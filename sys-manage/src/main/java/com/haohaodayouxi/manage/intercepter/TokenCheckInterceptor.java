@@ -1,6 +1,6 @@
-package com.haohaodayouxi.auth.intercepter;
+package com.haohaodayouxi.manage.intercepter;
 
-import com.haohaodayouxi.auth.config.SysAuthProperties;
+import com.haohaodayouxi.manage.config.SysAuthProperties;
 import com.haohaodayouxi.common.core.constants.CurrentParam;
 import com.haohaodayouxi.common.core.constants.CurrentUserContextHolder;
 import com.haohaodayouxi.common.core.constants.InterceptorCode;

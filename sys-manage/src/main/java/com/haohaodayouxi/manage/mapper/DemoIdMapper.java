@@ -1,7 +1,7 @@
-package com.haohaodayouxi.auth.mapper;
+package com.haohaodayouxi.manage.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.haohaodayouxi.auth.model.db.DemoId;
+import com.haohaodayouxi.manage.model.db.DemoId;
 
 /**
  * DemoIdMapper

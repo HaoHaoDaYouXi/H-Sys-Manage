@@ -1,7 +1,7 @@
-package com.haohaodayouxi.auth.service.impl;
+package com.haohaodayouxi.manage.service.impl;
 
-import com.haohaodayouxi.auth.event.DemoEvent;
-import com.haohaodayouxi.auth.service.DemoService;
+import com.haohaodayouxi.manage.event.DemoEvent;
+import com.haohaodayouxi.manage.service.DemoService;
 import com.haohaodayouxi.common.core.interfaces.BaseInfo;
 import com.haohaodayouxi.common.core.interfaces.InitService;
 import com.haohaodayouxi.common.util.base.SubBatchUtil;

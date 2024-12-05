@@ -1,4 +1,4 @@
-package com.haohaodayouxi.auth.event;
+package com.haohaodayouxi.manage.event;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;

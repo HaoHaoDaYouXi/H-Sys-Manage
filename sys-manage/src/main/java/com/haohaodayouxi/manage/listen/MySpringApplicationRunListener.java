@@ -1,4 +1,4 @@
-package com.haohaodayouxi.auth.listen;
+package com.haohaodayouxi.manage.listen;
 
 import org.springframework.boot.ConfigurableBootstrapContext;
 import org.springframework.boot.SpringApplication;

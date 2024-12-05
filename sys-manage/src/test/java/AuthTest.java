@@ -1,4 +1,4 @@
-import com.haohaodayouxi.auth.AuthBootstrap;
+import com.haohaodayouxi.manage.ManageBootstrap;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  * @date 2024/8/11 11:33
  */
 @Slf4j
-@SpringBootTest(classes = AuthBootstrap.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = ManageBootstrap.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AuthTest {
 
     @Test

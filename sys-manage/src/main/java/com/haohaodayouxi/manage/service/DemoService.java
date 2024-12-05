@@ -1,4 +1,4 @@
-package com.haohaodayouxi.auth.service;
+package com.haohaodayouxi.manage.service;
 
 /**
  * DemoService

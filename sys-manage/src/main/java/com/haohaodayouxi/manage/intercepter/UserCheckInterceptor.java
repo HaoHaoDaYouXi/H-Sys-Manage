@@ -1,4 +1,4 @@
-package com.haohaodayouxi.auth.intercepter;
+package com.haohaodayouxi.manage.intercepter;
 
 import com.haohaodayouxi.common.core.constants.CurrentParam;
 import com.haohaodayouxi.common.core.constants.CurrentUserContextHolder;

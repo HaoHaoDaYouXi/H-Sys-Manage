@@ -2,7 +2,7 @@
 server:
   port: 10000
   servlet:
-    context-path: /auth
+    context-path: /manage
     encoding:
       charset: UTF-8
       enabled: true
@@ -11,7 +11,7 @@ spring:
   profiles:
     active: dev
   application:
-    name: demo
+    name: manage
   main:
     allow-bean-definition-overriding: true
     allow-circular-references: true

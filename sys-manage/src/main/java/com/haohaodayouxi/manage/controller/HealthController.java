@@ -1,4 +1,4 @@
-package com.haohaodayouxi.auth.controller;
+package com.haohaodayouxi.manage.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

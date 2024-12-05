@@ -1,4 +1,4 @@
-package com.haohaodayouxi.auth.config;
+package com.haohaodayouxi.manage.config;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;

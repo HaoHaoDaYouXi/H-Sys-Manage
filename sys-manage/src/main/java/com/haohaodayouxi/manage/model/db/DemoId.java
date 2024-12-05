@@ -1,4 +1,4 @@
-package com.haohaodayouxi.auth.model.db;
+package com.haohaodayouxi.manage.model.db;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;

@@ -1,4 +1,4 @@
-package com.haohaodayouxi.auth.config;
+package com.haohaodayouxi.manage.config;
 
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;

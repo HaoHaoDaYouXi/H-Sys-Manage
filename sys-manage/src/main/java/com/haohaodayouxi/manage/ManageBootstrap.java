@@ -1,4 +1,4 @@
-package com.haohaodayouxi.auth;
+package com.haohaodayouxi.manage;
 
 import com.haohaodayouxi.common.core.interfaces.InitService;
 import lombok.extern.slf4j.Slf4j;
@@ -10,17 +10,17 @@ import org.springframework.context.ApplicationContext;
 import java.util.Map;
 
 /**
- * AuthBootstrap
+ * ManageBootstrap
  *
  * @author TONE
  * @date 2024/8/31
  */
 @Slf4j
 @SpringBootApplication(scanBasePackages = {"com.haohaodayouxi"})
-@MapperScan(basePackages = {"com.haohaodayouxi.auth.mapper"})
-public class AuthBootstrap {
+@MapperScan(basePackages = {"com.haohaodayouxi.manage.mapper"})
+public class ManageBootstrap {
     public static void main(String[] args) {
-        ApplicationContext applicationContext = SpringApplication.run(AuthBootstrap.class, args);
+        ApplicationContext applicationContext = SpringApplication.run(ManageBootstrap.class, args);
         init(applicationContext);
     }
 

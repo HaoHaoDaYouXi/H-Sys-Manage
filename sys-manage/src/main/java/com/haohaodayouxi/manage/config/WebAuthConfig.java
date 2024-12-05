@@ -1,6 +1,6 @@
-package com.haohaodayouxi.auth.config;
+package com.haohaodayouxi.manage.config;
 
-import com.haohaodayouxi.auth.intercepter.*;
+import com.haohaodayouxi.manage.intercepter.*;
 import com.haohaodayouxi.common.util.business.SpringContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
