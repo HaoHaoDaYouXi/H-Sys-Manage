@@ -4,21 +4,20 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.Date;
+
 /**
- * MRoleMenu
+ * 角色菜单关联表
  *
  * @author TONE
  * @date 2024/12/8
- */
-/**
- * 角色菜单关联表
  */
 @Data
 @Builder
@@ -26,6 +25,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @TableName(value = "m_role_menu")
 public class MRoleMenu implements Serializable {
+    @Serial
+    private static final long serialVersionUID = -4439904659770336440L;
     /**
      * 主键ID
      */
@@ -79,6 +80,4 @@ public class MRoleMenu implements Serializable {
      */
     @TableField(value = "del_status")
     private Integer delStatus;
-
-    private static final long serialVersionUID = 1L;
 }

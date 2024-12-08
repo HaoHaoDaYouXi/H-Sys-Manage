@@ -4,21 +4,20 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.Date;
+
 /**
- * MUserRole
+ * 用户角色关联表
  *
  * @author TONE
  * @date 2024/12/8
- */
-/**
- * 用户角色关联表
  */
 @Data
 @Builder
@@ -26,6 +25,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @TableName(value = "m_user_role")
 public class MUserRole implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 4201549815994994654L;
     /**
      * 主键ID
      */
@@ -85,6 +86,4 @@ public class MUserRole implements Serializable {
      */
     @TableField(value = "del_status")
     private Integer delStatus;
-
-    private static final long serialVersionUID = 1L;
 }

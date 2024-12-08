@@ -4,21 +4,20 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.Date;
+
 /**
- * SParam
+ * 系统参数表
  *
  * @author TONE
  * @date 2024/12/8
- */
-/**
- * 系统参数表
  */
 @Data
 @Builder
@@ -26,10 +25,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @TableName(value = "s_param")
 public class SParam implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 2252165608264894195L;
     /**
      * 编码（1001，每3位代表一级，非自增，由开发人员控制)
      */
-    @TableId(value = "param_code", type = IdType.AUTO)
+    @TableId(value = "param_code", type = IdType.INPUT)
     private Long paramCode;
 
     /**
@@ -91,6 +92,4 @@ public class SParam implements Serializable {
      */
     @TableField(value = "del_status")
     private Integer delStatus;
-
-    private static final long serialVersionUID = 1L;
 }
