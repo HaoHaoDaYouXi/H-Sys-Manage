@@ -1,0 +1,102 @@
+package com.haohaodayouxi.manage.model.db;
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import java.io.Serializable;
+import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+/**
+ * SUser
+ *
+ * @author TONE
+ * @date 2024/12/8
+ */
+/**
+ * 用户表
+ */
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@TableName(value = "s_user")
+public class SUser implements Serializable {
+    /**
+     * ID
+     */
+    @TableId(value = "user_id", type = IdType.AUTO)
+    private Long userId;
+
+    /**
+     * 账号
+     */
+    @TableField(value = "account")
+    private String account;
+
+    /**
+     * 密码
+     */
+    @TableField(value = "pwd")
+    private String pwd;
+
+    /**
+     * 用户名称
+     */
+    @TableField(value = "user_name")
+    private String userName;
+
+    /**
+     * 用户头像
+     */
+    @TableField(value = "user_avatar")
+    private String userAvatar;
+
+    /**
+     * 最近登录时间
+     */
+    @TableField(value = "last_login_time")
+    private Date lastLoginTime;
+
+    /**
+     * 创建人
+     */
+    @TableField(value = "create_uid")
+    private Long createUid;
+
+    /**
+     * 修改人
+     */
+    @TableField(value = "update_uid")
+    private Long updateUid;
+
+    /**
+     * 创建时间
+     */
+    @TableField(value = "create_time")
+    private Date createTime;
+
+    /**
+     * 修改时间
+     */
+    @TableField(value = "update_time")
+    private Date updateTime;
+
+    /**
+     * 版本
+     */
+    @TableField(value = "version")
+    private Long version;
+
+    /**
+     * 删除状态（0，正常，1已删除）
+     */
+    @TableField(value = "del_status")
+    private Integer delStatus;
+
+    private static final long serialVersionUID = 1L;
+}
