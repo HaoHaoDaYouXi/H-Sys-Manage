@@ -2,8 +2,9 @@ package com.haohaodayouxi.manage.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.haohaodayouxi.manage.model.db.MRoleMenu;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * MRoleMenuMapper
@@ -12,6 +13,7 @@ import org.apache.ibatis.annotations.Param;
  * @date 2024/12/8
  */
 public interface MRoleMenuMapper extends BaseMapper<MRoleMenu> {
+
     int updateBatch(List<MRoleMenu> list);
 
     int updateBatchSelective(List<MRoleMenu> list);
