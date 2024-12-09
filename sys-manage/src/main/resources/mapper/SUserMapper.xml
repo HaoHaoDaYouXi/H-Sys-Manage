@@ -7,8 +7,12 @@
     <id column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="account" jdbcType="VARCHAR" property="account" />
     <result column="pwd" jdbcType="VARCHAR" property="pwd" />
+    <result column="user_code" jdbcType="VARCHAR" property="userCode" />
     <result column="user_name" jdbcType="VARCHAR" property="userName" />
     <result column="user_avatar" jdbcType="VARCHAR" property="userAvatar" />
+    <result column="user_contact" jdbcType="VARCHAR" property="userContact" />
+    <result column="remarks" jdbcType="LONGVARCHAR" property="remarks" />
+    <result column="multiple_status" jdbcType="TINYINT" property="multipleStatus" />
     <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
     <result column="create_uid" jdbcType="BIGINT" property="createUid" />
     <result column="update_uid" jdbcType="BIGINT" property="updateUid" />
@@ -19,8 +23,9 @@
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    user_id, account, pwd, user_name, user_avatar, last_login_time, create_uid, update_uid, 
-    create_time, update_time, version, del_status
+    user_id, account, pwd, user_code, user_name, user_avatar, user_contact, remarks, 
+    multiple_status, last_login_time, create_uid, update_uid, create_time, update_time, 
+    version, del_status
   </sql>
   <update id="updateBatch" parameterType="java.util.List">
     <!--@mbg.generated-->
@@ -36,6 +41,11 @@
           when user_id = #{item.userId,jdbcType=BIGINT} then #{item.pwd,jdbcType=VARCHAR}
         </foreach>
       </trim>
+      <trim prefix="user_code = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when user_id = #{item.userId,jdbcType=BIGINT} then #{item.userCode,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
       <trim prefix="user_name = case" suffix="end,">
         <foreach collection="list" index="index" item="item">
           when user_id = #{item.userId,jdbcType=BIGINT} then #{item.userName,jdbcType=VARCHAR}
@@ -44,6 +54,21 @@
       <trim prefix="user_avatar = case" suffix="end,">
         <foreach collection="list" index="index" item="item">
           when user_id = #{item.userId,jdbcType=BIGINT} then #{item.userAvatar,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="user_contact = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when user_id = #{item.userId,jdbcType=BIGINT} then #{item.userContact,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="remarks = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when user_id = #{item.userId,jdbcType=BIGINT} then #{item.remarks,jdbcType=LONGVARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="multiple_status = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when user_id = #{item.userId,jdbcType=BIGINT} then #{item.multipleStatus,jdbcType=TINYINT}
         </foreach>
       </trim>
       <trim prefix="last_login_time = case" suffix="end,">
@@ -105,6 +130,13 @@
           </if>
         </foreach>
       </trim>
+      <trim prefix="user_code = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.userCode != null">
+            when user_id = #{item.userId,jdbcType=BIGINT} then #{item.userCode,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
       <trim prefix="user_name = case" suffix="end,">
         <foreach collection="list" index="index" item="item">
           <if test="item.userName != null">
@@ -116,6 +148,27 @@
         <foreach collection="list" index="index" item="item">
           <if test="item.userAvatar != null">
             when user_id = #{item.userId,jdbcType=BIGINT} then #{item.userAvatar,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="user_contact = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.userContact != null">
+            when user_id = #{item.userId,jdbcType=BIGINT} then #{item.userContact,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="remarks = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.remarks != null">
+            when user_id = #{item.userId,jdbcType=BIGINT} then #{item.remarks,jdbcType=LONGVARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="multiple_status = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.multipleStatus != null">
+            when user_id = #{item.userId,jdbcType=BIGINT} then #{item.multipleStatus,jdbcType=TINYINT}
           </if>
         </foreach>
       </trim>
@@ -177,15 +230,17 @@
   <insert id="batchInsert" keyColumn="user_id" keyProperty="userId" parameterType="map" useGeneratedKeys="true">
     <!--@mbg.generated-->
     insert into s_user
-    (account, pwd, user_name, user_avatar, last_login_time, create_uid, update_uid, create_time, 
-      update_time, version, del_status)
+    (account, pwd, user_code, user_name, user_avatar, user_contact, remarks, multiple_status, 
+      last_login_time, create_uid, update_uid, create_time, update_time, version, del_status
+      )
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.account,jdbcType=VARCHAR}, #{item.pwd,jdbcType=VARCHAR}, #{item.userName,jdbcType=VARCHAR}, 
-        #{item.userAvatar,jdbcType=VARCHAR}, #{item.lastLoginTime,jdbcType=TIMESTAMP}, 
-        #{item.createUid,jdbcType=BIGINT}, #{item.updateUid,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
-        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.version,jdbcType=BIGINT}, #{item.delStatus,jdbcType=TINYINT}
-        )
+      (#{item.account,jdbcType=VARCHAR}, #{item.pwd,jdbcType=VARCHAR}, #{item.userCode,jdbcType=VARCHAR}, 
+        #{item.userName,jdbcType=VARCHAR}, #{item.userAvatar,jdbcType=VARCHAR}, #{item.userContact,jdbcType=VARCHAR}, 
+        #{item.remarks,jdbcType=LONGVARCHAR}, #{item.multipleStatus,jdbcType=TINYINT}, 
+        #{item.lastLoginTime,jdbcType=TIMESTAMP}, #{item.createUid,jdbcType=BIGINT}, #{item.updateUid,jdbcType=BIGINT}, 
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.version,jdbcType=BIGINT}, 
+        #{item.delStatus,jdbcType=TINYINT})
     </foreach>
   </insert>
 </mapper>

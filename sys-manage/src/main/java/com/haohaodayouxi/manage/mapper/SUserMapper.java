@@ -10,7 +10,7 @@ import java.util.List;
  * SUserMapper
  *
  * @author TONE
- * @date 2024/12/8
+ * @date 2024/12/9
  */
 public interface SUserMapper extends BaseMapper<SUser> {
 

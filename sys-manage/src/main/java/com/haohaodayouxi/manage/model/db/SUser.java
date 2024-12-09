@@ -46,6 +46,12 @@ public class SUser implements Serializable {
     private String pwd;
 
     /**
+     * 用户编码(UUID，可使用于密码等方面)
+     */
+    @TableField(value = "user_code")
+    private String userCode;
+
+    /**
      * 用户名称
      */
     @TableField(value = "user_name")
@@ -56,6 +62,24 @@ public class SUser implements Serializable {
      */
     @TableField(value = "user_avatar")
     private String userAvatar;
+
+    /**
+     * 用户联系方式
+     */
+    @TableField(value = "user_contact")
+    private String userContact;
+
+    /**
+     * 备注
+     */
+    @TableField(value = "remarks")
+    private String remarks;
+
+    /**
+     * 多人使用状态 0-否 1-是
+     */
+    @TableField(value = "multiple_status")
+    private Integer multipleStatus;
 
     /**
      * 最近登录时间
