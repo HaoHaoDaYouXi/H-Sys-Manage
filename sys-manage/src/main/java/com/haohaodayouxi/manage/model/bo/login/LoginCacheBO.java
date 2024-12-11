@@ -29,4 +29,8 @@ public class LoginCacheBO implements Serializable {
      * 用户登录缓存
      */
     private UserLoginCacheBO userLoginCacheBO;
+    /**
+     * 用户关联信息登录缓存
+     */
+    private UserLinkLoginCacheBO userLinkLoginCacheBO;
 }
