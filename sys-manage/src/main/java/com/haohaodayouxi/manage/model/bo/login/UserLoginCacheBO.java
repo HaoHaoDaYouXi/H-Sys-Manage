@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Map;
 
 /**
  * UserRedisBO
@@ -56,9 +55,4 @@ public class UserLoginCacheBO implements Serializable {
      * 备注
      */
     private String remarks;
-
-    /**
-     * 补充数据 key=字段名，value=字段对应的值或对象
-     */
-    private Map<String, Object> supplementDataMap;
 }
