@@ -1,6 +1,7 @@
 package com.haohaodayouxi.manage.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.haohaodayouxi.manage.model.bo.user.UserRoleBO;
 import com.haohaodayouxi.manage.model.db.MUserRole;
 import org.apache.ibatis.annotations.Param;
 
@@ -19,4 +20,6 @@ public interface MUserRoleMapper extends BaseMapper<MUserRole> {
     int updateBatchSelective(List<MUserRole> list);
 
     int batchInsert(@Param("list") List<MUserRole> list);
+
+    List<UserRoleBO> selectUserRoleList(@Param("userId") Long userId);
 }

@@ -1,164 +1,172 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.haohaodayouxi.manage.mapper.MUserRoleMapper">
-  <resultMap id="BaseResultMap" type="com.haohaodayouxi.manage.model.db.MUserRole">
-    <!--@mbg.generated-->
-    <!--@Table m_user_role-->
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="user_id" jdbcType="BIGINT" property="userId" />
-    <result column="role_id" jdbcType="BIGINT" property="roleId" />
-    <result column="use_status" jdbcType="TINYINT" property="useStatus" />
-    <result column="create_uid" jdbcType="BIGINT" property="createUid" />
-    <result column="update_uid" jdbcType="BIGINT" property="updateUid" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="version" jdbcType="BIGINT" property="version" />
-    <result column="del_status" jdbcType="TINYINT" property="delStatus" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    <!--@mbg.generated-->
-    id, user_id, role_id, use_status, create_uid, update_uid, create_time, update_time, 
-    version, del_status
-  </sql>
-  <update id="updateBatch" parameterType="java.util.List">
-    <!--@mbg.generated-->
-    update m_user_role
-    <trim prefix="set" suffixOverrides=",">
-      <trim prefix="user_id = case" suffix="end,">
-        <foreach collection="list" index="index" item="item">
-          when id = #{item.id,jdbcType=BIGINT} then #{item.userId,jdbcType=BIGINT}
+    <resultMap id="BaseResultMap" type="com.haohaodayouxi.manage.model.db.MUserRole">
+        <!--@mbg.generated-->
+        <!--@Table m_user_role-->
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="user_id" jdbcType="BIGINT" property="userId" />
+        <result column="role_id" jdbcType="BIGINT" property="roleId" />
+        <result column="use_status" jdbcType="TINYINT" property="useStatus" />
+        <result column="create_uid" jdbcType="BIGINT" property="createUid" />
+        <result column="update_uid" jdbcType="BIGINT" property="updateUid" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="version" jdbcType="BIGINT" property="version" />
+        <result column="del_status" jdbcType="TINYINT" property="delStatus" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id, user_id, role_id, use_status, create_uid, update_uid, create_time, update_time,
+        version, del_status
+    </sql>
+    <update id="updateBatch" parameterType="java.util.List">
+        <!--@mbg.generated-->
+        update m_user_role
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="user_id = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    when id = #{item.id,jdbcType=BIGINT} then #{item.userId,jdbcType=BIGINT}
+                </foreach>
+            </trim>
+            <trim prefix="role_id = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    when id = #{item.id,jdbcType=BIGINT} then #{item.roleId,jdbcType=BIGINT}
+                </foreach>
+            </trim>
+            <trim prefix="use_status = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    when id = #{item.id,jdbcType=BIGINT} then #{item.useStatus,jdbcType=TINYINT}
+                </foreach>
+            </trim>
+            <trim prefix="create_uid = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    when id = #{item.id,jdbcType=BIGINT} then #{item.createUid,jdbcType=BIGINT}
+                </foreach>
+            </trim>
+            <trim prefix="update_uid = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    when id = #{item.id,jdbcType=BIGINT} then #{item.updateUid,jdbcType=BIGINT}
+                </foreach>
+            </trim>
+            <trim prefix="create_time = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    when id = #{item.id,jdbcType=BIGINT} then #{item.createTime,jdbcType=TIMESTAMP}
+                </foreach>
+            </trim>
+            <trim prefix="update_time = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    when id = #{item.id,jdbcType=BIGINT} then #{item.updateTime,jdbcType=TIMESTAMP}
+                </foreach>
+            </trim>
+            <trim prefix="version = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    when id = #{item.id,jdbcType=BIGINT} then #{item.version,jdbcType=BIGINT}
+                </foreach>
+            </trim>
+            <trim prefix="del_status = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    when id = #{item.id,jdbcType=BIGINT} then #{item.delStatus,jdbcType=TINYINT}
+                </foreach>
+            </trim>
+        </trim>
+        where id in
+        <foreach close=")" collection="list" item="item" open="(" separator=", ">
+            #{item.id,jdbcType=BIGINT}
         </foreach>
-      </trim>
-      <trim prefix="role_id = case" suffix="end,">
-        <foreach collection="list" index="index" item="item">
-          when id = #{item.id,jdbcType=BIGINT} then #{item.roleId,jdbcType=BIGINT}
+    </update>
+    <update id="updateBatchSelective" parameterType="java.util.List">
+        <!--@mbg.generated-->
+        update m_user_role
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="user_id = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    <if test="item.userId != null">
+                        when id = #{item.id,jdbcType=BIGINT} then #{item.userId,jdbcType=BIGINT}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="role_id = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    <if test="item.roleId != null">
+                        when id = #{item.id,jdbcType=BIGINT} then #{item.roleId,jdbcType=BIGINT}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="use_status = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    <if test="item.useStatus != null">
+                        when id = #{item.id,jdbcType=BIGINT} then #{item.useStatus,jdbcType=TINYINT}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="create_uid = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    <if test="item.createUid != null">
+                        when id = #{item.id,jdbcType=BIGINT} then #{item.createUid,jdbcType=BIGINT}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="update_uid = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    <if test="item.updateUid != null">
+                        when id = #{item.id,jdbcType=BIGINT} then #{item.updateUid,jdbcType=BIGINT}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="create_time = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    <if test="item.createTime != null">
+                        when id = #{item.id,jdbcType=BIGINT} then #{item.createTime,jdbcType=TIMESTAMP}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="update_time = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    <if test="item.updateTime != null">
+                        when id = #{item.id,jdbcType=BIGINT} then #{item.updateTime,jdbcType=TIMESTAMP}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="version = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    <if test="item.version != null">
+                        when id = #{item.id,jdbcType=BIGINT} then #{item.version,jdbcType=BIGINT}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="del_status = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    <if test="item.delStatus != null">
+                        when id = #{item.id,jdbcType=BIGINT} then #{item.delStatus,jdbcType=TINYINT}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where id in
+        <foreach close=")" collection="list" item="item" open="(" separator=", ">
+            #{item.id,jdbcType=BIGINT}
         </foreach>
-      </trim>
-      <trim prefix="use_status = case" suffix="end,">
-        <foreach collection="list" index="index" item="item">
-          when id = #{item.id,jdbcType=BIGINT} then #{item.useStatus,jdbcType=TINYINT}
+    </update>
+    <insert id="batchInsert" keyColumn="id" keyProperty="id" parameterType="map" useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into m_user_role
+        (user_id, role_id, use_status, create_uid, update_uid, create_time, update_time,
+        version, del_status)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.userId,jdbcType=BIGINT}, #{item.roleId,jdbcType=BIGINT}, #{item.useStatus,jdbcType=TINYINT},
+            #{item.createUid,jdbcType=BIGINT}, #{item.updateUid,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP},
+            #{item.updateTime,jdbcType=TIMESTAMP}, #{item.version,jdbcType=BIGINT}, #{item.delStatus,jdbcType=TINYINT}
+            )
         </foreach>
-      </trim>
-      <trim prefix="create_uid = case" suffix="end,">
-        <foreach collection="list" index="index" item="item">
-          when id = #{item.id,jdbcType=BIGINT} then #{item.createUid,jdbcType=BIGINT}
-        </foreach>
-      </trim>
-      <trim prefix="update_uid = case" suffix="end,">
-        <foreach collection="list" index="index" item="item">
-          when id = #{item.id,jdbcType=BIGINT} then #{item.updateUid,jdbcType=BIGINT}
-        </foreach>
-      </trim>
-      <trim prefix="create_time = case" suffix="end,">
-        <foreach collection="list" index="index" item="item">
-          when id = #{item.id,jdbcType=BIGINT} then #{item.createTime,jdbcType=TIMESTAMP}
-        </foreach>
-      </trim>
-      <trim prefix="update_time = case" suffix="end,">
-        <foreach collection="list" index="index" item="item">
-          when id = #{item.id,jdbcType=BIGINT} then #{item.updateTime,jdbcType=TIMESTAMP}
-        </foreach>
-      </trim>
-      <trim prefix="version = case" suffix="end,">
-        <foreach collection="list" index="index" item="item">
-          when id = #{item.id,jdbcType=BIGINT} then #{item.version,jdbcType=BIGINT}
-        </foreach>
-      </trim>
-      <trim prefix="del_status = case" suffix="end,">
-        <foreach collection="list" index="index" item="item">
-          when id = #{item.id,jdbcType=BIGINT} then #{item.delStatus,jdbcType=TINYINT}
-        </foreach>
-      </trim>
-    </trim>
-    where id in
-    <foreach close=")" collection="list" item="item" open="(" separator=", ">
-      #{item.id,jdbcType=BIGINT}
-    </foreach>
-  </update>
-  <update id="updateBatchSelective" parameterType="java.util.List">
-    <!--@mbg.generated-->
-    update m_user_role
-    <trim prefix="set" suffixOverrides=",">
-      <trim prefix="user_id = case" suffix="end,">
-        <foreach collection="list" index="index" item="item">
-          <if test="item.userId != null">
-            when id = #{item.id,jdbcType=BIGINT} then #{item.userId,jdbcType=BIGINT}
-          </if>
-        </foreach>
-      </trim>
-      <trim prefix="role_id = case" suffix="end,">
-        <foreach collection="list" index="index" item="item">
-          <if test="item.roleId != null">
-            when id = #{item.id,jdbcType=BIGINT} then #{item.roleId,jdbcType=BIGINT}
-          </if>
-        </foreach>
-      </trim>
-      <trim prefix="use_status = case" suffix="end,">
-        <foreach collection="list" index="index" item="item">
-          <if test="item.useStatus != null">
-            when id = #{item.id,jdbcType=BIGINT} then #{item.useStatus,jdbcType=TINYINT}
-          </if>
-        </foreach>
-      </trim>
-      <trim prefix="create_uid = case" suffix="end,">
-        <foreach collection="list" index="index" item="item">
-          <if test="item.createUid != null">
-            when id = #{item.id,jdbcType=BIGINT} then #{item.createUid,jdbcType=BIGINT}
-          </if>
-        </foreach>
-      </trim>
-      <trim prefix="update_uid = case" suffix="end,">
-        <foreach collection="list" index="index" item="item">
-          <if test="item.updateUid != null">
-            when id = #{item.id,jdbcType=BIGINT} then #{item.updateUid,jdbcType=BIGINT}
-          </if>
-        </foreach>
-      </trim>
-      <trim prefix="create_time = case" suffix="end,">
-        <foreach collection="list" index="index" item="item">
-          <if test="item.createTime != null">
-            when id = #{item.id,jdbcType=BIGINT} then #{item.createTime,jdbcType=TIMESTAMP}
-          </if>
-        </foreach>
-      </trim>
-      <trim prefix="update_time = case" suffix="end,">
-        <foreach collection="list" index="index" item="item">
-          <if test="item.updateTime != null">
-            when id = #{item.id,jdbcType=BIGINT} then #{item.updateTime,jdbcType=TIMESTAMP}
-          </if>
-        </foreach>
-      </trim>
-      <trim prefix="version = case" suffix="end,">
-        <foreach collection="list" index="index" item="item">
-          <if test="item.version != null">
-            when id = #{item.id,jdbcType=BIGINT} then #{item.version,jdbcType=BIGINT}
-          </if>
-        </foreach>
-      </trim>
-      <trim prefix="del_status = case" suffix="end,">
-        <foreach collection="list" index="index" item="item">
-          <if test="item.delStatus != null">
-            when id = #{item.id,jdbcType=BIGINT} then #{item.delStatus,jdbcType=TINYINT}
-          </if>
-        </foreach>
-      </trim>
-    </trim>
-    where id in
-    <foreach close=")" collection="list" item="item" open="(" separator=", ">
-      #{item.id,jdbcType=BIGINT}
-    </foreach>
-  </update>
-  <insert id="batchInsert" keyColumn="id" keyProperty="id" parameterType="map" useGeneratedKeys="true">
-    <!--@mbg.generated-->
-    insert into m_user_role
-    (user_id, role_id, use_status, create_uid, update_uid, create_time, update_time, 
-      version, del_status)
-    values
-    <foreach collection="list" item="item" separator=",">
-      (#{item.userId,jdbcType=BIGINT}, #{item.roleId,jdbcType=BIGINT}, #{item.useStatus,jdbcType=TINYINT}, 
-        #{item.createUid,jdbcType=BIGINT}, #{item.updateUid,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
-        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.version,jdbcType=BIGINT}, #{item.delStatus,jdbcType=TINYINT}
-        )
-    </foreach>
-  </insert>
+    </insert>
+
+    <select id="selectUserRoleList" resultType="com.haohaodayouxi.manage.model.bo.user.UserRoleBO">
+        select ur.id, ur.role_id, r.role_name, r.role_code, ur.use_status
+        from m_user_role ur
+        left join s_role r on ur.role_id = r.role_id
+        where ur.user_id = #{userId}
+        and ur.del_status = 0 and r.del_status = 0
+    </select>
 </mapper>
