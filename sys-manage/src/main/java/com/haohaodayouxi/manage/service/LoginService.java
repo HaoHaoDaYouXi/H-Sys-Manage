@@ -16,5 +16,5 @@ public interface LoginService {
      * @param req req
      * @return res
      */
-    LoginCacheBO accountLogin(AccountLoginReq req);
+    Response<Object> accountLogin(AccountLoginReq req);
 }
