@@ -1,6 +1,6 @@
 ﻿package com.haohaodayouxi.manage.service;
 
-import com.haohaodayouxi.manage.model.bo.login.LoginCacheBO;
+import com.haohaodayouxi.common.core.model.res.Response;
 import com.haohaodayouxi.manage.model.req.login.AccountLoginReq;
 
 /**
