@@ -89,4 +89,15 @@ public class LoginServiceImpl implements LoginService {
         userService.update(new LambdaUpdateWrapper<SUser>().eq(SUser::getUserId, loginCacheBO.getUserLoginCacheBO().getUserId()).set(SUser::getLastLoginTime, new Date()));
     }
 
+    /**
+     * 登录失败 进行账号限制等操作
+     *
+     * @param account 账号
+     * @return 错误次数
+     */
+    private Integer loginError(String account) {
+        // 登录错误达到错误次数，进行锁定
+        int loginCount = 1;
+        return loginCount;
+    }
 }
