@@ -26,19 +26,11 @@ public class LoginServiceImpl implements LoginService {
     private SUserService userService;
 
     @Override
-    public LoginCacheBO accountLogin(AccountLoginReq req) {
+    public Response<Object> accountLogin(AccountLoginReq req) {
         SUser user = userService.getOne(new LambdaQueryWrapper<SUser>().eq(SUser::getAccount, req.getAccount()).eq(SUser::getDelStatus, TrueFalseEnum.FALSE.getCode()));
-        if (ObjectUtils.isEmpty(user)) {
-            throw new BusinessException("账号名或密码错误，请检查并重试");
+        if (ObjectUtils.isEmpty(user) || (!Md5Util.encryptPWD(req.getPwd(), user.getUserCode()).equals(user.getPwd()))) {
+            return ErrorResponse.LOGIN_ERROR.toResponse("账号名或密码错误，请检查并重试", loginError(req.getAccount()));
         }
-//        if (!Md5Util.encryptPWD(req.getPwd()).equals(user.getPwd())) {
-//            throw new BusinessException("账号名或密码错误，请检查并重试");
-//        }
-        if (!Md5Util.encryptPWD(req.getPwd()).equals(user.getPwd())) {
-            throw new BusinessException("账号名或密码错误，请检查并重试");
-        }
-
-
-        return null;
+        return OkResponse.LOGIN.toResponse(baseLogin(user));
     }
 }
