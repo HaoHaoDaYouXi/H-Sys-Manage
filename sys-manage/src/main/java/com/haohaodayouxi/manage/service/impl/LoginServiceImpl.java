@@ -24,6 +24,8 @@ public class LoginServiceImpl implements LoginService {
 
     @Resource
     private SUserService userService;
+    @Resource
+    private MUserRoleService userRoleService;
 
     @Override
     public Response<Object> accountLogin(AccountLoginReq req) {
