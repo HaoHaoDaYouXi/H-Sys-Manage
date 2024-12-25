@@ -4,17 +4,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 /**
- * UtilTest
+ * ManageTest
  *
  * @author TONE
  * @date 2024/8/11 11:33
  */
 @Slf4j
 @SpringBootTest(classes = ManageBootstrap.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AuthTest {
+public class ManageTest {
 
     @Test
     public void test() {
-        log.info("AuthTest");
+        log.info("ManageTest");
     }
 }
