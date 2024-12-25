@@ -40,7 +40,7 @@ public class SRole implements Serializable {
     private String roleName;
 
     /**
-     * 角色分类标识(取配置表type=2)
+     * 角色编码(取配置表type=11)
      */
     @TableField(value = "role_code")
     private String roleCode;
