@@ -1,4 +1,4 @@
-﻿package com.haohaodayouxi.manage.model.bo.login;
+package com.haohaodayouxi.manage.model.bo.login;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
