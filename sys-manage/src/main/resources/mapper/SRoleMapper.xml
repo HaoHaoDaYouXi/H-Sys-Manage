@@ -6,7 +6,7 @@
     <!--@Table s_role-->
     <id column="role_id" jdbcType="BIGINT" property="roleId" />
     <result column="role_name" jdbcType="VARCHAR" property="roleName" />
-    <result column="role_code" jdbcType="VARCHAR" property="roleCode" />
+    <result column="role_code" jdbcType="INTEGER" property="roleCode" />
     <result column="create_uid" jdbcType="BIGINT" property="createUid" />
     <result column="update_uid" jdbcType="BIGINT" property="updateUid" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -30,7 +30,7 @@
       </trim>
       <trim prefix="role_code = case" suffix="end,">
         <foreach collection="list" index="index" item="item">
-          when role_id = #{item.roleId,jdbcType=BIGINT} then #{item.roleCode,jdbcType=VARCHAR}
+          when role_id = #{item.roleId,jdbcType=BIGINT} then #{item.roleCode,jdbcType=INTEGER}
         </foreach>
       </trim>
       <trim prefix="create_uid = case" suffix="end,">
@@ -83,7 +83,7 @@
       <trim prefix="role_code = case" suffix="end,">
         <foreach collection="list" index="index" item="item">
           <if test="item.roleCode != null">
-            when role_id = #{item.roleId,jdbcType=BIGINT} then #{item.roleCode,jdbcType=VARCHAR}
+            when role_id = #{item.roleId,jdbcType=BIGINT} then #{item.roleCode,jdbcType=INTEGER}
           </if>
         </foreach>
       </trim>
@@ -142,7 +142,7 @@
       del_status)
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.roleName,jdbcType=VARCHAR}, #{item.roleCode,jdbcType=VARCHAR}, #{item.createUid,jdbcType=BIGINT}, 
+      (#{item.roleName,jdbcType=VARCHAR}, #{item.roleCode,jdbcType=INTEGER}, #{item.createUid,jdbcType=BIGINT}, 
         #{item.updateUid,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}, 
         #{item.version,jdbcType=BIGINT}, #{item.delStatus,jdbcType=TINYINT})
     </foreach>

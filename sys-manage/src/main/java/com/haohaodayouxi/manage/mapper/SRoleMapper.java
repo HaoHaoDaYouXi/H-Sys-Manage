@@ -14,9 +14,9 @@ import java.util.List;
  */
 public interface SRoleMapper extends BaseMapper<SRole> {
 
-    int updateBatch(List<SRole> list);
+    int updateBatch(@Param("list") List<SRole> list);
 
-    int updateBatchSelective(List<SRole> list);
+    int updateBatchSelective(@Param("list") List<SRole> list);
 
     int batchInsert(@Param("list") List<SRole> list);
 }
