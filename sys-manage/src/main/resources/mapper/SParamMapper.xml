@@ -6,6 +6,7 @@
     <!--@Table s_param-->
     <id column="param_code" jdbcType="BIGINT" property="paramCode" />
     <result column="param_parent_code" jdbcType="BIGINT" property="paramParentCode" />
+    <result column="param_name" jdbcType="VARCHAR" property="paramName" />
     <result column="param_value" jdbcType="VARCHAR" property="paramValue" />
     <result column="param_remark" jdbcType="VARCHAR" property="paramRemark" />
     <result column="param_sort_code" jdbcType="INTEGER" property="paramSortCode" />
@@ -18,8 +19,8 @@
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    param_code, param_parent_code, param_value, param_remark, param_sort_code, version, 
-    create_uid, update_uid, create_time, update_time, del_status
+    param_code, param_parent_code, param_name, param_value, param_remark, param_sort_code, 
+    version, create_uid, update_uid, create_time, update_time, del_status
   </sql>
   <update id="updateBatch" parameterType="java.util.List">
     <!--@mbg.generated-->
@@ -28,6 +29,11 @@
       <trim prefix="param_parent_code = case" suffix="end,">
         <foreach collection="list" index="index" item="item">
           when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.paramParentCode,jdbcType=BIGINT}
+        </foreach>
+      </trim>
+      <trim prefix="param_name = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.paramName,jdbcType=VARCHAR}
         </foreach>
       </trim>
       <trim prefix="param_value = case" suffix="end,">
@@ -89,6 +95,13 @@
         <foreach collection="list" index="index" item="item">
           <if test="item.paramParentCode != null">
             when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.paramParentCode,jdbcType=BIGINT}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="param_name = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.paramName != null">
+            when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.paramName,jdbcType=VARCHAR}
           </if>
         </foreach>
       </trim>
@@ -161,14 +174,14 @@
       #{item.paramCode,jdbcType=BIGINT}
     </foreach>
   </update>
-  <insert id="batchInsert" parameterType="map">
+  <insert id="batchInsert" keyColumn="param_code" keyProperty="paramCode" parameterType="map" useGeneratedKeys="true">
     <!--@mbg.generated-->
     insert into s_param
-    (param_code, param_parent_code, param_value, param_remark, param_sort_code, version, 
+    (param_parent_code, param_name, param_value, param_remark, param_sort_code, version, 
       create_uid, update_uid, create_time, update_time, del_status)
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.paramCode,jdbcType=BIGINT}, #{item.paramParentCode,jdbcType=BIGINT}, #{item.paramValue,jdbcType=VARCHAR}, 
+      (#{item.paramParentCode,jdbcType=BIGINT}, #{item.paramName,jdbcType=VARCHAR}, #{item.paramValue,jdbcType=VARCHAR}, 
         #{item.paramRemark,jdbcType=VARCHAR}, #{item.paramSortCode,jdbcType=INTEGER}, #{item.version,jdbcType=INTEGER}, 
         #{item.createUid,jdbcType=BIGINT}, #{item.updateUid,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
         #{item.updateTime,jdbcType=TIMESTAMP}, #{item.delStatus,jdbcType=TINYINT})

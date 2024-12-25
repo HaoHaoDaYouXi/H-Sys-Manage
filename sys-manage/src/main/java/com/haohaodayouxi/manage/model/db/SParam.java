@@ -30,7 +30,7 @@ public class SParam implements Serializable {
     /**
      * 编码（1001，每3位代表一级，非自增，由开发人员控制)
      */
-    @TableId(value = "param_code", type = IdType.INPUT)
+    @TableId(value = "param_code", type = IdType.AUTO)
     private Long paramCode;
 
     /**
@@ -38,6 +38,12 @@ public class SParam implements Serializable {
      */
     @TableField(value = "param_parent_code")
     private Long paramParentCode;
+
+    /**
+     * 参数名称
+     */
+    @TableField(value = "param_name")
+    private String paramName;
 
     /**
      * 参数值

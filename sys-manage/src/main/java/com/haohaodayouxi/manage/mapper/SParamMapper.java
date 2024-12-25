@@ -14,9 +14,9 @@ import java.util.List;
  */
 public interface SParamMapper extends BaseMapper<SParam> {
 
-    int updateBatch(List<SParam> list);
+    int updateBatch(@Param("list") List<SParam> list);
 
-    int updateBatchSelective(List<SParam> list);
+    int updateBatchSelective(@Param("list") List<SParam> list);
 
     int batchInsert(@Param("list") List<SParam> list);
 }
