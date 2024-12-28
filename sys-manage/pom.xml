@@ -7,7 +7,7 @@
         <groupId>com.haohaodayouxi</groupId>
         <artifactId>lib-boot</artifactId>
         <version>1.0.0-21-SNAPSHOT</version>
-        <relativePath/>
+        <relativePath />
     </parent>
 
     <artifactId>sys-manage</artifactId>
@@ -36,6 +36,10 @@
             <groupId>com.haohaodayouxi</groupId>
             <artifactId>common-redis</artifactId>
             <version>${common-redis.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
         </dependency>
 
     </dependencies>
