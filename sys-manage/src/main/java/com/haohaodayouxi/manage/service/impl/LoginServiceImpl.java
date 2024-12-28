@@ -1,29 +1,39 @@
-﻿package com.haohaodayouxi.manage.service.impl;
+package com.haohaodayouxi.manage.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.haohaodayouxi.common.core.enums.ErrorResponse;
 import com.haohaodayouxi.common.core.enums.OkResponse;
 import com.haohaodayouxi.common.core.exception.BusinessException;
 import com.haohaodayouxi.common.core.model.res.Response;
+import com.haohaodayouxi.common.redis.service.impl.CommonRedisServiceImpl;
 import com.haohaodayouxi.common.util.algorithm.md5.Md5Util;
 import com.haohaodayouxi.common.util.business.TokenUtil;
 import com.haohaodayouxi.common.util.enums.TrueFalseEnum;
+import com.haohaodayouxi.manage.constants.RedisConstants;
+import com.haohaodayouxi.manage.constants.enums.login.LoginLimitEnum;
 import com.haohaodayouxi.manage.model.bo.login.LoginCacheBO;
 import com.haohaodayouxi.manage.model.bo.login.UserLinkLoginCacheBO;
 import com.haohaodayouxi.manage.model.bo.login.UserLoginCacheBO;
 import com.haohaodayouxi.manage.model.bo.user.UserRoleBO;
+import com.haohaodayouxi.manage.model.db.SParam;
 import com.haohaodayouxi.manage.model.db.SUser;
 import com.haohaodayouxi.manage.model.req.login.AccountLoginReq;
 import com.haohaodayouxi.manage.service.LoginService;
 import com.haohaodayouxi.manage.service.MUserRoleService;
+import com.haohaodayouxi.manage.service.SParamService;
 import com.haohaodayouxi.manage.service.SUserService;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * LoginServiceImpl
@@ -38,6 +48,10 @@ public class LoginServiceImpl implements LoginService {
     private SUserService userService;
     @Resource
     private MUserRoleService userRoleService;
+    @Resource
+    private SParamService paramService;
+    @Resource
+    private CommonRedisServiceImpl<String> stringRedisServiceImpl;
 
     @Override
     public Response<Object> accountLogin(AccountLoginReq req) {
@@ -87,6 +101,7 @@ public class LoginServiceImpl implements LoginService {
     private void loginSuccess(LoginCacheBO loginCacheBO) {
         // 更新登录时间
         userService.update(new LambdaUpdateWrapper<SUser>().eq(SUser::getUserId, loginCacheBO.getUserLoginCacheBO().getUserId()).set(SUser::getLastLoginTime, new Date()));
+        // todo 进行消息通知 登录成功
     }
 
     /**
@@ -98,6 +113,22 @@ public class LoginServiceImpl implements LoginService {
     private Integer loginError(String account) {
         // 登录错误达到错误次数，进行锁定
         int loginCount = 1;
+        List<SParam> loginParam = paramService.list(new LambdaQueryWrapper<SParam>().in(SParam::getParamCode, Arrays.stream(LoginLimitEnum.values()).map(LoginLimitEnum::getCode).toList()));
+        Map<Long, Integer> loginParamMap = loginParam.stream().collect(Collectors.toMap(SParam::getParamCode, v -> Integer.valueOf(v.getParamValue()), (v1, v2) -> v2));
+        int loginErrorNum = loginParamMap.getOrDefault(LoginLimitEnum.LOGIN_ERROR_NUM.getCode(), LoginLimitEnum.LOGIN_ERROR_NUM.getValue());
+        int loginLockTime = loginParamMap.getOrDefault(LoginLimitEnum.LOGIN_LOCK_TIME.getCode(), LoginLimitEnum.LOGIN_LOCK_TIME.getValue());
+        String loginLimitCountKey = RedisConstants.getLoginLimitAccountCountKey(account);
+        String loginLimitTimeKey = RedisConstants.getLoginLimitAccountTimeKey(account);
+        String loginCountRedis = stringRedisServiceImpl.get(loginLimitCountKey, String.class);
+        if (ObjectUtils.isNotEmpty(loginCountRedis)) {
+            loginCount += Integer.parseInt(loginCountRedis);
+            if (loginCount >= loginErrorNum) {
+                stringRedisServiceImpl.set(loginLimitTimeKey, DateUtil.offsetMinute(new Date(), loginLockTime).toString());
+                stringRedisServiceImpl.expire(loginLimitTimeKey, (long) loginLockTime, TimeUnit.MINUTES);
+            }
+        }
+        stringRedisServiceImpl.set(loginLimitCountKey, Integer.toString(loginCount));
+        stringRedisServiceImpl.expire(loginLimitCountKey, (long) loginLockTime, TimeUnit.MINUTES);
         return loginCount;
     }
 }
