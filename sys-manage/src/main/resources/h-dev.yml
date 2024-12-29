@@ -1,0 +1,6 @@
+h:
+  info:
+    name: "系统管理"
+    version: "1.0.0"
+    base-package: "com.haohaodayouxi.manage"
+    parent-package: "com.haohaodayouxi"
