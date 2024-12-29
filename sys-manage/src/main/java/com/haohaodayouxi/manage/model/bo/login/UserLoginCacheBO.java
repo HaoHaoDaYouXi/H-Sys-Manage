@@ -55,4 +55,9 @@ public class UserLoginCacheBO implements Serializable {
      * 备注
      */
     private String remarks;
+
+    /**
+     * 多人使用状态 0-否 1-是
+     */
+    private Integer multipleStatus;
 }
