@@ -9,7 +9,7 @@ import com.haohaodayouxi.common.util.constants.StringConstant;
  * @date 2024/12/26
  */
 public interface RedisConstants {
-    
+
     /**
      * 登录限制
      */
@@ -47,6 +47,8 @@ public interface RedisConstants {
 
     /**
      * token前缀
+     * 访问token示例：xxx:token:admin
+     * 访问token_list示例：xxx:token:admin:list
      */
     String TOKEN = SysConstants.PROJECT_CACHE_PREFIX + ":token";
 
