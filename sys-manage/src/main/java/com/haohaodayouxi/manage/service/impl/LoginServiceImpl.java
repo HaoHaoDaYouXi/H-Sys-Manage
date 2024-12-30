@@ -28,10 +28,7 @@ import jakarta.annotation.Resource;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -52,10 +49,12 @@ public class LoginServiceImpl implements LoginService {
     private SParamService paramService;
     @Resource
     private CommonRedisServiceImpl<String> stringRedisServiceImpl;
+    @Resource
+    private CommonRedisServiceImpl<LoginCacheBO> loginRedisServiceImpl;
 
     @Override
     public Response<Object> accountLogin(AccountLoginReq req) {
-        SUser user = userService.getOne(new LambdaQueryWrapper<SUser>().eq(SUser::getAccount, req.getAccount()).eq(SUser::getDelStatus, TrueFalseEnum.FALSE.getCode()));
+        SUser user = userService.getOne(new LambdaQueryWrapper<SUser>().eq(SUser::getAccount, req.getAccount()));
         if (ObjectUtils.isEmpty(user) || (!Md5Util.encryptPWD(req.getPwd(), user.getUserCode()).equals(user.getPwd()))) {
             return ErrorResponse.LOGIN_ERROR.toResponse("账号名或密码错误，请检查并重试", loginError(req.getAccount()));
         }
@@ -96,11 +95,17 @@ public class LoginServiceImpl implements LoginService {
     /**
      * 登录成功 账号信息一切正常都可以使用表示登录成功，进行缓存设置和登录时间变更等登录成功的操作
      *
-     * @param loginCacheBO 登录成功返回的缓存信息
+     * @param bo 登录成功返回的缓存信息
      */
-    private void loginSuccess(LoginCacheBO loginCacheBO) {
+    private void loginSuccess(LoginCacheBO bo) {
         // 更新登录时间
-        userService.update(new LambdaUpdateWrapper<SUser>().eq(SUser::getUserId, loginCacheBO.getUserLoginCacheBO().getUserId()).set(SUser::getLastLoginTime, new Date()));
+        userService.update(new LambdaUpdateWrapper<SUser>().eq(SUser::getUserId, bo.getUserLoginCacheBO().getUserId()).set(SUser::getLastLoginTime, new Date()));
+        // 是否是多人在线模式
+        checkMultipleStatus(bo);
+        // 设置登录缓存
+        setLoginCache(bo);
+        // 删除登录锁定缓存
+        delLoginLockCache(bo.getUserLoginCacheBO().getAccount());
         // todo 进行消息通知 登录成功
     }
 
@@ -113,6 +118,7 @@ public class LoginServiceImpl implements LoginService {
     private Integer loginError(String account) {
         // 登录错误达到错误次数，进行锁定
         int loginCount = 1;
+        // todo 改成缓存拿 不查询数据库
         List<SParam> loginParam = paramService.list(new LambdaQueryWrapper<SParam>().in(SParam::getParamCode, Arrays.stream(LoginLimitEnum.values()).map(LoginLimitEnum::getCode).toList()));
         Map<Long, Integer> loginParamMap = loginParam.stream().collect(Collectors.toMap(SParam::getParamCode, v -> Integer.valueOf(v.getParamValue()), (v1, v2) -> v2));
         int loginErrorNum = loginParamMap.getOrDefault(LoginLimitEnum.LOGIN_ERROR_NUM.getCode(), LoginLimitEnum.LOGIN_ERROR_NUM.getValue());
@@ -130,5 +136,43 @@ public class LoginServiceImpl implements LoginService {
         stringRedisServiceImpl.set(loginLimitCountKey, Integer.toString(loginCount));
         stringRedisServiceImpl.expire(loginLimitCountKey, (long) loginLockTime, TimeUnit.MINUTES);
         return loginCount;
+    }
+
+    /**
+     * 是否是多人使用状态
+     *
+     * @param bo bo
+     */
+    private void checkMultipleStatus(LoginCacheBO bo) {
+        String tokenListRedisKey = RedisConstants.getAccountTokenListKey(bo.getUserLoginCacheBO().getAccount());
+        if (Objects.equals(bo.getUserLoginCacheBO().getMultipleStatus(), TrueFalseEnum.TRUE.getCode())) {
+            List<String> tokenList = stringRedisServiceImpl.listRange(tokenListRedisKey, 0L, -1L, String.class);
+            if (ObjectUtils.isNotEmpty(tokenList)) {
+                stringRedisServiceImpl.del(tokenList.stream().map(RedisConstants::getAccountTokenKey).toList().toArray(new String[]{}));
+            }
+            stringRedisServiceImpl.listDel(tokenListRedisKey);
+        }
+        stringRedisServiceImpl.listLeftPush(tokenListRedisKey, bo.getHToken());
+        stringRedisServiceImpl.expire(tokenListRedisKey, Long.valueOf(LoginLimitEnum.LOGIN_TOKEN_TIME.getValue()), TimeUnit.MINUTES);
+    }
+
+    /**
+     * 设置登录缓存
+     *
+     * @param bo bo
+     */
+    private void setLoginCache(LoginCacheBO bo) {
+        String tokenRedisKey = RedisConstants.getAccountTokenKey(bo.getHToken());
+        loginRedisServiceImpl.set(tokenRedisKey, bo);
+        stringRedisServiceImpl.expire(tokenRedisKey, Long.valueOf(LoginLimitEnum.LOGIN_TOKEN_TIME.getValue()), TimeUnit.MINUTES);
+    }
+
+    /**
+     * 删除登录锁定缓存
+     *
+     * @param account 账号
+     */
+    private void delLoginLockCache(String account) {
+        stringRedisServiceImpl.delBySelectKeys(RedisConstants.getLoginLimitAccountKey(account) + "*");
     }
 }
