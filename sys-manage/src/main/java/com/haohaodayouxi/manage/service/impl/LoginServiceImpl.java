@@ -13,6 +13,7 @@ import com.haohaodayouxi.common.util.business.TokenUtil;
 import com.haohaodayouxi.common.util.enums.TrueFalseEnum;
 import com.haohaodayouxi.manage.constants.RedisConstants;
 import com.haohaodayouxi.manage.constants.enums.login.LoginLimitEnum;
+import com.haohaodayouxi.manage.event.LoginSuccessEvent;
 import com.haohaodayouxi.manage.model.bo.login.LoginCacheBO;
 import com.haohaodayouxi.manage.model.bo.login.UserLinkLoginCacheBO;
 import com.haohaodayouxi.manage.model.bo.login.UserLoginCacheBO;
@@ -26,6 +27,7 @@ import com.haohaodayouxi.manage.service.SParamService;
 import com.haohaodayouxi.manage.service.SUserService;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -51,6 +53,8 @@ public class LoginServiceImpl implements LoginService {
     private CommonRedisServiceImpl<String> stringRedisServiceImpl;
     @Resource
     private CommonRedisServiceImpl<LoginCacheBO> loginRedisServiceImpl;
+    @Resource
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @Override
     public Response<Object> accountLogin(AccountLoginReq req) {
@@ -106,7 +110,8 @@ public class LoginServiceImpl implements LoginService {
         setLoginCache(bo);
         // 删除登录锁定缓存
         delLoginLockCache(bo.getUserLoginCacheBO().getAccount());
-        // todo 进行消息通知 登录成功
+        // 进行消息通知 登录成功
+        applicationEventPublisher.publishEvent(new LoginSuccessEvent(bo.getUserLoginCacheBO().getUserId()));
     }
 
     /**
