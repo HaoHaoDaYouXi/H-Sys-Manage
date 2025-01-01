@@ -134,12 +134,10 @@ public class LoginServiceImpl implements LoginService {
         if (ObjectUtils.isNotEmpty(loginCountRedis)) {
             loginCount += Integer.parseInt(loginCountRedis);
             if (loginCount >= loginErrorNum) {
-                stringRedisServiceImpl.set(loginLimitTimeKey, DateUtil.offsetMinute(new Date(), loginLockTime).toString());
-                stringRedisServiceImpl.expire(loginLimitTimeKey, (long) loginLockTime, TimeUnit.MINUTES);
+                stringRedisServiceImpl.set(loginLimitTimeKey, DateUtil.offsetMinute(new Date(), loginLockTime).toString(), loginLockTime, TimeUnit.MINUTES);
             }
         }
-        stringRedisServiceImpl.set(loginLimitCountKey, Integer.toString(loginCount));
-        stringRedisServiceImpl.expire(loginLimitCountKey, (long) loginLockTime, TimeUnit.MINUTES);
+        stringRedisServiceImpl.set(loginLimitCountKey, Integer.toString(loginCount), loginLockTime, TimeUnit.MINUTES);
         return loginCount;
     }
 
@@ -168,8 +166,7 @@ public class LoginServiceImpl implements LoginService {
      */
     private void setLoginCache(LoginCacheBO bo) {
         String tokenRedisKey = RedisConstants.getAccountTokenKey(bo.getHToken());
-        loginRedisServiceImpl.set(tokenRedisKey, bo);
-        stringRedisServiceImpl.expire(tokenRedisKey, Long.valueOf(LoginLimitEnum.LOGIN_TOKEN_TIME.getValue()), TimeUnit.MINUTES);
+        loginRedisServiceImpl.set(tokenRedisKey, bo, Long.valueOf(LoginLimitEnum.LOGIN_TOKEN_TIME.getValue()), TimeUnit.MINUTES);
     }
 
     /**
