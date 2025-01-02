@@ -2,7 +2,6 @@ package com.haohaodayouxi.manage.service.impl;
 
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.haohaodayouxi.common.core.enums.ErrorResponse;
 import com.haohaodayouxi.common.core.enums.OkResponse;
 import com.haohaodayouxi.common.core.exception.BusinessException;
@@ -104,8 +103,6 @@ public class LoginServiceImpl implements LoginService {
      * @param bo 登录成功返回的缓存信息
      */
     private void loginSuccess(LoginCacheBO bo) {
-        // 更新登录时间
-        userService.update(new LambdaUpdateWrapper<SUser>().eq(SUser::getUserId, bo.getUserLoginCacheBO().getUserId()).set(SUser::getLastLoginTime, new Date()));
         // 是否是多人在线模式
         checkMultipleStatus(bo);
         // 设置登录缓存
