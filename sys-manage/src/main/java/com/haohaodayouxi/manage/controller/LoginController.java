@@ -4,6 +4,8 @@ import com.haohaodayouxi.common.core.annotation.OpenApi;
 import com.haohaodayouxi.common.core.enums.OkResponse;
 import com.haohaodayouxi.common.core.model.res.Response;
 import com.haohaodayouxi.manage.model.req.login.AccountLoginReq;
+import com.haohaodayouxi.manage.service.LoginService;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/login")
 public class LoginController {
+    @Resource
+    private LoginService loginService;
 
 
     /**
@@ -32,8 +36,7 @@ public class LoginController {
     @OpenApi
     @PostMapping("/account")
     public Response<Object> accountLogin(@RequestBody @Validated AccountLoginReq req) {
-        
-        return OkResponse.LOGIN.toResponse();
+        return OkResponse.LOGIN.toResponse(loginService.accountLogin(req));
     }
 
 }

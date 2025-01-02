@@ -26,6 +26,7 @@ import com.haohaodayouxi.manage.service.MUserRoleService;
 import com.haohaodayouxi.manage.service.SParamService;
 import com.haohaodayouxi.manage.service.SUserService;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,7 @@ import java.util.stream.Collectors;
  * @author TONE
  * @date 2024/12/9
  */
+@Slf4j
 @Service
 public class LoginServiceImpl implements LoginService {
 
