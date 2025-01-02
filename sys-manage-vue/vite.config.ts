@@ -32,8 +32,8 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
       strictPort: false,
       /** 接口代理 */
       proxy: {
-        "/demo": {
-          target: "https://192.168.0.110:10000",
+        "/manage": {
+          target: "http://127.0.0.1:10000",
           ws: true,
           /** 是否允许跨域 */
           changeOrigin: true
