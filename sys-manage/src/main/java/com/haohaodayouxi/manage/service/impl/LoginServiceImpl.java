@@ -89,7 +89,9 @@ public class LoginServiceImpl implements LoginService {
                         .userName(user.getUserName())
                         .userAvatar(user.getUserAvatar())
                         .userContact(user.getUserContact())
-                        .remarks(user.getRemarks()).build())
+                        .remarks(user.getRemarks())
+                        .multipleStatus(user.getMultipleStatus())
+                        .build())
                 .userLinkLoginCacheBO(UserLinkLoginCacheBO.builder().userRoles(userRoleBOS).build())
                 .build();
         loginSuccess(cacheBO);

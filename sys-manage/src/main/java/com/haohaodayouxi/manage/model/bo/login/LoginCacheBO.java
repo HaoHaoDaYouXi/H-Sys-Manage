@@ -1,5 +1,6 @@
 package com.haohaodayouxi.manage.model.bo.login;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class LoginCacheBO implements Serializable {
     /**
      * token
      */
+    @JsonProperty("hToken")
     private String hToken;
     /**
      * 用户登录缓存
