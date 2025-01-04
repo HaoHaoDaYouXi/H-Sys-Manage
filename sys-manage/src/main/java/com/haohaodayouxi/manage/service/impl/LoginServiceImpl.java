@@ -9,6 +9,7 @@ import com.haohaodayouxi.common.core.model.res.Response;
 import com.haohaodayouxi.common.redis.service.impl.CommonRedisServiceImpl;
 import com.haohaodayouxi.common.util.algorithm.md5.Md5Util;
 import com.haohaodayouxi.common.util.business.TokenUtil;
+import com.haohaodayouxi.common.util.constants.StringConstant;
 import com.haohaodayouxi.common.util.enums.TrueFalseEnum;
 import com.haohaodayouxi.manage.constants.RedisConstants;
 import com.haohaodayouxi.manage.constants.enums.login.LoginLimitEnum;
@@ -106,7 +107,9 @@ public class LoginServiceImpl implements LoginService {
      */
     private void loginSuccess(LoginCacheBO bo) {
         // 是否是多人在线模式
-        checkMultipleStatus(bo);
+        if (Objects.equals(bo.getUserLoginCacheBO().getMultipleStatus(), TrueFalseEnum.FALSE.getCode())) {
+            stringRedisServiceImpl.delBySelectKeys(RedisConstants.getTokenAccountKey(bo.getUserLoginCacheBO().getAccount()) + StringConstant.MATCHES_PATTERN);
+        }
         // 设置登录缓存
         setLoginCache(bo);
         // 删除登录锁定缓存
@@ -143,30 +146,12 @@ public class LoginServiceImpl implements LoginService {
     }
 
     /**
-     * 是否是多人使用状态
-     *
-     * @param bo bo
-     */
-    private void checkMultipleStatus(LoginCacheBO bo) {
-        String tokenListRedisKey = RedisConstants.getAccountTokenListKey(bo.getUserLoginCacheBO().getAccount());
-        if (Objects.equals(bo.getUserLoginCacheBO().getMultipleStatus(), TrueFalseEnum.TRUE.getCode())) {
-            List<String> tokenList = stringRedisServiceImpl.listRange(tokenListRedisKey, 0L, -1L, String.class);
-            if (ObjectUtils.isNotEmpty(tokenList)) {
-                stringRedisServiceImpl.del(tokenList.stream().map(RedisConstants::getAccountTokenKey).toList().toArray(new String[]{}));
-            }
-            stringRedisServiceImpl.listDel(tokenListRedisKey);
-        }
-        stringRedisServiceImpl.listLeftPush(tokenListRedisKey, bo.getHToken());
-        stringRedisServiceImpl.expire(tokenListRedisKey, Long.valueOf(LoginLimitEnum.LOGIN_TOKEN_TIME.getValue()), TimeUnit.MINUTES);
-    }
-
-    /**
      * 设置登录缓存
      *
      * @param bo bo
      */
     private void setLoginCache(LoginCacheBO bo) {
-        String tokenRedisKey = RedisConstants.getAccountTokenKey(bo.getHToken());
+        String tokenRedisKey = RedisConstants.getAccountTokenKey(bo.getUserLoginCacheBO().getAccount(), bo.getHToken());
         loginRedisServiceImpl.set(tokenRedisKey, bo, Long.valueOf(LoginLimitEnum.LOGIN_TOKEN_TIME.getValue()), TimeUnit.MINUTES);
     }
 
@@ -176,6 +161,6 @@ public class LoginServiceImpl implements LoginService {
      * @param account 账号
      */
     private void delLoginLockCache(String account) {
-        stringRedisServiceImpl.delBySelectKeys(RedisConstants.getLoginLimitAccountKey(account) + "*");
+        stringRedisServiceImpl.delBySelectKeys(RedisConstants.getLoginLimitAccountKey(account) + StringConstant.MATCHES_PATTERN);
     }
 }
