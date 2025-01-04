@@ -47,8 +47,8 @@ public interface RedisConstants {
 
     /**
      * token前缀
-     * 访问token示例：xxx:token:admin
-     * 访问token_list示例：xxx:token:admin:list
+     * 账号token示例：xxx:token:admin 方便统一处理
+     * 访问token示例：xxx:token:admin:token值
      */
     String TOKEN = SysConstants.PROJECT_CACHE_PREFIX + ":token";
 
@@ -58,18 +58,28 @@ public interface RedisConstants {
      * @param account 账号
      * @return redis key
      */
-    static String getAccountTokenKey(String account) {
+    static String getTokenAccountKey(String account) {
         return TOKEN + StringConstant.COLON + account;
     }
 
     /**
-     * 账号使用的每个token
+     * 账号token
      *
      * @param account 账号
      * @return redis key
      */
-    static String getAccountTokenListKey(String account) {
-        return getAccountTokenKey(account) + ":list";
+    static String getAccountTokenKey(String account, String token) {
+        return getTokenAccountKey(account) + StringConstant.COLON + token;
+    }
+
+    /**
+     * 参数缓存前缀
+     * 示例：xxx:param:1，xxx:param:1001
+     */
+    String PARAM_KEY = SysConstants.PROJECT_CACHE_PREFIX + ":param";
+
+    static String getParamKey(Long paramCode) {
+        return PARAM_KEY + StringConstant.COLON + paramCode;
     }
 
 }
