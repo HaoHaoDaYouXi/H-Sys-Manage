@@ -17,10 +17,11 @@ import com.haohaodayouxi.manage.event.LoginSuccessEvent;
 import com.haohaodayouxi.manage.model.bo.login.LoginCacheBO;
 import com.haohaodayouxi.manage.model.bo.login.UserLinkLoginCacheBO;
 import com.haohaodayouxi.manage.model.bo.login.UserLoginCacheBO;
+import com.haohaodayouxi.manage.model.bo.param.SParamBO;
 import com.haohaodayouxi.manage.model.bo.user.UserRoleBO;
-import com.haohaodayouxi.manage.model.db.SParam;
 import com.haohaodayouxi.manage.model.db.SUser;
 import com.haohaodayouxi.manage.model.req.login.AccountLoginReq;
+import com.haohaodayouxi.manage.model.req.param.SParamReq;
 import com.haohaodayouxi.manage.service.LoginService;
 import com.haohaodayouxi.manage.service.MUserRoleService;
 import com.haohaodayouxi.manage.service.SParamService;
@@ -127,9 +128,8 @@ public class LoginServiceImpl implements LoginService {
     private Integer loginError(String account) {
         // 登录错误达到错误次数，进行锁定
         int loginCount = 1;
-        // todo 改成缓存拿 不查询数据库
-        List<SParam> loginParam = paramService.list(new LambdaQueryWrapper<SParam>().in(SParam::getParamCode, Arrays.stream(LoginLimitEnum.values()).map(LoginLimitEnum::getCode).toList()));
-        Map<Long, Integer> loginParamMap = loginParam.stream().collect(Collectors.toMap(SParam::getParamCode, v -> Integer.valueOf(v.getParamValue()), (v1, v2) -> v2));
+        List<SParamBO> loginParamBOS = paramService.getByCache(SParamReq.builder().paramCodes(Arrays.stream(LoginLimitEnum.values()).map(m -> m.getCode().toString()).collect(Collectors.joining(StringConstant.EN_COMMA))).build());
+        Map<Long, Integer> loginParamMap = loginParamBOS.stream().collect(Collectors.toMap(SParamBO::getParamCode, v -> Integer.valueOf(v.getParamValue()), (v1, v2) -> v2));
         int loginErrorNum = loginParamMap.getOrDefault(LoginLimitEnum.LOGIN_ERROR_NUM.getCode(), LoginLimitEnum.LOGIN_ERROR_NUM.getValue());
         int loginLockTime = loginParamMap.getOrDefault(LoginLimitEnum.LOGIN_LOCK_TIME.getCode(), LoginLimitEnum.LOGIN_LOCK_TIME.getValue());
         String loginLimitCountKey = RedisConstants.getLoginLimitAccountCountKey(account);
