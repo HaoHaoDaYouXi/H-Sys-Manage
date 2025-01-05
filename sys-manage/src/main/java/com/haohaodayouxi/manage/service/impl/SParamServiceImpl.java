@@ -38,7 +38,6 @@ public class SParamServiceImpl extends ServiceImpl<SParamMapper, SParam> impleme
     @Override
     public void init() {
         // 查询并放入缓存
-        // 根据查询出来的更新本地参数
         setCache(baseMapper.getByReq(null));
     }
 
