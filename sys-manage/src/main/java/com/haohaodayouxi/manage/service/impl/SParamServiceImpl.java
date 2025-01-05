@@ -39,9 +39,7 @@ public class SParamServiceImpl extends ServiceImpl<SParamMapper, SParam> impleme
     public void init() {
         // 查询并放入缓存
         // 根据查询出来的更新本地参数
-//        setCache(baseMapper.getByReq(null));
-
-        log.info(getByCache(SParamReq.builder().paramCode(21001L).paramCodes("21002,21003").paramParentCode(21L).build()).toString());
+        setCache(baseMapper.getByReq(null));
     }
 
     private void setCache(List<SParamBO> bos) {
