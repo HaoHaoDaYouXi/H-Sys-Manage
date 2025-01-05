@@ -195,6 +195,7 @@
         <include refid="Base_Column_List" />
         from s_param
         <where>
+            del_status = 0
             <if test="paramCode != null">
                 <choose>
                     <when test="paramCodes != null">
