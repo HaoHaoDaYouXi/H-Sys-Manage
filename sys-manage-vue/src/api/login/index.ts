@@ -4,7 +4,7 @@ import type * as Login from "./types/login"
 /** 登录并返回 Token */
 export function loginApi(data: Login.LoginReq) {
   return request<Login.LoginRes>({
-    url: "user/login",
+    url: "login/account",
     method: "post",
     data
   })
