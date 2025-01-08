@@ -37,11 +37,10 @@ export const useUserStore = defineStore("user", () => {
   const settingsStore = useSettingsStore()
 
   /** 登录 */
-  const login = async ({ user_name, user_password }: LoginReq) => {
-    // const { data } = await loginApi({ user_name, user_password })
-    const { data } = { data: { token: "testToken" } }
-    setToken(data.token)
-    token.value = data.token
+  const login = async ({ account, pwd }: LoginReq) => {
+    const { data } = await loginApi({ account, pwd })
+    setToken(data.hToken)
+    token.value = data.hToken
   }
 
   /** 获取用户详情 */

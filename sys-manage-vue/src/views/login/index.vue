@@ -24,13 +24,13 @@
             label-position="top"
             @keyup.enter="handleLogin"
           >
-            <el-form-item prop="user_name" :rules="commonFormRules.required">
-              <el-input placeholder="请输入登录账号" v-model.trim="loginFormData.user_name" :prefix-icon="User" />
+            <el-form-item prop="account" :rules="commonFormRules.required">
+              <el-input placeholder="请输入登录账号" v-model.trim="loginFormData.account" :prefix-icon="User" />
             </el-form-item>
-            <el-form-item prop="user_password" :rules="commonFormRules.required">
+            <el-form-item prop="pwd" :rules="commonFormRules.required">
               <el-input
                 placeholder="请输入登录密码"
-                v-model="loginFormData.user_password"
+                v-model="loginFormData.pwd"
                 :prefix-icon="Lock"
                 show-password
               />
@@ -71,15 +71,14 @@ const loginFormRef = ref<FormInstance | null>(null)
 const loading = ref(false)
 /** 登录表单数据 */
 const loginFormData: LoginReq = reactive({
-  user_name: "admin",
-  user_password: "12345678"
+  account: "admin",
+  pwd: "123456"
 })
 
 /** 登录逻辑 */
 const handleLogin = () => {
   loginFormRef.value?.validate((valid: boolean, fields) => {
     if (valid) {
-      console.info("表单校验通过")
       loading.value = true
       useUserStore()
         .login(loginFormData)
@@ -87,7 +86,7 @@ const handleLogin = () => {
           router.push("/")
         })
         .catch(() => {
-          loginFormData.user_password = ""
+          loginFormData.pwd = ""
         })
         .finally(() => {
           loading.value = false
