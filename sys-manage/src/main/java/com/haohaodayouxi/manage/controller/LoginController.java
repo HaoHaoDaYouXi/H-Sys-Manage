@@ -2,7 +2,6 @@ package com.haohaodayouxi.manage.controller;
 
 import com.haohaodayouxi.common.core.annotation.OpenApi;
 import com.haohaodayouxi.common.core.annotation.TokenApi;
-import com.haohaodayouxi.common.core.enums.OkResponse;
 import com.haohaodayouxi.common.core.model.res.Response;
 import com.haohaodayouxi.manage.model.req.login.AccountLoginReq;
 import com.haohaodayouxi.manage.service.LoginService;
@@ -38,7 +37,7 @@ public class LoginController {
     @TokenApi
     @PostMapping("/account")
     public Response<Object> accountLogin(@RequestBody @Validated AccountLoginReq req) {
-        return OkResponse.LOGIN.toResponse(loginService.accountLogin(req));
+        return loginService.accountLogin(req);
     }
 
 }
