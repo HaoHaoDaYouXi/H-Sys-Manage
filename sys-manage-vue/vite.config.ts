@@ -33,7 +33,7 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
       /** 接口代理 */
       proxy: {
         "/manage": {
-          target: "http://192.168.0.110:10000",
+          target: "http://127.0.0.1:10000",
           ws: true,
           /** 是否允许跨域 */
           changeOrigin: true
