@@ -23,7 +23,7 @@ public class LoginCacheUtil {
     private CommonRedisServiceImpl<LoginCacheBO> loginRedisServiceImpl;
 
     /**
-     * 设置登录缓存
+     * 获取登录缓存
      *
      * @param bo bo
      */
