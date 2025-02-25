@@ -25,10 +25,10 @@ public class LoginCacheUtil {
     /**
      * 获取登录缓存
      *
-     * @param bo bo
+     * @param token token
      */
-    public LoginCacheBO getLoginCache(LoginCacheBO bo) {
-        String tokenRedisKey = RedisConstants.getAccountTokenKey(bo.getHToken());
+    public LoginCacheBO getLoginCache(String token) {
+        String tokenRedisKey = RedisConstants.getAccountTokenKey(token);
         return loginRedisServiceImpl.get(tokenRedisKey, LoginCacheBO.class);
     }
 

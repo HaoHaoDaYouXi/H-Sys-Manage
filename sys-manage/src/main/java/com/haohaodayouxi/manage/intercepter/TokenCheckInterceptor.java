@@ -1,10 +1,11 @@
 package com.haohaodayouxi.manage.intercepter;
 
-import com.haohaodayouxi.manage.config.SysAuthProperties;
 import com.haohaodayouxi.common.core.constants.CurrentParam;
 import com.haohaodayouxi.common.core.constants.CurrentUserContextHolder;
 import com.haohaodayouxi.common.core.constants.InterceptorCode;
-import com.haohaodayouxi.common.core.model.bo.LoginCacheBO;
+import com.haohaodayouxi.manage.config.SysAuthProperties;
+import com.haohaodayouxi.manage.model.bo.login.LoginCacheBO;
+import com.haohaodayouxi.manage.utils.LoginCacheUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,6 +26,8 @@ public class TokenCheckInterceptor implements HandlerInterceptor {
 
     @Resource
     private SysAuthProperties sysAuthProperties;
+    @Resource
+    private LoginCacheUtil loginCacheUtil;
 
     /**
      * 对token判断是否有效，并放入缓存
@@ -54,7 +57,7 @@ public class TokenCheckInterceptor implements HandlerInterceptor {
                 // 调用接口判断token是否还在缓存内，并把缓存对象放入线程对象内
                 // 只通过缓存判断token是否还可以使用，用户的信息和权限在后续的校验中处理
                 // 如果要做token被删除，需要提示用户信息的，可以在此处做提示
-                LoginCacheBO cacheBO = new LoginCacheBO();
+                LoginCacheBO cacheBO = loginCacheUtil.getLoginCache(token);
                 if (ObjectUtils.isNotEmpty(cacheBO)) {
                     CurrentUserContextHolder.set(cacheBO);
                     tokenInvalid = false;

@@ -9,3 +9,10 @@ export function loginApi(data: Login.LoginReq) {
     data
   })
 }
+/** 获取登录缓存 */
+export function loginCacheApi() {
+  return request<Login.LoginRes>({
+    url: "login/getLoginCache",
+    method: "post"
+  })
+}

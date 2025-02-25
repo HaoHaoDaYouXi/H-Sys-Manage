@@ -168,5 +168,6 @@
         left join s_role r on ur.role_id = r.role_id
         where ur.user_id = #{userId}
         and ur.del_status = 0 and r.del_status = 0
+        order by use_status desc, ur.id desc
     </select>
 </mapper>

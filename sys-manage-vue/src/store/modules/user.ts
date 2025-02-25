@@ -6,7 +6,7 @@ import { useTagsViewStore } from "./tags-view"
 import { useSettingsStore } from "./settings"
 import { getToken, removeToken, setToken } from "@/utils/cache/cookies"
 import { resetRouter } from "@/router"
-import { loginApi } from "@/api/login"
+import {loginApi, loginCacheApi} from "@/api/login"
 import { type LoginReq } from "@/api/login/types/login"
 import { getUserInfoApi } from "@/api/user"
 import { type UserInfoData } from "@/api/user/types/user"
@@ -45,12 +45,12 @@ export const useUserStore = defineStore("user", () => {
 
   /** 获取用户详情 */
   const getUserInfo = async () => {
-    // await getUserInfoApi() 调用接口获取用户信息
+    const { data } = await loginCacheApi()
     setUserInfo({
-      userName: "admin",
+      userName: data.userLoginCacheBO.userName,
       avatar: "../../assets/vue.svg",
-      roleId: 1,
-      roleName: "系统管理员"
+      roleId: data.userLinkLoginCacheBO.userRoles[0].roleId,
+      roleName: data.userLinkLoginCacheBO.userRoles[0].roleName
     })
   }
 

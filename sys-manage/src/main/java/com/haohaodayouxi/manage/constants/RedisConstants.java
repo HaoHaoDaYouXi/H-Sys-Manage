@@ -47,29 +47,29 @@ public interface RedisConstants {
 
     /**
      * token前缀
-     * 账号token示例：xxx:token:admin 方便统一处理
-     * 访问token示例：xxx:token:admin:token值
+     * 访问token 示例：xxx:token:token值
+     * 使用中的token 示例：xxx:token:list:admin
      */
     String TOKEN = SysConstants.PROJECT_CACHE_PREFIX + ":token";
 
     /**
-     * 账号token
+     * 访问token
      *
-     * @param account 账号
+     * @param token token
      * @return redis key
      */
-    static String getTokenAccountKey(String account) {
-        return TOKEN + StringConstant.COLON + account;
+    static String getAccountTokenKey(String token) {
+        return TOKEN + StringConstant.COLON + token;
     }
 
     /**
-     * 账号token
+     * 使用中的token
      *
      * @param account 账号
      * @return redis key
      */
-    static String getAccountTokenKey(String account, String token) {
-        return getTokenAccountKey(account) + StringConstant.COLON + token;
+    static String getAccountTokenListKey(String account) {
+        return TOKEN + ":list:" + account;
     }
 
     /**

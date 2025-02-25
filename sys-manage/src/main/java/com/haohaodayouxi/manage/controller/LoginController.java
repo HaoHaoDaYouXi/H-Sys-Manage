@@ -2,6 +2,8 @@ package com.haohaodayouxi.manage.controller;
 
 import com.haohaodayouxi.common.core.annotation.OpenApi;
 import com.haohaodayouxi.common.core.annotation.TokenApi;
+import com.haohaodayouxi.common.core.constants.CurrentUserContextHolder;
+import com.haohaodayouxi.common.core.enums.OkResponse;
 import com.haohaodayouxi.common.core.model.res.Response;
 import com.haohaodayouxi.manage.model.req.login.AccountLoginReq;
 import com.haohaodayouxi.manage.service.LoginService;
@@ -38,6 +40,16 @@ public class LoginController {
     @PostMapping("/account")
     public Response<Object> accountLogin(@RequestBody @Validated AccountLoginReq req) {
         return loginService.accountLogin(req);
+    }
+
+    /**
+     * 获取登录缓存
+     *
+     * @return res
+     */
+    @PostMapping("/getLoginCache")
+    public Response<Object> getLoginCache() {
+        return OkResponse.OK.toResponse(CurrentUserContextHolder.get());
     }
 
 }
