@@ -48,7 +48,7 @@ export const useUserStore = defineStore("user", () => {
     const { data } = await loginCacheApi()
     setUserInfo({
       userName: data.userLoginCacheBO.userName,
-      avatar: "../../assets/vue.svg",
+      avatar: data.userLoginCacheBO.userAvatar,
       roleId: data.userLinkLoginCacheBO.userRoles[0].roleId,
       roleName: data.userLinkLoginCacheBO.userRoles[0].roleName
     })
