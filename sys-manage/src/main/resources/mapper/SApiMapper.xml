@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haohaodayouxi.manage.mapper.SApiMapper">
+  <resultMap id="BaseResultMap" type="com.haohaodayouxi.manage.model.db.SApi">
+    <!--@mbg.generated-->
+    <!--@Table s_api-->
+    <id column="api_id" jdbcType="BIGINT" property="apiId" />
+    <result column="module_name" jdbcType="VARCHAR" property="moduleName" />
+    <result column="api_name" jdbcType="VARCHAR" property="apiName" />
+    <result column="api_type" jdbcType="TINYINT" property="apiType" />
+    <result column="api_key" jdbcType="VARCHAR" property="apiKey" />
+    <result column="url_type" jdbcType="TINYINT" property="urlType" />
+    <result column="request_method" jdbcType="VARCHAR" property="requestMethod" />
+    <result column="open_status" jdbcType="TINYINT" property="openStatus" />
+    <result column="create_uid" jdbcType="BIGINT" property="createUid" />
+    <result column="update_uid" jdbcType="BIGINT" property="updateUid" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="version" jdbcType="BIGINT" property="version" />
+    <result column="del_status" jdbcType="TINYINT" property="delStatus" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    api_id, module_name, api_name, api_type, api_key, url_type, request_method, open_status, 
+    create_uid, update_uid, create_time, update_time, version, del_status
+  </sql>
+  <update id="updateBatchSelective" parameterType="java.util.List">
+    <!--@mbg.generated-->
+    update s_api
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="module_name = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.moduleName != null">
+            when api_id = #{item.apiId,jdbcType=BIGINT} then #{item.moduleName,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="api_name = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.apiName != null">
+            when api_id = #{item.apiId,jdbcType=BIGINT} then #{item.apiName,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="api_type = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.apiType != null">
+            when api_id = #{item.apiId,jdbcType=BIGINT} then #{item.apiType,jdbcType=TINYINT}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="api_key = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.apiKey != null">
+            when api_id = #{item.apiId,jdbcType=BIGINT} then #{item.apiKey,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="url_type = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.urlType != null">
+            when api_id = #{item.apiId,jdbcType=BIGINT} then #{item.urlType,jdbcType=TINYINT}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="request_method = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.requestMethod != null">
+            when api_id = #{item.apiId,jdbcType=BIGINT} then #{item.requestMethod,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="open_status = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.openStatus != null">
+            when api_id = #{item.apiId,jdbcType=BIGINT} then #{item.openStatus,jdbcType=TINYINT}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="create_uid = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.createUid != null">
+            when api_id = #{item.apiId,jdbcType=BIGINT} then #{item.createUid,jdbcType=BIGINT}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="update_uid = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.updateUid != null">
+            when api_id = #{item.apiId,jdbcType=BIGINT} then #{item.updateUid,jdbcType=BIGINT}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="create_time = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.createTime != null">
+            when api_id = #{item.apiId,jdbcType=BIGINT} then #{item.createTime,jdbcType=TIMESTAMP}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="update_time = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.updateTime != null">
+            when api_id = #{item.apiId,jdbcType=BIGINT} then #{item.updateTime,jdbcType=TIMESTAMP}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="version = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.version != null">
+            when api_id = #{item.apiId,jdbcType=BIGINT} then #{item.version,jdbcType=BIGINT}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="del_status = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.delStatus != null">
+            when api_id = #{item.apiId,jdbcType=BIGINT} then #{item.delStatus,jdbcType=TINYINT}
+          </if>
+        </foreach>
+      </trim>
+    </trim>
+    where api_id in
+    <foreach close=")" collection="list" item="item" open="(" separator=", ">
+      #{item.apiId,jdbcType=BIGINT}
+    </foreach>
+  </update>
+  <insert id="batchInsert" keyColumn="api_id" keyProperty="apiId" parameterType="map" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into s_api
+    (module_name, api_name, api_type, api_key, url_type, request_method, open_status, 
+      create_uid, update_uid, create_time, update_time, version, del_status)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.moduleName,jdbcType=VARCHAR}, #{item.apiName,jdbcType=VARCHAR}, #{item.apiType,jdbcType=TINYINT}, 
+        #{item.apiKey,jdbcType=VARCHAR}, #{item.urlType,jdbcType=TINYINT}, #{item.requestMethod,jdbcType=VARCHAR}, 
+        #{item.openStatus,jdbcType=TINYINT}, #{item.createUid,jdbcType=BIGINT}, #{item.updateUid,jdbcType=BIGINT}, 
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.version,jdbcType=BIGINT}, 
+        #{item.delStatus,jdbcType=TINYINT})
+    </foreach>
+  </insert>
+</mapper>

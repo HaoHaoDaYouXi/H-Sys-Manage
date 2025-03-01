@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haohaodayouxi.manage.mapper.MMenuApiMapper">
+  <resultMap id="BaseResultMap" type="com.haohaodayouxi.manage.model.db.MMenuApi">
+    <!--@mbg.generated-->
+    <!--@Table m_menu_api-->
+    <id column="menu_api_id" jdbcType="BIGINT" property="menuApiId" />
+    <result column="menu_id" jdbcType="BIGINT" property="menuId" />
+    <result column="api_id" jdbcType="BIGINT" property="apiId" />
+    <result column="create_uid" jdbcType="BIGINT" property="createUid" />
+    <result column="update_uid" jdbcType="BIGINT" property="updateUid" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="version" jdbcType="BIGINT" property="version" />
+    <result column="del_status" jdbcType="TINYINT" property="delStatus" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    menu_api_id, menu_id, api_id, create_uid, update_uid, create_time, update_time, version, 
+    del_status
+  </sql>
+  <update id="updateBatchSelective" parameterType="java.util.List">
+    <!--@mbg.generated-->
+    update m_menu_api
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="menu_id = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.menuId != null">
+            when menu_api_id = #{item.menuApiId,jdbcType=BIGINT} then #{item.menuId,jdbcType=BIGINT}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="api_id = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.apiId != null">
+            when menu_api_id = #{item.menuApiId,jdbcType=BIGINT} then #{item.apiId,jdbcType=BIGINT}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="create_uid = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.createUid != null">
+            when menu_api_id = #{item.menuApiId,jdbcType=BIGINT} then #{item.createUid,jdbcType=BIGINT}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="update_uid = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.updateUid != null">
+            when menu_api_id = #{item.menuApiId,jdbcType=BIGINT} then #{item.updateUid,jdbcType=BIGINT}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="create_time = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.createTime != null">
+            when menu_api_id = #{item.menuApiId,jdbcType=BIGINT} then #{item.createTime,jdbcType=TIMESTAMP}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="update_time = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.updateTime != null">
+            when menu_api_id = #{item.menuApiId,jdbcType=BIGINT} then #{item.updateTime,jdbcType=TIMESTAMP}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="version = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.version != null">
+            when menu_api_id = #{item.menuApiId,jdbcType=BIGINT} then #{item.version,jdbcType=BIGINT}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="del_status = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.delStatus != null">
+            when menu_api_id = #{item.menuApiId,jdbcType=BIGINT} then #{item.delStatus,jdbcType=TINYINT}
+          </if>
+        </foreach>
+      </trim>
+    </trim>
+    where menu_api_id in
+    <foreach close=")" collection="list" item="item" open="(" separator=", ">
+      #{item.menuApiId,jdbcType=BIGINT}
+    </foreach>
+  </update>
+  <insert id="batchInsert" keyColumn="menu_api_id" keyProperty="menuApiId" parameterType="map" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into m_menu_api
+    (menu_id, api_id, create_uid, update_uid, create_time, update_time, version, del_status
+      )
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.menuId,jdbcType=BIGINT}, #{item.apiId,jdbcType=BIGINT}, #{item.createUid,jdbcType=BIGINT}, 
+        #{item.updateUid,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}, 
+        #{item.version,jdbcType=BIGINT}, #{item.delStatus,jdbcType=TINYINT})
+    </foreach>
+  </insert>
+</mapper>
