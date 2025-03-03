@@ -40,7 +40,9 @@ function createService() {
           // 本系统采用 code === 20000 来表示业务正常
           return apiData
         case 40001:
+        case 50000:
           // Token 过期时
+          ElMessage.error(apiData.message || "Error")
           return logout()
         default:
           // 不是正确的 code
