@@ -38,6 +38,52 @@ export const usePermissionStore = defineStore("permission", () => {
       data: {
         routerDetails: [
           {
+            id: "11",
+            parentId: "0",
+            resType: 2,
+            path: "/sys",
+            component: "Layout",
+            // redirect: "/table/element-plus",
+            disabled: 0,
+            meta: {
+              title: "系统管理",
+              icon: "setting",
+              breadcrumb: true,
+              alwaysShow: true
+            },
+            children: [
+              {
+                id: "22",
+                parentId: "11",
+                resType: 2,
+                path: "menu",
+                component: "Menu",
+                disabled: 0,
+                meta: {
+                  title: "菜单管理",
+                  icon: "menu",
+                  breadcrumb: true
+                },
+                children: []
+              },
+              {
+                id: "22",
+                parentId: "11",
+                resType: 2,
+                path: "element-plus",
+                component: "Table",
+                disabled: 0,
+                meta: {
+                  title: "Element Plus",
+                  icon: "List",
+                  breadcrumb: true
+                  // ,cachedView: true
+                },
+                children: []
+              }
+            ]
+          },
+          {
             id: "1",
             parentId: "0",
             resType: 2,
@@ -61,43 +107,11 @@ export const usePermissionStore = defineStore("permission", () => {
                 component: "Index",
                 disabled: 0,
                 meta: {
-                  title: "首页1",
+                  title: "首页",
                   icon: "el-icon-s-home",
                   breadcrumb: true,
                   // affix: false,
                   hidden: false
-                },
-                children: []
-              }
-            ]
-          },
-          {
-            id: "11",
-            parentId: "0",
-            resType: 2,
-            path: "/table",
-            component: "Layout",
-            // redirect: "/table/element-plus",
-            disabled: 0,
-            meta: {
-              title: "表格",
-              elIcon: "Grid",
-              breadcrumb: true,
-              alwaysShow: true
-            },
-            children: [
-              {
-                id: "22",
-                parentId: "11",
-                resType: 2,
-                path: "element-plus",
-                component: "Table",
-                disabled: 0,
-                meta: {
-                  title: "Element Plus",
-                  elIcon: "List",
-                  breadcrumb: true
-                  // ,cachedView: true
                 },
                 children: []
               }
