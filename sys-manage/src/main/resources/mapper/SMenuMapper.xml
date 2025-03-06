@@ -4,36 +4,36 @@
   <resultMap id="BaseResultMap" type="com.haohaodayouxi.manage.model.db.SMenu">
     <!--@mbg.generated-->
     <!--@Table s_menu-->
-    <id column="menu_id" jdbcType="BIGINT" property="menuId" />
-    <result column="menu_parent_id" jdbcType="BIGINT" property="menuParentId" />
-    <result column="menu_type" jdbcType="TINYINT" property="menuType" />
-    <result column="menu_name" jdbcType="VARCHAR" property="menuName" />
-    <result column="menu_icon" jdbcType="VARCHAR" property="menuIcon" />
-    <result column="menu_key" jdbcType="LONGVARCHAR" property="menuKey" />
-    <result column="active_menu" jdbcType="LONGVARCHAR" property="activeMenu" />
-    <result column="redirect" jdbcType="VARCHAR" property="redirect" />
-    <result column="res_component" jdbcType="LONGVARCHAR" property="resComponent" />
-    <result column="out_url" jdbcType="TINYINT" property="outUrl" />
-    <result column="show_order" jdbcType="INTEGER" property="showOrder" />
-    <result column="disabled" jdbcType="TINYINT" property="disabled" />
-    <result column="hidden" jdbcType="TINYINT" property="hidden" />
-    <result column="cached_view" jdbcType="TINYINT" property="cachedView" />
-    <result column="breadcrumb" jdbcType="TINYINT" property="breadcrumb" />
-    <result column="affix" jdbcType="TINYINT" property="affix" />
-    <result column="always_show" jdbcType="TINYINT" property="alwaysShow" />
-    <result column="res_describe" jdbcType="VARCHAR" property="resDescribe" />
-    <result column="create_uid" jdbcType="BIGINT" property="createUid" />
-    <result column="update_uid" jdbcType="BIGINT" property="updateUid" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="version" jdbcType="BIGINT" property="version" />
-    <result column="del_status" jdbcType="TINYINT" property="delStatus" />
+    <id column="menu_id" jdbcType="BIGINT" property="menuId"/>
+    <result column="menu_parent_id" jdbcType="BIGINT" property="menuParentId"/>
+    <result column="menu_type" jdbcType="TINYINT" property="menuType"/>
+    <result column="menu_name" jdbcType="VARCHAR" property="menuName"/>
+    <result column="menu_icon" jdbcType="VARCHAR" property="menuIcon"/>
+    <result column="menu_key" jdbcType="LONGVARCHAR" property="menuKey"/>
+    <result column="active_menu" jdbcType="LONGVARCHAR" property="activeMenu"/>
+    <result column="redirect" jdbcType="VARCHAR" property="redirect"/>
+    <result column="menu_component" jdbcType="LONGVARCHAR" property="menuComponent"/>
+    <result column="out_url" jdbcType="TINYINT" property="outUrl"/>
+    <result column="show_order" jdbcType="INTEGER" property="showOrder"/>
+    <result column="disabled" jdbcType="TINYINT" property="disabled"/>
+    <result column="hidden" jdbcType="TINYINT" property="hidden"/>
+    <result column="cached_view" jdbcType="TINYINT" property="cachedView"/>
+    <result column="breadcrumb" jdbcType="TINYINT" property="breadcrumb"/>
+    <result column="affix" jdbcType="TINYINT" property="affix"/>
+    <result column="always_show" jdbcType="TINYINT" property="alwaysShow"/>
+    <result column="menu_describe" jdbcType="VARCHAR" property="menuDescribe"/>
+    <result column="create_uid" jdbcType="BIGINT" property="createUid"/>
+    <result column="update_uid" jdbcType="BIGINT" property="updateUid"/>
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    <result column="version" jdbcType="BIGINT" property="version"/>
+    <result column="del_status" jdbcType="TINYINT" property="delStatus"/>
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    menu_id, menu_parent_id, menu_type, menu_name, menu_icon, menu_key, active_menu, 
-    redirect, res_component, out_url, show_order, disabled, hidden, cached_view, breadcrumb, 
-    affix, always_show, res_describe, create_uid, update_uid, create_time, update_time, 
+    menu_id, menu_parent_id, menu_type, menu_name, menu_icon, menu_key, active_menu,
+    redirect, menu_component, out_url, show_order, disabled, hidden, cached_view, breadcrumb,
+    affix, always_show, menu_describe, create_uid, update_uid, create_time, update_time,
     version, del_status
   </sql>
   <update id="updateBatch" parameterType="java.util.List">
@@ -75,9 +75,9 @@
           when menu_id = #{item.menuId,jdbcType=BIGINT} then #{item.redirect,jdbcType=VARCHAR}
         </foreach>
       </trim>
-      <trim prefix="res_component = case" suffix="end,">
+      <trim prefix="menu_component = case" suffix="end,">
         <foreach collection="list" index="index" item="item">
-          when menu_id = #{item.menuId,jdbcType=BIGINT} then #{item.resComponent,jdbcType=LONGVARCHAR}
+          when menu_id = #{item.menuId,jdbcType=BIGINT} then #{item.menuComponent,jdbcType=LONGVARCHAR}
         </foreach>
       </trim>
       <trim prefix="out_url = case" suffix="end,">
@@ -120,9 +120,9 @@
           when menu_id = #{item.menuId,jdbcType=BIGINT} then #{item.alwaysShow,jdbcType=TINYINT}
         </foreach>
       </trim>
-      <trim prefix="res_describe = case" suffix="end,">
+      <trim prefix="menu_describe = case" suffix="end,">
         <foreach collection="list" index="index" item="item">
-          when menu_id = #{item.menuId,jdbcType=BIGINT} then #{item.resDescribe,jdbcType=VARCHAR}
+          when menu_id = #{item.menuId,jdbcType=BIGINT} then #{item.menuDescribe,jdbcType=VARCHAR}
         </foreach>
       </trim>
       <trim prefix="create_uid = case" suffix="end,">
@@ -214,10 +214,10 @@
           </if>
         </foreach>
       </trim>
-      <trim prefix="res_component = case" suffix="end,">
+      <trim prefix="menu_component = case" suffix="end,">
         <foreach collection="list" index="index" item="item">
-          <if test="item.resComponent != null">
-            when menu_id = #{item.menuId,jdbcType=BIGINT} then #{item.resComponent,jdbcType=LONGVARCHAR}
+          <if test="item.menuComponent != null">
+            when menu_id = #{item.menuId,jdbcType=BIGINT} then #{item.menuComponent,jdbcType=LONGVARCHAR}
           </if>
         </foreach>
       </trim>
@@ -277,10 +277,10 @@
           </if>
         </foreach>
       </trim>
-      <trim prefix="res_describe = case" suffix="end,">
+      <trim prefix="menu_describe = case" suffix="end,">
         <foreach collection="list" index="index" item="item">
-          <if test="item.resDescribe != null">
-            when menu_id = #{item.menuId,jdbcType=BIGINT} then #{item.resDescribe,jdbcType=VARCHAR}
+          <if test="item.menuDescribe != null">
+            when menu_id = #{item.menuId,jdbcType=BIGINT} then #{item.menuDescribe,jdbcType=VARCHAR}
           </if>
         </foreach>
       </trim>
@@ -335,20 +335,21 @@
   <insert id="batchInsert" keyColumn="menu_id" keyProperty="menuId" parameterType="map" useGeneratedKeys="true">
     <!--@mbg.generated-->
     insert into s_menu
-    (menu_parent_id, menu_type, menu_name, menu_icon, menu_key, active_menu, redirect, 
-      res_component, out_url, show_order, disabled, hidden, cached_view, breadcrumb, 
-      affix, always_show, res_describe, create_uid, update_uid, create_time, update_time, 
-      version, del_status)
+    (menu_parent_id, menu_type, menu_name, menu_icon, menu_key, active_menu, redirect,
+    menu_component, out_url, show_order, disabled, hidden, cached_view, breadcrumb,
+    affix, always_show, menu_describe, create_uid, update_uid, create_time, update_time,
+    version, del_status)
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.menuParentId,jdbcType=BIGINT}, #{item.menuType,jdbcType=TINYINT}, #{item.menuName,jdbcType=VARCHAR}, 
-        #{item.menuIcon,jdbcType=VARCHAR}, #{item.menuKey,jdbcType=LONGVARCHAR}, #{item.activeMenu,jdbcType=LONGVARCHAR}, 
-        #{item.redirect,jdbcType=VARCHAR}, #{item.resComponent,jdbcType=LONGVARCHAR}, #{item.outUrl,jdbcType=TINYINT}, 
-        #{item.showOrder,jdbcType=INTEGER}, #{item.disabled,jdbcType=TINYINT}, #{item.hidden,jdbcType=TINYINT}, 
-        #{item.cachedView,jdbcType=TINYINT}, #{item.breadcrumb,jdbcType=TINYINT}, #{item.affix,jdbcType=TINYINT}, 
-        #{item.alwaysShow,jdbcType=TINYINT}, #{item.resDescribe,jdbcType=VARCHAR}, #{item.createUid,jdbcType=BIGINT}, 
-        #{item.updateUid,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}, 
-        #{item.version,jdbcType=BIGINT}, #{item.delStatus,jdbcType=TINYINT})
+      (#{item.menuParentId,jdbcType=BIGINT}, #{item.menuType,jdbcType=TINYINT}, #{item.menuName,jdbcType=VARCHAR},
+      #{item.menuIcon,jdbcType=VARCHAR}, #{item.menuKey,jdbcType=LONGVARCHAR}, #{item.activeMenu,jdbcType=LONGVARCHAR},
+      #{item.redirect,jdbcType=VARCHAR}, #{item.menuComponent,jdbcType=LONGVARCHAR},
+      #{item.outUrl,jdbcType=TINYINT}, #{item.showOrder,jdbcType=INTEGER}, #{item.disabled,jdbcType=TINYINT},
+      #{item.hidden,jdbcType=TINYINT}, #{item.cachedView,jdbcType=TINYINT}, #{item.breadcrumb,jdbcType=TINYINT},
+      #{item.affix,jdbcType=TINYINT}, #{item.alwaysShow,jdbcType=TINYINT}, #{item.menuDescribe,jdbcType=VARCHAR},
+      #{item.createUid,jdbcType=BIGINT}, #{item.updateUid,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP},
+      #{item.updateTime,jdbcType=TIMESTAMP}, #{item.version,jdbcType=BIGINT}, #{item.delStatus,jdbcType=TINYINT}
+      )
     </foreach>
   </insert>
 </mapper>

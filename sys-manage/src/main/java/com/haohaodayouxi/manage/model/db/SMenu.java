@@ -34,19 +34,19 @@ public class SMenu implements Serializable {
     private Long menuId;
 
     /**
-     * 资源父级ID
+     * 菜单父级ID
      */
     @TableField(value = "menu_parent_id")
     private Long menuParentId;
 
     /**
-     * 资源类型(取配置表type=1) 默认1
+     * 菜单类型(取配置表type=1) 默认1
      */
     @TableField(value = "menu_type")
     private Integer menuType;
 
     /**
-     * 资源名称
+     * 菜单名称
      */
     @TableField(value = "menu_name")
     private String menuName;
@@ -58,7 +58,7 @@ public class SMenu implements Serializable {
     private String menuIcon;
 
     /**
-     * 资源标识(对应前端页面的path和按钮的标识)
+     * 菜单标识(对应前端页面的path和按钮的标识)
      */
     @TableField(value = "menu_key")
     private String menuKey;
@@ -78,8 +78,8 @@ public class SMenu implements Serializable {
     /**
      * 组件地址
      */
-    @TableField(value = "res_component")
-    private String resComponent;
+    @TableField(value = "menu_component")
+    private String menuComponent;
 
     /**
      * 外部URL(是否外链) 0-不是 1-是 默认0
@@ -132,8 +132,8 @@ public class SMenu implements Serializable {
     /**
      * 菜单描述
      */
-    @TableField(value = "res_describe")
-    private String resDescribe;
+    @TableField(value = "menu_describe")
+    private String menuDescribe;
 
     /**
      * 创建人
