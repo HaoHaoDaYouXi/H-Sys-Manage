@@ -22,4 +22,22 @@ public enum MenuTypeEnum {
     private final String name;
 
     private final Integer value;
+
+    public static MenuTypeEnum getByCode(Long code) {
+        for (MenuTypeEnum menuTypeEnum : MenuTypeEnum.values()) {
+            if (menuTypeEnum.getCode().equals(code)) {
+                return menuTypeEnum;
+            }
+        }
+        return FOLDER;
+    }
+
+    public static MenuTypeEnum getByValue(Integer value) {
+        for (MenuTypeEnum menuTypeEnum : MenuTypeEnum.values()) {
+            if (menuTypeEnum.getValue().equals(value)) {
+                return menuTypeEnum;
+            }
+        }
+        return FOLDER;
+    }
 }
