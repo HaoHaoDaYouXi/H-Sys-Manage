@@ -1,6 +1,6 @@
-export enum TrueFalseEnum {
-  FALSE = 0,
-  TRUE = 1
+export const TrueFalseEnum = {
+  FALSE: 0,
+  TRUE: 1
 }
 
 export const DisabledList = [
