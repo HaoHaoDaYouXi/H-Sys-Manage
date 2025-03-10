@@ -352,4 +352,31 @@
       )
     </foreach>
   </insert>
+
+  <select id="listByParent" resultType="com.haohaodayouxi.manage.model.res.menu.SMenuListRes">
+    select
+    menu_id,
+    menu_parent_id,
+    menu_type,
+    menu_name,
+    menu_icon,
+    menu_key,
+    menu_component,
+    disabled,
+    update_time,
+    EXISTS (select 1 from s_menu where menu_parent_id = s.menu_id and del_status =0) as hasChildren
+    from s_menu s
+    where del_status =0
+    and menu_parent_id = #{menuParentId,jdbcType=BIGINT}
+    <if test="menuName != null and menuName != ''">
+      and menu_name like concat('%', #{menuName,jdbcType=VARCHAR}, '%')
+    </if>
+    <if test="menuType != null">
+      and menu_type = #{menuType,jdbcType=TINYINT}
+    </if>
+    <if test="disabled != null">
+      and disabled = #{disabled,jdbcType=TINYINT}
+    </if>
+    order by show_order desc, update_time desc
+  </select>
 </mapper>

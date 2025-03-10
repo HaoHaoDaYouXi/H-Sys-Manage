@@ -63,4 +63,9 @@ public class SMenuListRes implements Serializable {
      */
     private Date updateTime;
 
+    /**
+     * 是否有子节点
+     */
+    private boolean hasChildren;
+
 }

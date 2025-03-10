@@ -1,6 +1,5 @@
 package com.haohaodayouxi.manage.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.haohaodayouxi.common.core.constants.CurrentUserContextHolder;
@@ -22,7 +21,10 @@ import jakarta.annotation.Resource;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -56,20 +58,13 @@ public class SMenuServiceImpl extends ServiceImpl<SMenuMapper, SMenu> implements
         if (ObjectUtils.isEmpty(req.getMenuParentId())) {
             req.setMenuParentId(SysConstants.TOP_LEVEL_ID);
         }
-        List<SMenu> data = baseMapper.selectList(new LambdaQueryWrapper<SMenu>()
-                .eq(SMenu::getMenuParentId, req.getMenuParentId())
-                .eq(ObjectUtils.isNotEmpty(req.getMenuType()), SMenu::getMenuType, req.getMenuType())
-                .eq(ObjectUtils.isNotEmpty(req.getMenuName()), SMenu::getMenuName, req.getMenuName())
-                .eq(ObjectUtils.isNotEmpty(req.getDisabled()), SMenu::getDisabled, req.getDisabled())
-                .orderByDesc(SMenu::getShowOrder)
-                .orderByDesc(SMenu::getUpdateTime)
-        );
-        if (ObjectUtils.isEmpty(data)) {
-            return new ArrayList<>();
+        List<SMenuListRes> res = baseMapper.listByParent(req);
+        if (ObjectUtils.isNotEmpty(res)) {
+            List<SParamBO> paramBOS = paramService.getByCache(SParamReq.builder().paramCodes(Arrays.stream(MenuTypeEnum.values()).map(m -> m.getCode().toString()).collect(Collectors.joining(StringConstant.EN_COMMA))).build());
+            Map<Integer, String> paramMap = paramBOS.stream().collect(Collectors.toMap(k -> Integer.valueOf(k.getParamValue()), SParamBO::getParamName, (v1, v2) -> v2));
+            res.forEach(f -> f.setMenuTypeStr(paramMap.getOrDefault(f.getMenuType(), MenuTypeEnum.getByValue(f.getMenuType()).getName())));
         }
-        List<SParamBO> paramBOS = paramService.getByCache(SParamReq.builder().paramCodes(Arrays.stream(MenuTypeEnum.values()).map(m -> m.getCode().toString()).collect(Collectors.joining(StringConstant.EN_COMMA))).build());
-        Map<Integer, String> paramMap = paramBOS.stream().collect(Collectors.toMap(k -> Integer.valueOf(k.getParamValue()), SParamBO::getParamName, (v1, v2) -> v2));
-        return data.stream().map(m -> SMenuListRes.builder().menuId(m.getMenuId()).menuParentId(m.getMenuParentId()).menuType(m.getMenuType()).menuTypeStr(paramMap.getOrDefault(m.getMenuType(), MenuTypeEnum.getByValue(m.getMenuType()).getName())).menuName(m.getMenuName()).menuIcon(m.getMenuIcon()).menuKey(m.getMenuKey()).menuComponent(m.getMenuComponent()).disabled(m.getDisabled()).updateTime(m.getUpdateTime()).build()).toList();
+        return res;
     }
 
     @Override
