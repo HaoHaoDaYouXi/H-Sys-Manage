@@ -94,3 +94,11 @@
   display: table-cell;
   vertical-align: middle;
 }
+
+.el-form--inline {
+  .el-form-item {
+    .el-input, .el-cascader, .el-select, .el-autocomplete {
+      width: 240px;
+    }
+  }
+}

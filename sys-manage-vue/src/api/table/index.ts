@@ -68,6 +68,7 @@ export const tableDataApi = () => {
             email: "r.dggkx@bixgljk.tp",
             roles: "editor",
             status: true,
+            hasChildren: true,
             createTime: "1971-09-15 20:48:54"
           },
           {
@@ -86,6 +87,7 @@ export const tableDataApi = () => {
             email: "j.yijezkv@rcf.za",
             roles: "admin",
             status: true,
+            hasChildren: true,
             createTime: "2023-03-17 15:18:07"
           },
           {

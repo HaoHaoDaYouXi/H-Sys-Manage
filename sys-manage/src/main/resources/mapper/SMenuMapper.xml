@@ -362,6 +362,7 @@
     menu_icon,
     menu_key,
     menu_component,
+    show_order,
     disabled,
     update_time,
     EXISTS (select 1 from s_menu where menu_parent_id = s.menu_id and del_status =0) as hasChildren

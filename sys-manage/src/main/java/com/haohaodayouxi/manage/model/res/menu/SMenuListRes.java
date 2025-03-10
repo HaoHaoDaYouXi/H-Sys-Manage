@@ -54,6 +54,11 @@ public class SMenuListRes implements Serializable {
     private String menuComponent;
 
     /**
+     * 顺序 默认1
+     */
+    private Integer showOrder;
+
+    /**
      * 禁用 0-不禁用 1-禁用 默认0
      */
     private Integer disabled;
