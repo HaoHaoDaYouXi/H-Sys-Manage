@@ -1,3 +1,5 @@
+export const TopId = 0
+
 export const TrueFalseEnum = {
   FALSE: 0,
   TRUE: 1
