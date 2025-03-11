@@ -11,10 +11,10 @@ export function getMenuTypeApi() {
   })
 }
 /** 查 */
-export function listByParentApi(params: Menu.SMenuListReq) {
+export function listByParentApi(data: Menu.SMenuListReq) {
   return request<Menu.SMenuListRes>({
     url: `${API_PREFIX}/listByParent`,
     method: "post",
-    params
+    data
   })
 }

@@ -1,8 +1,8 @@
 export interface SMenuListReq {
   menuParentId: number,
-  menuType: number,
+  menuType?: number,
   menuName: string,
-  disabled: number,
+  disabled?: number,
 }
 
 export interface SMenuList {
