@@ -13,10 +13,19 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum RoleTypeEnum {
 
-    SYS_ADMIN(11001L, "系统管理员"),
-    REGULAR_USER(11002L, "普通用户"),
+    SYS_ADMIN("11001", "系统管理员"),
+    REGULAR_USER("11002", "普通用户"),
     ;
-    private final Long code;
+    private final String code;
 
     private final String name;
+
+    public static RoleTypeEnum getByCode(String code) {
+        for (RoleTypeEnum typeEnum : RoleTypeEnum.values()) {
+            if (typeEnum.getCode().equals(code)) {
+                return typeEnum;
+            }
+        }
+        return REGULAR_USER;
+    }
 }
