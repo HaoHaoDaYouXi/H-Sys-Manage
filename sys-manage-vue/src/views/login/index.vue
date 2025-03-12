@@ -60,6 +60,7 @@ import { type FormInstance } from "element-plus"
 import { User, Lock } from "@element-plus/icons-vue"
 import { useUserStore } from "@/store/modules/user"
 import { type LoginReq } from "@/api/login/types/login"
+import commonFormRules from "@/utils/rules"
 
 const VITE_APP_TITLE = import.meta.env.VITE_APP_TITLE
 const VITE_APP_VERSION = import.meta.env.VITE_APP_VERSION
