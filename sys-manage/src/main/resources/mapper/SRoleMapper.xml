@@ -6,7 +6,7 @@
     <!--@Table s_role-->
     <id column="role_id" jdbcType="BIGINT" property="roleId" />
     <result column="role_name" jdbcType="VARCHAR" property="roleName" />
-    <result column="role_code" jdbcType="VARCHAR" property="roleCode" />
+    <result column="role_type" jdbcType="VARCHAR" property="roleType" />
     <result column="create_uid" jdbcType="BIGINT" property="createUid" />
     <result column="update_uid" jdbcType="BIGINT" property="updateUid" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -16,7 +16,7 @@
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    role_id, role_name, role_code, create_uid, update_uid, create_time, update_time, 
+    role_id, role_name, role_type, create_uid, update_uid, create_time, update_time, 
     version, del_status
   </sql>
   <update id="updateBatch" parameterType="java.util.List">
@@ -28,9 +28,9 @@
           when role_id = #{item.roleId,jdbcType=BIGINT} then #{item.roleName,jdbcType=VARCHAR}
         </foreach>
       </trim>
-      <trim prefix="role_code = case" suffix="end,">
+      <trim prefix="role_type = case" suffix="end,">
         <foreach collection="list" index="index" item="item">
-          when role_id = #{item.roleId,jdbcType=BIGINT} then #{item.roleCode,jdbcType=VARCHAR}
+          when role_id = #{item.roleId,jdbcType=BIGINT} then #{item.roleType,jdbcType=VARCHAR}
         </foreach>
       </trim>
       <trim prefix="create_uid = case" suffix="end,">
@@ -80,10 +80,10 @@
           </if>
         </foreach>
       </trim>
-      <trim prefix="role_code = case" suffix="end,">
+      <trim prefix="role_type = case" suffix="end,">
         <foreach collection="list" index="index" item="item">
-          <if test="item.roleCode != null">
-            when role_id = #{item.roleId,jdbcType=BIGINT} then #{item.roleCode,jdbcType=VARCHAR}
+          <if test="item.roleType != null">
+            when role_id = #{item.roleId,jdbcType=BIGINT} then #{item.roleType,jdbcType=VARCHAR}
           </if>
         </foreach>
       </trim>
@@ -138,11 +138,11 @@
   <insert id="batchInsert" keyColumn="role_id" keyProperty="roleId" parameterType="map" useGeneratedKeys="true">
     <!--@mbg.generated-->
     insert into s_role
-    (role_name, role_code, create_uid, update_uid, create_time, update_time, version, 
+    (role_name, role_type, create_uid, update_uid, create_time, update_time, version, 
       del_status)
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.roleName,jdbcType=VARCHAR}, #{item.roleCode,jdbcType=VARCHAR}, #{item.createUid,jdbcType=BIGINT}, 
+      (#{item.roleName,jdbcType=VARCHAR}, #{item.roleType,jdbcType=VARCHAR}, #{item.createUid,jdbcType=BIGINT}, 
         #{item.updateUid,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}, 
         #{item.version,jdbcType=BIGINT}, #{item.delStatus,jdbcType=TINYINT})
     </foreach>
