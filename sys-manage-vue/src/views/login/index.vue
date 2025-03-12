@@ -8,7 +8,7 @@
     </div>
     <div class="page-login--wrapper">
       <div class="page-login--content">
-        <el-card shadow="never" class="login-form">
+        <el-card v-loading="loading" shadow="never" class="login-form">
           <div class="login-title">
             <p>{{ VITE_APP_TITLE }}</p>
             <p>{{ VITE_APP_VERSION }}</p>
