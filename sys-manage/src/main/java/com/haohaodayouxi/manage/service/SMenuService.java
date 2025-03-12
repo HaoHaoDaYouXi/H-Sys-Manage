@@ -24,7 +24,7 @@ public interface SMenuService extends IService<SMenu> {
 
     List<SMenuListRes> listByParent(SMenuListReq req);
 
-    void addOrUpdSMenu(SMenuAddOrUpdReq req);
+    void addOrUpd(SMenuAddOrUpdReq req);
 
     void batchDel(List<Long> ids);
 }

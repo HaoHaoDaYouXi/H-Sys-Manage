@@ -68,7 +68,7 @@ public class SMenuServiceImpl extends ServiceImpl<SMenuMapper, SMenu> implements
     }
 
     @Override
-    public void addOrUpdSMenu(SMenuAddOrUpdReq req) {
+    public void addOrUpd(SMenuAddOrUpdReq req) {
         SMenu menu = SMenu.builder()
                 .menuId(req.getMenuId())
                 .menuParentId(req.getMenuParentId())

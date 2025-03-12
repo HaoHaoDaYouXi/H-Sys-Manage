@@ -42,7 +42,7 @@ public class SMenuController {
 
 
     /**
-     * 详情
+     * 菜单类型
      *
      * @return res
      */
@@ -50,9 +50,9 @@ public class SMenuController {
     public Response<Object> getMenuType() {
         List<SParamBO> paramBOS = paramService.getByCache(SParamReq.builder().paramCodes(Arrays.stream(MenuTypeEnum.values()).map(m -> m.getCode().toString()).collect(Collectors.joining(StringConstant.EN_COMMA))).build());
         if (ObjectUtils.isEmpty(paramBOS)) {
-            return OkResponse.OK.toResponse(Arrays.stream(MenuTypeEnum.values()).map(m -> LabelValueVO.builder().label(m.getName()).value(m.getValue()).build()).toList());
+            return OkResponse.QUERY.toResponse(Arrays.stream(MenuTypeEnum.values()).map(m -> LabelValueVO.builder().label(m.getName()).value(m.getValue()).build()).toList());
         } else {
-            return OkResponse.OK.toResponse(paramBOS.stream().map(m -> LabelValueVO.builder().label(m.getParamName()).value(m.getParamValue()).build()).toList());
+            return OkResponse.QUERY.toResponse(paramBOS.stream().map(m -> LabelValueVO.builder().label(m.getParamName()).value(m.getParamValue()).build()).toList());
         }
     }
 
@@ -63,7 +63,7 @@ public class SMenuController {
      */
     @PostMapping("/listByParent")
     public Response<Object> listByParent(@RequestBody SMenuListReq req) {
-        return OkResponse.OK.toResponse(sMenuService.listByParent(req));
+        return OkResponse.QUERY.toResponse(sMenuService.listByParent(req));
     }
 
     /**
@@ -73,7 +73,7 @@ public class SMenuController {
      */
     @PostMapping("/add")
     public Response<Object> add(@RequestBody @Validated(AddValid.class) SMenuAddOrUpdReq req) {
-        sMenuService.addOrUpdSMenu(req);
+        sMenuService.addOrUpd(req);
         return OkResponse.INSERT.toResponse(true);
     }
 
@@ -84,7 +84,7 @@ public class SMenuController {
      */
     @GetMapping("/detail/{id}")
     public Response<Object> detail(@PathVariable String id) {
-        return OkResponse.UPDATE.toResponse(sMenuService.getById(id));
+        return OkResponse.QUERY.toResponse(sMenuService.getById(id));
     }
 
     /**
@@ -94,7 +94,7 @@ public class SMenuController {
      */
     @PostMapping("/upd")
     public Response<Object> upd(@RequestBody @Validated(UpdValid.class) SMenuAddOrUpdReq req) {
-        sMenuService.addOrUpdSMenu(req);
+        sMenuService.addOrUpd(req);
         return OkResponse.UPDATE.toResponse(true);
     }
 
