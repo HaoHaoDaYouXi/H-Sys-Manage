@@ -54,7 +54,7 @@
           </template>
         </el-input>
       </div>
-      <el-tabs v-model="tabsModel">
+      <el-tabs v-model="tabsModel" @tab-change="tabChange">
         <el-tab-pane
           v-for="(pane, index) in IconJson"
           :key="index"
@@ -64,7 +64,7 @@
           <el-scrollbar height="220px">
             <ul class="ml-2 flex flex-wrap">
               <li
-                v-for="(item, key) in pane.value"
+                v-for="(item, key) in iconList"
                 :title="item"
                 :key="pane.prefix+key"
                 :style="iconItemStyle(item)"
@@ -82,7 +82,7 @@
 
 <script lang="ts" setup>
 import { ref, computed } from "vue"
-import { ElPopover } from 'element-plus'
+import { ElPopover, TabPaneName } from 'element-plus'
 import IconItem from "../Icon/item.vue"
 import { IconJson } from "@/icons"
 
@@ -119,10 +119,18 @@ const searchForm = ref({
   icon: ''
 })
 
-const tabsModel = ref(IconJson[0].name)
+const tabsModel = ref<string>(IconJson[0].name)
+const iconList = ref<string[]>(IconJson[0].value)
 
-const iconItemStyle = computed((): ParameterCSSProperties => {
-  return (item) => {
+const tabChange = (name: TabPaneName) => {
+  iconList.value = IconJson.find(item => item.name === name)?.value || []
+  if (searchForm.value.icon) {
+    iconList.value = iconList.value.filter((item: string) => item.includes(searchForm.value.icon.trim().toLowerCase()))
+  }
+}
+
+const iconItemStyle = computed(() => {
+  return (item: string) => {
     if (props.exData.icon === item) {
       return {
         borderColor: 'var(--el-color-primary)',
@@ -169,10 +177,9 @@ const handleClear = () => {
 const searchSubmit = () => {
   searchForm.value.icon = searchForm.value.icon.trim()
   if (searchForm.value.icon) {
-    pageNum.value = 1
-    setIconList(iconList.value.filter((item: string) => item.includes(searchForm.value.icon.trim().toLowerCase())))
+    iconList.value = iconList.value.filter((item: string) => item.includes(searchForm.value.icon.trim().toLowerCase()))
   } else {
-    setIconList()
+    iconList.value = IconJson.find(item => item.name === tabsModel.value)?.value || []
   }
 }
 </script>
