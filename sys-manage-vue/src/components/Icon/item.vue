@@ -1,20 +1,50 @@
 <!-- icon 组件 -->
 <template>
-  <template v-if="props.icon.includes('el-icon') || props.icon.includes('svg-icon') || props.icon.includes('iconfont')">
-    <SvgIcon v-if="props.icon.includes('svg-icon')" :name="props.icon" class="el-icon sub-el-icon" />
-    <i v-else :class="props.icon.includes('el-icon')?props.icon+' el-icon sub-el-icon mr-8':props.icon+' el-icon sub-el-icon mr-5 text-18'" />
-  </template>
-  <component v-else :is="props.icon" class="el-icon sub-el-icon" />
+  <SvgIcon v-if="isSvgIcon" :name="iconName" :class="iconClass" />
+  <i v-else-if="isElIcon || isIconfont" :class="iconClass" ></i>
+  <el-icon v-else>
+    <component :is="props.icon" :class="iconClass" />
+  </el-icon>
 </template>
 
 <script lang="ts" setup>
+import { computed } from "vue"
+
 interface Props {
   icon?: string
+  defaultStyle?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  icon: ""
+  icon: "",
+  defaultStyle: false,
+  color: "",
 })
+
+const isSvgIcon = computed(() => props.icon.includes('svg-icon'))
+const isElIcon = computed(() => props.icon.includes('el-icon'))
+const isIconfont = computed(() => props.icon.includes('iconfont'))
+
+const iconName = computed(() => {
+  if (isSvgIcon.value) {
+    return props.icon.replace('svg-icon-', '')
+  }
+  return props.icon
+})
+
+const iconClass = computed(() => {
+  if (isSvgIcon.value) {
+    return props.defaultStyle?[]:['el-icon', 'sub-el-icon']
+  }
+  if (isElIcon.value) {
+    return props.defaultStyle?[props.icon, 'icon']:[props.icon, 'el-icon', 'sub-el-icon', 'mr-8']
+  }
+  if (isIconfont.value) {
+    return props.defaultStyle?[props.icon, 'icon']:[props.icon, 'el-icon', 'sub-el-icon', 'mr-5', 'text-18']
+  }
+  return props.defaultStyle?[props.icon, 'icon']:['el-icon', 'sub-el-icon']
+})
+
 </script>
 
 <style lang="scss" scoped>
