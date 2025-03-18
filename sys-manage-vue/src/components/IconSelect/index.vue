@@ -8,18 +8,19 @@
       <template #reference>
         <div class="icon-select">
           <el-button
-            class="el-icon-plus icon-select-trigger"
-            v-if="!props.exData.icon"></el-button>
+            v-if="!props.exData.icon"
+            class="el-icon-plus icon-select-trigger"></el-button>
           <p
+            v-else
             class="icon-select-result-box"
             @mouseenter.stop="booClear = true"
-            @mouseleave.stop="booClear = false"
-            v-if="!!props.exData.icon">
+            @mouseleave.stop="booClear = false">
             <el-button
               size="small"
               class="icon-select-result"
-              :class="props.exData.icon"
-              :style="{ color: props.exData.color }"></el-button>
+              :style="{ color: props.exData.color }">
+              <IconItem :icon="props.exData.icon" :defaultStyle="true" />
+            </el-button>
             <el-button
               size="small"
               class="el-icon-circle-close icon-select-clear"
@@ -53,39 +54,37 @@
           </template>
         </el-input>
       </div>
-      <div class="icon-box">
-        <div
-          class="icon-list"
-          v-for="item in iconList"
-          :key="item">
-          <el-tooltip
-            :content="item"
-            :open-delay="1000"
-            placement="bottom"
-            effect="light"
-            popper-class="tool-tip">
-            <i :class="[item, 'icon']" @click="setIcon(item)"></i>
-          </el-tooltip>
-        </div>
-        <div class="empty" v-if="iconList.length < 1">暂无数据</div>
-      </div>
-      <div class="pagination-box">
-        <el-pagination
-          @current-change="changeCurrent"
-          :current-page="pageNum"
-          :page-size="pageSize"
-          :total="total"
-          layout="prev, pager, next">
-        </el-pagination>
-      </div>
+      <el-tabs v-model="tabsModel">
+        <el-tab-pane
+          v-for="(pane, index) in IconJson"
+          :key="index"
+          :label="pane.label"
+          :name="pane.name">
+          <el-divider border-style="dashed" class="tab-divider" />
+          <el-scrollbar height="220px">
+            <ul class="ml-2 flex flex-wrap">
+              <li
+                v-for="(item, key) in pane.value"
+                :title="item"
+                :key="pane.prefix+key"
+                :style="iconItemStyle(item)"
+                class="icon-item mr-2 mt-1 w-1/10 flex cursor-pointer items-center justify-center border border-solid p-2"
+                @click="setIcon(pane.prefix+item)">
+                <IconItem :icon="pane.prefix+item" :defaultStyle="true" />
+              </li>
+            </ul>
+          </el-scrollbar>
+        </el-tab-pane>
+      </el-tabs>
     </el-popover>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from "vue"
-import { select } from "@/utils/enums"
-import { ElPopover } from 'element-plus';
+import { ref, computed } from "vue"
+import { ElPopover } from 'element-plus'
+import IconItem from "../Icon/item.vue"
+import { IconJson } from "@/icons"
 
 interface ExData {
   icon: string
@@ -115,14 +114,23 @@ const colorList = [
   }
 ]
 const booClear = ref(false)
-const pageNum = ref(1)
-const pageSize = ref(50)
-const total = ref(0)
 
 const searchForm = ref({
   icon: ''
 })
-const iconList = ref<string[]>([])
+
+const tabsModel = ref(IconJson[0].name)
+
+const iconItemStyle = computed((): ParameterCSSProperties => {
+  return (item) => {
+    if (props.exData.icon === item) {
+      return {
+        borderColor: 'var(--el-color-primary)',
+        color: 'var(--el-color-primary)'
+      }
+    }
+  }
+})
 
 const showColorConfig = () => {
   return Object.prototype.hasOwnProperty.call(props.exData, 'color')
@@ -158,20 +166,6 @@ const handleClear = () => {
   })
 }
 
-const setIconList = (data?: string[]) => {
-  const list = data ? data : select.iconsList
-  const start = (pageNum.value - 1) * pageSize.value
-  const end = start + pageSize.value
-
-  iconList.value = list.slice(start, end)
-  total.value = list.length
-}
-
-const changeCurrent = (val: number) => {
-  pageNum.value = val
-  setIconList()
-}
-
 const searchSubmit = () => {
   searchForm.value.icon = searchForm.value.icon.trim()
   if (searchForm.value.icon) {
@@ -181,13 +175,52 @@ const searchSubmit = () => {
     setIconList()
   }
 }
-
-onMounted(() => {
-  setIconList()
-})
 </script>
 
 <style lang="scss" scoped>
+.el-divider--horizontal {
+  margin: 1px auto !important;
+}
+
+.tab-divider.el-divider--horizontal {
+  margin: 0 !important;
+}
+
+.icon-item {
+  &:hover {
+    color: var(--el-color-primary);
+    border-color: var(--el-color-primary);
+    transform: scaleX(1.05);
+    transition: all 0.4s;
+  }
+}
+
+:deep(.el-tabs__nav-next) {
+  font-size: 15px;
+  line-height: 32px;
+  box-shadow: -5px 0 5px -6px #ccc;
+}
+
+:deep(.el-tabs__nav-prev) {
+  font-size: 15px;
+  line-height: 32px;
+  box-shadow: 5px 0 5px -6px #ccc;
+}
+
+:deep(.el-tabs__item) {
+  height: 30px;
+  font-size: 12px;
+  font-weight: normal;
+  line-height: 30px;
+}
+
+:deep(.el-tabs__header),
+:deep(.el-tabs__nav-wrap) {
+  position: static;
+  margin: 0;
+}
+
+
 .icon-select {
   width: 32px;
 
