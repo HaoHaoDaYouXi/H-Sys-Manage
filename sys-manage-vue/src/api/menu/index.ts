@@ -18,3 +18,26 @@ export function listByParentApi(data: Menu.SMenuListReq) {
     data
   })
 }
+
+export function addApi(data: any) {
+  return request<ApiRes<string>>({
+    url: `${API_PREFIX}/add`,
+    method: "post",
+    data
+  })
+}
+
+export function detailApi(id: any) {
+  return request<ApiRes<any>>({
+    url: `${API_PREFIX}/detail/${id}`,
+    method: "get"
+  })
+}
+
+export function updApi(data: any) {
+  return request<ApiRes<string>>({
+    url: `${API_PREFIX}/upd`,
+    method: "post",
+    data
+  })
+}
