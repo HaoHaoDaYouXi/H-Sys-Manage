@@ -1,5 +1,6 @@
 import { request } from "@/utils/service"
 import type * as Menu from "./types/menu"
+import { ListObjectBO } from "@/api/commonTypes"
 
 const API_PREFIX = "s_menu"
 
@@ -20,7 +21,7 @@ export function listByParentApi(data: Menu.SMenuListReq) {
 }
 
 export function addApi(data: any) {
-  return request<ApiRes<string>>({
+  return request<ApiRes<boolean>>({
     url: `${API_PREFIX}/add`,
     method: "post",
     data
@@ -35,7 +36,15 @@ export function detailApi(id: any) {
 }
 
 export function updApi(data: any) {
-  return request<ApiRes<string>>({
+  return request<ApiRes<boolean>>({
+    url: `${API_PREFIX}/upd`,
+    method: "post",
+    data
+  })
+}
+
+export function batchDelApi(data: ListObjectBO) {
+  return request<ApiRes<boolean>>({
     url: `${API_PREFIX}/upd`,
     method: "post",
     data
