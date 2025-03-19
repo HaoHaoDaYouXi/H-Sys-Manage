@@ -45,7 +45,7 @@ export function updApi(data: any) {
 
 export function batchDelApi(data: ListObjectBO) {
   return request<ApiRes<boolean>>({
-    url: `${API_PREFIX}/upd`,
+    url: `${API_PREFIX}/batchDel`,
     method: "post",
     data
   })
