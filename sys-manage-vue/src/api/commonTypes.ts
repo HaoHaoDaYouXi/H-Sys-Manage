@@ -1,3 +1,3 @@
 export interface ListObjectBO {
-  list: []
+  list: any[]
 }
