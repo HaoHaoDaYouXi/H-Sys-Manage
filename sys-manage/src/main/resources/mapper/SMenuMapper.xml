@@ -6,7 +6,7 @@
     <!--@Table s_menu-->
     <id column="menu_id" jdbcType="BIGINT" property="menuId"/>
     <result column="menu_parent_id" jdbcType="BIGINT" property="menuParentId"/>
-    <result column="menu_level_path" jdbcType="VARCHAR" property="menuLevelPath"/>
+    <result column="menu_parent_path" jdbcType="VARCHAR" property="menuParentPath"/>
     <result column="menu_type" jdbcType="TINYINT" property="menuType"/>
     <result column="menu_name" jdbcType="VARCHAR" property="menuName"/>
     <result column="menu_icon" jdbcType="VARCHAR" property="menuIcon"/>
@@ -32,7 +32,7 @@
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    menu_id, menu_parent_id, menu_level_path, menu_type, menu_name, menu_icon, menu_key,
+    menu_id, menu_parent_id, menu_parent_path, menu_type, menu_name, menu_icon, menu_key,
     active_menu, redirect, menu_component, out_url, show_order, disabled, hidden, cached_view,
     breadcrumb, affix, always_show, menu_describe, create_uid, update_uid, create_time,
     update_time, version, del_status
@@ -75,4 +75,9 @@
     and menu_parent_id = #{parentId,jdbcType=BIGINT}
     order by show_order desc, update_time desc
   </select>
+
+  <update id="changeParentPath">
+    update s_menu set menu_parent_path = REPLACE (menu_parent_path, #{oldPath}, #{newPath})
+    where menu_parent_path rlike #{oldPath}
+  </update>
 </mapper>
