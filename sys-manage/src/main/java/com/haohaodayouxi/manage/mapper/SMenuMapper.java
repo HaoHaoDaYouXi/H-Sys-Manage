@@ -1,6 +1,7 @@
 package com.haohaodayouxi.manage.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.haohaodayouxi.common.core.model.vo.keyValue.LabelValueVO;
 import com.haohaodayouxi.manage.model.db.SMenu;
 import com.haohaodayouxi.manage.model.req.menu.SMenuListReq;
 import com.haohaodayouxi.manage.model.res.menu.SMenuListRes;
@@ -23,4 +24,6 @@ public interface SMenuMapper extends BaseMapper<SMenu> {
     int batchInsert(@Param("list") List<SMenu> list);
 
     List<SMenuListRes> listByParent(SMenuListReq req);
+
+    List<LabelValueVO<String, Long>> labelValueByParent(Long parentId);
 }

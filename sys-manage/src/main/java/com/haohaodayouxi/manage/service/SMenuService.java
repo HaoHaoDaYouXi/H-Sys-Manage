@@ -1,6 +1,7 @@
 package com.haohaodayouxi.manage.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.haohaodayouxi.common.core.model.vo.keyValue.LabelValueVO;
 import com.haohaodayouxi.manage.model.db.SMenu;
 import com.haohaodayouxi.manage.model.req.menu.SMenuAddOrUpdReq;
 import com.haohaodayouxi.manage.model.req.menu.SMenuListReq;
@@ -23,6 +24,8 @@ public interface SMenuService extends IService<SMenu> {
     int batchInsert(List<SMenu> list);
 
     List<SMenuListRes> listByParent(SMenuListReq req);
+
+    List<LabelValueVO<String, Long>> labelValueByParent(Long parentId);
 
     void addOrUpd(SMenuAddOrUpdReq req);
 

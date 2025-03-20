@@ -3,6 +3,7 @@ package com.haohaodayouxi.manage.service.impl;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.haohaodayouxi.common.core.constants.CurrentUserContextHolder;
+import com.haohaodayouxi.common.core.model.vo.keyValue.LabelValueVO;
 import com.haohaodayouxi.common.util.constants.StringConstant;
 import com.haohaodayouxi.common.util.enums.TrueFalseEnum;
 import com.haohaodayouxi.manage.constants.SysConstants;
@@ -65,6 +66,14 @@ public class SMenuServiceImpl extends ServiceImpl<SMenuMapper, SMenu> implements
             res.forEach(f -> f.setMenuTypeStr(paramMap.getOrDefault(f.getMenuType(), MenuTypeEnum.getByValue(f.getMenuType()).getName())));
         }
         return res;
+    }
+
+    @Override
+    public List<LabelValueVO<String, Long>> labelValueByParent(Long parentId) {
+        if (ObjectUtils.isEmpty(parentId)) {
+            parentId = SysConstants.TOP_LEVEL_ID;
+        }
+        return baseMapper.labelValueByParent(parentId);
     }
 
     @Override

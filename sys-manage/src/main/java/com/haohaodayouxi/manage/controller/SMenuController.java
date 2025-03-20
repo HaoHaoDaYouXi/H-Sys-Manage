@@ -67,6 +67,16 @@ public class SMenuController {
     }
 
     /**
+     * 列表查询
+     *
+     * @return res
+     */
+    @GetMapping("/labelValueByParent/{parentId}")
+    public Response<Object> labelValueByParent(@PathVariable Long parentId) {
+        return OkResponse.QUERY.toResponse(sMenuService.labelValueByParent(parentId));
+    }
+
+    /**
      * 新增
      *
      * @return res

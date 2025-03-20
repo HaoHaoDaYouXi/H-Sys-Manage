@@ -129,6 +129,5 @@ public class SMenuAddOrUpdReq implements Serializable {
     /**
      * 菜单描述
      */
-    @NotBlank(groups = AddValid.class)
     private String menuDescribe;
 }
