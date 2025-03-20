@@ -40,21 +40,6 @@ public class SMenuServiceImpl extends ServiceImpl<SMenuMapper, SMenu> implements
     private SParamService paramService;
 
     @Override
-    public int updateBatch(List<SMenu> list) {
-        return baseMapper.updateBatch(list);
-    }
-
-    @Override
-    public int updateBatchSelective(List<SMenu> list) {
-        return baseMapper.updateBatchSelective(list);
-    }
-
-    @Override
-    public int batchInsert(List<SMenu> list) {
-        return baseMapper.batchInsert(list);
-    }
-
-    @Override
     public List<SMenuListRes> listByParent(SMenuListReq req) {
         if (ObjectUtils.isEmpty(req.getMenuParentId())) {
             req.setMenuParentId(SysConstants.TOP_LEVEL_ID);

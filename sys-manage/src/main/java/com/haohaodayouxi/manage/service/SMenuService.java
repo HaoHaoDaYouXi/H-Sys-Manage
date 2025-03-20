@@ -17,12 +17,6 @@ import java.util.List;
  */
 public interface SMenuService extends IService<SMenu> {
 
-    int updateBatch(List<SMenu> list);
-
-    int updateBatchSelective(List<SMenu> list);
-
-    int batchInsert(List<SMenu> list);
-
     List<SMenuListRes> listByParent(SMenuListReq req);
 
     List<LabelValueVO<String, Long>> labelValueByParent(Long parentId);
