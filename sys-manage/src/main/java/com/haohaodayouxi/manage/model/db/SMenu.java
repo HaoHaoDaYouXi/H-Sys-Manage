@@ -42,10 +42,10 @@ public class SMenu implements Serializable {
     private Long menuParentId;
 
     /**
-     * 层级ID
+     * 父级层级ID路径
      */
-    @TableField(value = "menu_level_path")
-    private String menuLevelPath;
+    @TableField(value = "menu_parent_path")
+    private String menuParentPath;
 
     /**
      * 菜单类型(取配置表type=1) 默认1
