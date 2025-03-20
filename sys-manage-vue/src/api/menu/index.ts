@@ -20,6 +20,13 @@ export function listByParentApi(data: Menu.SMenuListReq) {
   })
 }
 
+export function labelValueByParentApi(parentId: any) {
+  return request<ApiRes<any>>({
+    url: `${API_PREFIX}/labelValueByParent/${parentId}`,
+    method: "get"
+  })
+}
+
 export function addApi(data: any) {
   return request<ApiRes<boolean>>({
     url: `${API_PREFIX}/add`,
