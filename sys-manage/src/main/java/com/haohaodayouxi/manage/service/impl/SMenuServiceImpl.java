@@ -65,7 +65,7 @@ public class SMenuServiceImpl extends ServiceImpl<SMenuMapper, SMenu> implements
     public void addOrUpd(SMenuAddOrUpdReq req) {
         SMenu menu = SMenu.builder()
                 .menuId(req.getMenuId())
-                .menuParentId(req.getMenuParentId())
+                .menuParentId(ObjectUtils.isEmpty(req.getMenuParentId()) ? SysConstants.TOP_LEVEL_ID : req.getMenuParentId())
                 .menuType(req.getMenuType())
                 .menuName(req.getMenuName())
                 .menuIcon(req.getMenuIcon())
@@ -83,16 +83,44 @@ public class SMenuServiceImpl extends ServiceImpl<SMenuMapper, SMenu> implements
                 .alwaysShow(req.getAlwaysShow())
                 .menuDescribe(req.getMenuDescribe())
                 .build();
+        boolean add = ObjectUtils.isEmpty(menu.getMenuId());
+        if (!add && menu.getMenuId().equals(menu.getMenuParentId())) {
+            throw new RuntimeException("父级菜单不能是自身");
+        }
+        if (!menu.getMenuParentId().equals(SysConstants.TOP_LEVEL_ID)) {
+            SMenu parent = baseMapper.selectById(menu.getMenuParentId());
+            if (ObjectUtils.isEmpty(parent)) {
+                throw new RuntimeException("父级菜单数据错误，请重试");
+            } else {
+                menu.setMenuParentPath(splitParentPath(parent.getMenuParentPath(), parent.getMenuId()));
+            }
+        }
+        if (baseMapper.sameCheck(menu.getMenuId(), menu.getMenuParentId(), menu.getMenuName(), menu.getMenuKey())) {
+            throw new RuntimeException("当前父级下菜单名称或菜单标识已存在");
+        }
         LoginCacheBO bo = (LoginCacheBO) CurrentUserContextHolder.get();
         menu.setUpdateUid(bo.getUserLoginCacheBO().getUserId());
         menu.setUpdateTime(new Date());
-        if (ObjectUtils.isEmpty(req.getMenuId())) {
+        if (add) {
             menu.setCreateUid(bo.getUserLoginCacheBO().getUserId());
             menu.setCreateTime(menu.getUpdateTime());
             baseMapper.insert(menu);
         } else {
+            SMenu old = baseMapper.selectById(menu.getMenuId());
+            if (ObjectUtils.isEmpty(old)) {
+                throw new RuntimeException("菜单编号数据错误，请重试");
+            }
             baseMapper.updateById(menu);
+            if (!old.getMenuParentPath().equals(menu.getMenuParentPath())) {
+                baseMapper.changeParentPath(splitParentPath(old.getMenuParentPath(), old.getMenuId()), splitParentPath(menu.getMenuParentPath(), menu.getMenuId()));
+            }
         }
+    }
+
+    private String splitParentPath(String parentPath, Long menuId) {
+        return ObjectUtils.isEmpty(parentPath)
+                ? menuId.toString()
+                : parentPath + StringConstant.STRIKETHROUGH + menuId;
     }
 
     @Override

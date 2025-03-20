@@ -22,4 +22,6 @@ public interface SMenuMapper extends BaseMapper<SMenu> {
     List<LabelValueVO<String, Long>> labelValueByParent(Long parentId);
 
     void changeParentPath(@Param("oldPath") String oldPath, @Param("newPath") String newPath);
+
+    boolean sameCheck(@Param("menuId") Long menuId, @Param("menuParentId") Long menuParentId, @Param("menuName") String menuName, @Param("menuKey") String menuKey);
 }

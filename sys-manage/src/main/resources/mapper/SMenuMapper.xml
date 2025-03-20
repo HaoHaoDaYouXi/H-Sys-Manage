@@ -50,7 +50,7 @@
     show_order,
     disabled,
     update_time,
-    EXISTS (select 1 from s_menu where menu_parent_id = s.menu_id and del_status =0) as hasChildren
+    EXISTS (select 1 from s_menu where del_status =0 and menu_parent_id = s.menu_id) as hasChildren
     from s_menu s
     where del_status =0
     and menu_parent_id = #{menuParentId,jdbcType=BIGINT}
@@ -80,4 +80,17 @@
     update s_menu set menu_parent_path = REPLACE (menu_parent_path, #{oldPath}, #{newPath})
     where menu_parent_path rlike #{oldPath}
   </update>
+
+  <select id="sameCheck" resultType="boolean">
+    select
+    exists (
+    select 1 from s_menu
+    where del_status = 0
+    and menu_parent_id = #{menuParentId}
+    and (menu_name = #{menuName} or menu_key = #{menuKey})
+    <if test="menuId != null">
+      and menu_id != #{menuId}
+    </if>
+    )
+  </select>
 </mapper>
