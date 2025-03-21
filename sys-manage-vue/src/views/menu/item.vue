@@ -54,7 +54,7 @@
             </el-select>
           </el-form-item>
           <el-form-item
-            v-if="form.menuType !== '3'"
+            v-if="form.menuType !== 3"
             label="图标："
             label-width="120px"
             prop="menuIcon">
@@ -83,14 +83,14 @@
               clearable></el-input>
           </el-form-item>
           <el-form-item
-            v-if="form.menuType === '2'"
+            v-if="form.menuType === 2"
             label-width="120px"
             label="高亮菜单标识："
           >
             <el-input v-model="form.activeMenu" placeholder="请输入高亮菜单标识" clearable />
           </el-form-item>
           <el-form-item
-            v-if="form.menuType === '1'"
+            v-if="form.menuType === 1"
             label-width="120px"
             label="重定向："
           >
@@ -100,7 +100,7 @@
             label="组件名："
             label-width="120px"
             prop="menuComponent"
-            v-if="form.menuType !== '3'"
+            v-if="form.menuType !== 3"
             :rules="detailFormRules.menuComponent">
             <el-input
               v-model="form.menuComponent"
@@ -108,20 +108,20 @@
               clearable></el-input>
           </el-form-item>
           <el-form-item
-            v-if="form.menuType === '2'"
+            v-if="form.menuType === 2"
             label="打开方式："
             label-width="140px"
             prop="outUrl">
             <el-radio-group v-model="form.outUrl">
-              <el-radio :label="0">内链</el-radio>
-              <el-radio :label="1">外链</el-radio>
+              <el-radio :label="TrueFalseEnum.FALSE">内链</el-radio>
+              <el-radio :label="TrueFalseEnum.TRUE">外链</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item
             label="排序号："
             label-width="120px"
             prop="showOrder"
-            v-if="form.menuType !== '3'">
+            v-if="form.menuType !== 3">
             <el-input
               v-model="form.showOrder"
               placeholder="请输入排序号"
@@ -134,58 +134,58 @@
             prop="disabled">
             <el-switch
               v-model="form.disabled"
-              :active-value="1"
-              :inactive-value="0"></el-switch>
+              :active-value="TrueFalseEnum.TRUE"
+              :inactive-value="TrueFalseEnum.FALSE"></el-switch>
           </el-form-item>
           <el-form-item
-            v-if="form.menuType !== '3'"
+            v-if="form.menuType !== 3"
             label="是否隐藏："
             label-width="140px"
             prop="hidden">
             <el-switch
               v-model="form.hidden"
-              :active-value="1"
-              :inactive-value="0"></el-switch>
+              :active-value="TrueFalseEnum.TRUE"
+              :inactive-value="TrueFalseEnum.FALSE"></el-switch>
           </el-form-item>
           <el-form-item
-            v-if="form.menuType !== '3'"
+            v-if="form.menuType !== 3"
             label="是否缓存："
             label-width="140px"
             prop="cachedView">
             <el-switch
               v-model="form.cachedView"
-              :active-value="1"
-              :inactive-value="0"></el-switch>
+              :active-value="TrueFalseEnum.TRUE"
+              :inactive-value="TrueFalseEnum.FALSE"></el-switch>
           </el-form-item>
           <el-form-item
-            v-if="form.menuType !== '3'"
+            v-if="form.menuType !== 3"
             label="面包屑中显示："
             label-width="140px"
             prop="breadcrumb">
             <el-switch
               v-model="form.breadcrumb"
-              :active-value="1"
-              :inactive-value="0"></el-switch>
+              :active-value="TrueFalseEnum.TRUE"
+              :inactive-value="TrueFalseEnum.FALSE"></el-switch>
           </el-form-item>
           <el-form-item
-            v-if="form.menuType === '2'"
+            v-if="form.menuType === 2"
             label="固定在tags-view："
             label-width="140px"
             prop="affix">
             <el-switch
               v-model="form.affix"
-              :active-value="1"
-              :inactive-value="0"></el-switch>
+              :active-value="TrueFalseEnum.TRUE"
+              :inactive-value="TrueFalseEnum.FALSE"></el-switch>
           </el-form-item>
           <el-form-item
-            v-if="form.menuType === '2'"
+            v-if="form.menuType === 2"
             label="显示根目录："
             label-width="140px"
             prop="alwaysShow">
             <el-switch
               v-model="form.alwaysShow"
-              :active-value="1"
-              :inactive-value="0"></el-switch>
+              :active-value="TrueFalseEnum.TRUE"
+              :inactive-value="TrueFalseEnum.FALSE"></el-switch>
           </el-form-item>
           <el-form-item
             label="备注："
@@ -214,7 +214,7 @@
 import { ref } from "vue"
 import commonFormRules from "@/utils/rules"
 import IconSelect from "@/components/IconSelect/index.vue"
-import { TopId } from "@/utils/enums"
+import { TopId, TrueFalseEnum } from "@/utils/enums"
 import { addApi, detailApi, updApi, labelValueByParentApi } from "@/api/menu"
 import { ElMessage } from "element-plus"
 
@@ -249,7 +249,7 @@ const formRef = ref()
 const form = ref({
   menuId: undefined,
   menuParentId: [TopId],
-  menuType: '1',
+  menuType: 1,
   menuName: '',
   menuIcon: '',
   menuKey: '',
@@ -324,7 +324,7 @@ const resetForm = () => {
   form.value = {
     menuId: undefined,
     menuParentId: [TopId],
-    menuType: '1',
+    menuType: 1,
     menuName: '',
     menuIcon: '',
     menuKey: '',

@@ -48,12 +48,12 @@ public class SMenuController {
      * @return res
      */
     @GetMapping("/getMenuType")
-    public Response<Object> getMenuType() {
+    public Response<List<LabelValueVO<String, Integer>>> getMenuType() {
         List<SParamBO> paramBOS = paramService.getByCache(SParamReq.builder().paramCodes(Arrays.stream(MenuTypeEnum.values()).map(m -> m.getCode().toString()).collect(Collectors.joining(StringConstant.EN_COMMA))).build());
         if (ObjectUtils.isEmpty(paramBOS)) {
-            return OkResponse.QUERY.toResponse(Arrays.stream(MenuTypeEnum.values()).map(m -> LabelValueVO.builder().label(m.getName()).value(m.getValue()).build()).toList());
+            return OkResponse.QUERY.toResponse(Arrays.stream(MenuTypeEnum.values()).map(m -> LabelValueVO.<String, Integer>builder().label(m.getName()).value(m.getValue()).build()).toList());
         } else {
-            return OkResponse.QUERY.toResponse(paramBOS.stream().map(m -> LabelValueVO.builder().label(m.getParamName()).value(m.getParamValue()).build()).toList());
+            return OkResponse.QUERY.toResponse(paramBOS.stream().map(m -> LabelValueVO.<String, Integer>builder().label(m.getParamName()).value(Integer.valueOf(m.getParamValue())).build()).toList());
         }
     }
 
