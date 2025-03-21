@@ -71,8 +71,10 @@
           <el-table-column prop="disabled" label="禁用" align="center">
             <template #default="scope">
               <el-switch v-model="scope.row.disabled"
-                         :active-value="1"
-                         :inactive-value="0"/>
+                         :active-value="TrueFalseEnum.TRUE"
+                         :inactive-value="TrueFalseEnum.FALSE"
+                         :loading="changeDisableLoading"
+                         @change="ChangeDisable(scope.row)"/>
             </template>
           </el-table-column>
           <el-table-column prop="updateTime" label="更新时间" align="center" />
@@ -116,9 +118,9 @@ import { type FormInstance, type FormRules, ElMessage, ElMessageBox, ElTable } f
 import { Search, Refresh, CirclePlus, Delete } from "@element-plus/icons-vue"
 import IconItem from "@/components/Icon/item.vue"
 import { cloneDeep } from "lodash-es"
-import { batchDelApi, getMenuTypeApi, listByParentApi } from "@/api/menu"
+import { batchDelApi, getMenuTypeApi, listByParentApi, changeDisableApi } from "@/api/menu"
 import { SMenuListReq, SMenuList } from "@/api/menu/types/menu"
-import { TopId, DisabledList} from "@/utils/enums"
+import { TopId, DisabledList, TrueFalseEnum } from "@/utils/enums"
 import Item from "./item.vue"
 import { ListObjectBO } from "@/api/commonTypes"
 
@@ -155,6 +157,19 @@ const getTableData = async () => {
   } catch (error) {
     ElMessage.error("获取菜单列表失败")
   }
+}
+
+const changeDisableLoading = ref(false)
+
+const ChangeDisable = async (row: SMenuList) => {
+  changeDisableLoading.value = true
+  changeDisableApi({menuId: row.menuId, disabled: row.disabled}).then((res) => {
+    ElMessage.success(res.message)
+  }).catch((error) => {
+    ElMessage.error("更新失败，请稍后重试")
+    row.disabled = (row.disabled === TrueFalseEnum.TRUE) ? TrueFalseEnum.FALSE : TrueFalseEnum.TRUE
+  })
+  changeDisableLoading.value = false
 }
 
 const load = async (row: SMenuList, treeNode: unknown, resolve: (data: SMenuList[]) => void) => {

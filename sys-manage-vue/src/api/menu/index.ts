@@ -50,6 +50,14 @@ export function updApi(data: any) {
   })
 }
 
+export function changeDisableApi(data: any) {
+  return request<ApiRes<boolean>>({
+    url: `${API_PREFIX}/changeDisable`,
+    method: "post",
+    data
+  })
+}
+
 export function batchDelApi(data: ListObjectBO) {
   return request<ApiRes<boolean>>({
     url: `${API_PREFIX}/batchDel`,
