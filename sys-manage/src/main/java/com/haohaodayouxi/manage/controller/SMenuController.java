@@ -9,6 +9,7 @@ import com.haohaodayouxi.common.core.model.vo.keyValue.LabelValueVO;
 import com.haohaodayouxi.common.util.constants.StringConstant;
 import com.haohaodayouxi.manage.constants.enums.menu.MenuTypeEnum;
 import com.haohaodayouxi.manage.model.bo.param.SParamBO;
+import com.haohaodayouxi.manage.model.req.menu.ChangeDisableReq;
 import com.haohaodayouxi.manage.model.req.menu.SMenuAddOrUpdReq;
 import com.haohaodayouxi.manage.model.req.menu.SMenuListReq;
 import com.haohaodayouxi.manage.model.req.param.SParamReq;
@@ -105,6 +106,17 @@ public class SMenuController {
     @PostMapping("/upd")
     public Response<Object> upd(@RequestBody @Validated(UpdValid.class) SMenuAddOrUpdReq req) {
         sMenuService.addOrUpd(req);
+        return OkResponse.UPDATE.toResponse(true);
+    }
+
+    /**
+     * 修改禁用状态
+     *
+     * @return res
+     */
+    @PostMapping("/changeDisable")
+    public Response<Object> changeDisable(@RequestBody @Validated ChangeDisableReq req) {
+        sMenuService.changeDisable(req);
         return OkResponse.UPDATE.toResponse(true);
     }
 

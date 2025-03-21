@@ -12,6 +12,7 @@ import com.haohaodayouxi.manage.mapper.SMenuMapper;
 import com.haohaodayouxi.manage.model.bo.login.LoginCacheBO;
 import com.haohaodayouxi.manage.model.bo.param.SParamBO;
 import com.haohaodayouxi.manage.model.db.SMenu;
+import com.haohaodayouxi.manage.model.req.menu.ChangeDisableReq;
 import com.haohaodayouxi.manage.model.req.menu.SMenuAddOrUpdReq;
 import com.haohaodayouxi.manage.model.req.menu.SMenuListReq;
 import com.haohaodayouxi.manage.model.req.param.SParamReq;
@@ -115,6 +116,11 @@ public class SMenuServiceImpl extends ServiceImpl<SMenuMapper, SMenu> implements
                 baseMapper.changeParentPath(splitParentPath(old.getMenuParentPath(), old.getMenuId()), splitParentPath(menu.getMenuParentPath(), menu.getMenuId()));
             }
         }
+    }
+
+    @Override
+    public void changeDisable(ChangeDisableReq req) {
+        baseMapper.update(new LambdaUpdateWrapper<SMenu>().set(SMenu::getDisabled, req.getDisabled()).eq(SMenu::getMenuId, req.getMenuId()));
     }
 
     private String splitParentPath(String parentPath, Long menuId) {

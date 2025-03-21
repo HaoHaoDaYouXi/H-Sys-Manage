@@ -3,6 +3,7 @@ package com.haohaodayouxi.manage.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.haohaodayouxi.common.core.model.vo.keyValue.LabelValueVO;
 import com.haohaodayouxi.manage.model.db.SMenu;
+import com.haohaodayouxi.manage.model.req.menu.ChangeDisableReq;
 import com.haohaodayouxi.manage.model.req.menu.SMenuAddOrUpdReq;
 import com.haohaodayouxi.manage.model.req.menu.SMenuListReq;
 import com.haohaodayouxi.manage.model.res.menu.SMenuListRes;
@@ -22,6 +23,8 @@ public interface SMenuService extends IService<SMenu> {
     List<LabelValueVO<String, Long>> labelValueByParent(Long parentId);
 
     void addOrUpd(SMenuAddOrUpdReq req);
+
+    void changeDisable(ChangeDisableReq req);
 
     void batchDel(List<Long> ids);
 }
