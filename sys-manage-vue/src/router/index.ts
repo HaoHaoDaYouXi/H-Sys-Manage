@@ -1,6 +1,6 @@
 import { type RouteRecordRaw, createRouter } from "vue-router"
 import { history } from "./util"
-import Home from "@/router/modules/home"
+import { Home, Sys } from "@/router/modules"
 
 const Layout = () => import("@/layouts/index.vue")
 
@@ -52,7 +52,8 @@ export const constantRoutes: RouteRecordRaw[] = [
 /** 路由组件 */
 export const componentsMap: { [key: string]: () => Promise<any> } = {
   Layout,
-  ...Home
+  ...Home,
+  ...Sys,
 }
 
 const router = createRouter({
