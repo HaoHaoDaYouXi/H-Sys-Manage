@@ -40,7 +40,7 @@ export const usePermissionStore = defineStore("permission", () => {
           {
             id: "11",
             parentId: "0",
-            resType: 2,
+            menuType: 1,
             path: "/sys",
             component: "Layout",
             // redirect: "/table/element-plus",
@@ -53,9 +53,23 @@ export const usePermissionStore = defineStore("permission", () => {
             },
             children: [
               {
+                id: "23",
+                parentId: "11",
+                menuType: 2,
+                path: "Role",
+                component: "Role",
+                disabled: 0,
+                meta: {
+                  title: "角色管理",
+                  icon: "Role",
+                  breadcrumb: true
+                },
+                children: []
+              },
+              {
                 id: "22",
                 parentId: "11",
-                resType: 2,
+                menuType: 2,
                 path: "menu",
                 component: "Menu",
                 disabled: 0,
@@ -69,7 +83,7 @@ export const usePermissionStore = defineStore("permission", () => {
               {
                 id: "22",
                 parentId: "11",
-                resType: 2,
+                menuType: 2,
                 path: "element-plus",
                 component: "Table",
                 disabled: 0,
@@ -86,7 +100,7 @@ export const usePermissionStore = defineStore("permission", () => {
           {
             id: "1",
             parentId: "0",
-            resType: 2,
+            menuType: 2,
             path: "/test",
             component: "Layout",
             // redirect: "/",
@@ -102,7 +116,7 @@ export const usePermissionStore = defineStore("permission", () => {
               {
                 id: "2",
                 parentId: "1",
-                resType: 2,
+                menuType: 2,
                 path: "index",
                 component: "Index",
                 disabled: 0,

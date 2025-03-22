@@ -3,7 +3,7 @@ import { RouteMeta } from "vue-router"
 export interface PermissionData {
   id: string
   parentId: string
-  resType: number
+  menuType: number
   path: string
   component: string
   disabled: number
