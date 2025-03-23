@@ -47,12 +47,12 @@ public class SRoleController {
      * @return res
      */
     @GetMapping("/getRoleType")
-    public Response<Object> getRoleType() {
+    public Response<List<LabelValueVO<String, String>>> getRoleType() {
         List<SParamBO> paramBOS = paramService.getByCache(SParamReq.builder().paramCodes(Arrays.stream(RoleTypeEnum.values()).map(RoleTypeEnum::getCode).collect(Collectors.joining(StringConstant.EN_COMMA))).build());
         if (ObjectUtils.isEmpty(paramBOS)) {
-            return OkResponse.QUERY.toResponse(Arrays.stream(RoleTypeEnum.values()).map(m -> LabelValueVO.builder().label(m.getName()).value(m.getCode()).build()).toList());
+            return OkResponse.QUERY.toResponse(Arrays.stream(RoleTypeEnum.values()).map(m -> LabelValueVO.<String, String>builder().label(m.getName()).value(m.getCode()).build()).toList());
         } else {
-            return OkResponse.QUERY.toResponse(paramBOS.stream().map(m -> LabelValueVO.builder().label(m.getParamName()).value(m.getParamValue()).build()).toList());
+            return OkResponse.QUERY.toResponse(paramBOS.stream().map(m -> LabelValueVO.<String, String>builder().label(m.getParamName()).value(m.getParamValue()).build()).toList());
         }
     }
 
