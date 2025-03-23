@@ -215,7 +215,7 @@ import { ref } from "vue"
 import commonFormRules from "@/utils/rules"
 import IconSelect from "@/components/IconSelect/index.vue"
 import { TopId, TrueFalseEnum } from "@/utils/enums"
-import { addApi, detailApi, updApi, labelValueByParentApi } from "@/api/menu"
+import { addApi, detailApi, updApi, labelValueByParentApi } from "@/api/sys/menu"
 import { ElMessage } from "element-plus"
 
 const dialogVisible = ref(false)

@@ -61,7 +61,7 @@ export const usePermissionStore = defineStore("permission", () => {
                 disabled: 0,
                 meta: {
                   title: "角色管理",
-                  icon: "Role",
+                  icon: "Postcard",
                   breadcrumb: true
                 },
                 children: []
