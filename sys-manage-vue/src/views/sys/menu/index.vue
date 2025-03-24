@@ -173,8 +173,11 @@ const ChangeDisable = async (row: SMenuList) => {
 }
 
 const load = async (row: SMenuList, treeNode: unknown, resolve: (data: SMenuList[]) => void) => {
-  searchData.menuParentId = row.menuId
-  const { data } = await listByParentApi(searchData)
+  const tmp = {
+    ...searchData,
+    menuParentId: row.menuId
+  }
+  const { data } = await listByParentApi(tmp)
   resolve(data)
 }
 
