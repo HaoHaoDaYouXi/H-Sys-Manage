@@ -43,7 +43,7 @@
           >
             新增菜单
           </el-button>
-          <el-button type="danger" :icon="Delete">批量删除</el-button>
+          <el-button type="danger" :icon="Delete" @click="batchDel">批量删除</el-button>
         </div>
       </div>
       <div class="table-wrapper">
@@ -207,6 +207,22 @@ const handleDelete = (row: SMenuList) => {
     batchDelApi({ list: [row.menuId]} as ListObjectBO).then((res) => {
       ElMessage.success("删除成功")
       itemSuccess({ menuParentId: row.menuParentId })
+    }).catch((error) => {
+      ElMessage.error("删除失败")
+    })
+  })
+}
+
+const batchDel = async () => {
+  ElMessageBox.confirm("确定要删除吗？", "提示", {
+    type: "warning",
+    confirmButtonText: "确定",
+    cancelButtonText: "取消"
+  }).then(async () => {
+    console.log(tableDataRef.value?.getSelectionRows())
+    batchDelApi({ list: tableDataRef.value?.getSelectionRows()?.map((m: SMenuList) => m.menuId) } as ListObjectBO).then((res) => {
+      ElMessage.success("删除成功")
+      itemSuccess({ menuParentId: TopId })
     }).catch((error) => {
       ElMessage.error("删除失败")
     })
