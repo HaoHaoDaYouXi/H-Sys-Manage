@@ -94,7 +94,7 @@ public class SMenuController {
      * @return res
      */
     @GetMapping("/detail/{id}")
-    public Response<Object> detail(@PathVariable String id) {
+    public Response<Object> detail(@PathVariable Long id) {
         return OkResponse.QUERY.toResponse(sMenuService.getById(id));
     }
 
