@@ -222,7 +222,6 @@ const batchDel = async () => {
     confirmButtonText: "确定",
     cancelButtonText: "取消"
   }).then(async () => {
-    console.log(tableDataRef.value?.getSelectionRows())
     batchDelApi({ list: tableDataRef.value?.getSelectionRows()?.map((m: SMenuList) => m.menuId) } as ListObjectBO).then((res) => {
       ElMessage.success("删除成功")
       itemSuccess({ menuParentId: TopId })
