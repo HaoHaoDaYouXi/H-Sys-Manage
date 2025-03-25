@@ -234,7 +234,6 @@ const open = async (menuTypeData: [], id?: number) => {
       form.value = detail.data
       form.value.menuParentId = detail.data.menuParentPath.split('-').map(Number)
     }catch (e) {
-      console.log(e)
       ElMessage.error("获取详情失败")
     }
     formLoading.value = false
