@@ -3,6 +3,7 @@ package com.haohaodayouxi.manage.service.impl;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.haohaodayouxi.common.core.constants.CurrentUserContextHolder;
+import com.haohaodayouxi.common.core.exception.BusinessException;
 import com.haohaodayouxi.common.core.model.vo.keyValue.LabelValueVO;
 import com.haohaodayouxi.common.util.constants.StringConstant;
 import com.haohaodayouxi.common.util.enums.TrueFalseEnum;
@@ -86,18 +87,18 @@ public class SMenuServiceImpl extends ServiceImpl<SMenuMapper, SMenu> implements
                 .build();
         boolean add = ObjectUtils.isEmpty(menu.getMenuId());
         if (!add && menu.getMenuId().equals(menu.getMenuParentId())) {
-            throw new RuntimeException("父级菜单不能是自身");
+            throw new BusinessException("父级菜单不能是自身");
         }
         if (!menu.getMenuParentId().equals(SysConstants.TOP_LEVEL_ID)) {
             SMenu parent = baseMapper.selectById(menu.getMenuParentId());
             if (ObjectUtils.isEmpty(parent)) {
-                throw new RuntimeException("父级菜单数据错误，请重试");
+                throw new BusinessException("父级菜单数据错误，请重试");
             } else {
                 menu.setMenuParentPath(splitParentPath(parent.getMenuParentPath(), parent.getMenuId()));
             }
         }
         if (baseMapper.sameCheck(menu.getMenuId(), menu.getMenuParentId(), menu.getMenuName(), menu.getMenuKey())) {
-            throw new RuntimeException("当前父级下菜单名称或菜单标识已存在");
+            throw new BusinessException("当前父级下菜单名称或菜单标识已存在");
         }
         LoginCacheBO bo = (LoginCacheBO) CurrentUserContextHolder.get();
         menu.setUpdateUid(bo.getUserLoginCacheBO().getUserId());
@@ -109,7 +110,7 @@ public class SMenuServiceImpl extends ServiceImpl<SMenuMapper, SMenu> implements
         } else {
             SMenu old = baseMapper.selectById(menu.getMenuId());
             if (ObjectUtils.isEmpty(old)) {
-                throw new RuntimeException("菜单编号数据错误，请重试");
+                throw new BusinessException("菜单编号数据错误，请重试");
             }
             baseMapper.updateById(menu);
             if (!old.getMenuParentPath().equals(menu.getMenuParentPath())) {
