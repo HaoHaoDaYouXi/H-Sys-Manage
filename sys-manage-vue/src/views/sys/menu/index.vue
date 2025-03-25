@@ -6,7 +6,7 @@
           <el-input v-model="searchData.menuName" placeholder="请输入" />
         </el-form-item>
         <el-form-item prop="menuType" label="菜单类型">
-          <el-select v-model="searchData.menuType" placeholder="请选择菜单类型">
+          <el-select v-model="searchData.menuType" placeholder="请选择菜单类型" clearable>
             <el-option
               v-for="item in menuTypeList"
               :key="item.value"
@@ -16,7 +16,7 @@
           </el-select>
         </el-form-item>
         <el-form-item prop="disabled" label="禁用状态">
-          <el-select v-model="searchData.disabled" placeholder="请选择禁用状态">
+          <el-select v-model="searchData.disabled" placeholder="请选择禁用状态" clearable>
             <el-option
               v-for="item in DisabledList"
               :key="item.value"
