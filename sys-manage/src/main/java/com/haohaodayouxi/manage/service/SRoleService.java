@@ -5,6 +5,7 @@ import com.haohaodayouxi.common.core.model.vo.page.PageBaseVO;
 import com.haohaodayouxi.manage.model.db.SRole;
 import com.haohaodayouxi.manage.model.req.role.SRoleAddOrUpdReq;
 import com.haohaodayouxi.manage.model.req.role.SRolePageListReq;
+import com.haohaodayouxi.manage.model.res.role.RoleMenuDetailRes;
 import com.haohaodayouxi.manage.model.res.role.SRolePageListRes;
 
 import java.util.List;
@@ -26,6 +27,8 @@ public interface SRoleService extends IService<SRole> {
     PageBaseVO<SRolePageListRes> pageList(SRolePageListReq req);
 
     void addOrUpd(SRoleAddOrUpdReq req);
+
+    RoleMenuDetailRes getDetail(Long id);
 
     void batchDel(List<Long> ids);
 

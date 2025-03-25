@@ -1,9 +1,9 @@
 package com.haohaodayouxi.manage.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.haohaodayouxi.common.core.model.vo.keyValue.LabelValueVO;
 import com.haohaodayouxi.manage.model.db.SMenu;
 import com.haohaodayouxi.manage.model.req.menu.SMenuListReq;
+import com.haohaodayouxi.manage.model.res.menu.MenuTreeRes;
 import com.haohaodayouxi.manage.model.res.menu.SMenuListRes;
 import org.apache.ibatis.annotations.Param;
 
@@ -19,7 +19,7 @@ public interface SMenuMapper extends BaseMapper<SMenu> {
 
     List<SMenuListRes> listByParent(SMenuListReq req);
 
-    List<LabelValueVO<String, Long>> labelValueByParent(Long parentId);
+    List<MenuTreeRes> labelValueByParent(Long parentId);
 
     void changeParentPath(@Param("oldPath") String oldPath, @Param("newPath") String newPath);
 

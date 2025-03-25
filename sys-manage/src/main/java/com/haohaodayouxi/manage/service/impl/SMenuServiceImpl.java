@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.haohaodayouxi.common.core.constants.CurrentUserContextHolder;
 import com.haohaodayouxi.common.core.exception.BusinessException;
-import com.haohaodayouxi.common.core.model.vo.keyValue.LabelValueVO;
 import com.haohaodayouxi.common.util.constants.StringConstant;
 import com.haohaodayouxi.common.util.enums.TrueFalseEnum;
 import com.haohaodayouxi.manage.constants.SysConstants;
@@ -17,6 +16,7 @@ import com.haohaodayouxi.manage.model.req.menu.ChangeDisableReq;
 import com.haohaodayouxi.manage.model.req.menu.SMenuAddOrUpdReq;
 import com.haohaodayouxi.manage.model.req.menu.SMenuListReq;
 import com.haohaodayouxi.manage.model.req.param.SParamReq;
+import com.haohaodayouxi.manage.model.res.menu.MenuTreeRes;
 import com.haohaodayouxi.manage.model.res.menu.SMenuListRes;
 import com.haohaodayouxi.manage.service.SMenuService;
 import com.haohaodayouxi.manage.service.SParamService;
@@ -56,7 +56,7 @@ public class SMenuServiceImpl extends ServiceImpl<SMenuMapper, SMenu> implements
     }
 
     @Override
-    public List<LabelValueVO<String, Long>> labelValueByParent(Long parentId) {
+    public List<MenuTreeRes> labelValueByParent(Long parentId) {
         if (ObjectUtils.isEmpty(parentId)) {
             parentId = SysConstants.TOP_LEVEL_ID;
         }

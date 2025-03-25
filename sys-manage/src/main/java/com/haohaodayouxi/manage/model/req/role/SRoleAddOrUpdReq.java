@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 角色表
@@ -42,4 +43,9 @@ public class SRoleAddOrUpdReq implements Serializable {
      */
     @NotBlank(groups = AddValid.class)
     private String roleType;
+
+    /**
+     * 菜单权限
+     */
+    private List<Long> menuIds;
 }

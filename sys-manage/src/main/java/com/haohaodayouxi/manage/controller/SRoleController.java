@@ -12,6 +12,7 @@ import com.haohaodayouxi.manage.model.bo.param.SParamBO;
 import com.haohaodayouxi.manage.model.req.param.SParamReq;
 import com.haohaodayouxi.manage.model.req.role.SRoleAddOrUpdReq;
 import com.haohaodayouxi.manage.model.req.role.SRolePageListReq;
+import com.haohaodayouxi.manage.model.res.role.RoleMenuDetailRes;
 import com.haohaodayouxi.manage.service.SParamService;
 import com.haohaodayouxi.manage.service.SRoleService;
 import jakarta.annotation.Resource;
@@ -83,8 +84,8 @@ public class SRoleController {
      * @return res
      */
     @GetMapping("/detail/{id}")
-    public Response<Object> detail(@PathVariable String id) {
-        return OkResponse.UPDATE.toResponse(sRoleService.getById(id));
+    public Response<RoleMenuDetailRes> detail(@PathVariable Long id) {
+        return OkResponse.QUERY.toResponse(sRoleService.getDetail(id));
     }
 
     /**

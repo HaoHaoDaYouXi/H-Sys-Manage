@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.haohaodayouxi.common.core.constants.CurrentUserContextHolder;
+import com.haohaodayouxi.common.core.exception.BusinessException;
 import com.haohaodayouxi.common.core.model.vo.page.PageBaseVO;
 import com.haohaodayouxi.common.util.constants.StringConstant;
 import com.haohaodayouxi.common.util.enums.TrueFalseEnum;
@@ -12,14 +13,18 @@ import com.haohaodayouxi.manage.constants.enums.role.RoleTypeEnum;
 import com.haohaodayouxi.manage.mapper.SRoleMapper;
 import com.haohaodayouxi.manage.model.bo.login.LoginCacheBO;
 import com.haohaodayouxi.manage.model.bo.param.SParamBO;
+import com.haohaodayouxi.manage.model.db.MRoleMenu;
 import com.haohaodayouxi.manage.model.db.SRole;
 import com.haohaodayouxi.manage.model.req.param.SParamReq;
 import com.haohaodayouxi.manage.model.req.role.SRoleAddOrUpdReq;
 import com.haohaodayouxi.manage.model.req.role.SRolePageListReq;
+import com.haohaodayouxi.manage.model.res.role.RoleMenuDetailRes;
 import com.haohaodayouxi.manage.model.res.role.SRolePageListRes;
+import com.haohaodayouxi.manage.service.MRoleMenuService;
 import com.haohaodayouxi.manage.service.SParamService;
 import com.haohaodayouxi.manage.service.SRoleService;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 
@@ -32,10 +37,13 @@ import java.util.stream.Collectors;
  * @author TONE
  * @date 2024/12/8
  */
+@Slf4j
 @Service
 public class SRoleServiceImpl extends ServiceImpl<SRoleMapper, SRole> implements SRoleService {
     @Resource
     private SParamService paramService;
+    @Resource
+    private MRoleMenuService roleMenuService;
 
     @Override
     public int updateBatch(List<SRole> list) {
@@ -82,9 +90,71 @@ public class SRoleServiceImpl extends ServiceImpl<SRoleMapper, SRole> implements
             role.setCreateUid(bo.getUserLoginCacheBO().getUserId());
             role.setCreateTime(role.getUpdateTime());
             baseMapper.insert(role);
+            if (ObjectUtils.isNotEmpty(req.getMenuIds())) {
+                roleMenuService.saveBatch(req.getMenuIds().stream().map(m -> MRoleMenu.builder()
+                        .roleId(role.getRoleId())
+                        .menuId(m)
+                        .createUid(role.getCreateUid())
+                        .updateUid(role.getCreateUid())
+                        .createTime(role.getCreateTime())
+                        .updateTime(role.getUpdateTime())
+                        .build()).toList());
+            }
         } else {
             baseMapper.updateById(role);
+            if (ObjectUtils.isNotEmpty(req.getMenuIds())) {
+                List<MRoleMenu> list = roleMenuService.list(new LambdaQueryWrapper<MRoleMenu>()
+                        .eq(MRoleMenu::getRoleId, role.getRoleId())
+                        .eq(MRoleMenu::getDelStatus, TrueFalseEnum.FALSE.getCode()));
+                if (ObjectUtils.isNotEmpty(list)) {
+                    // 原有ID和新ID比较，是否有更新，在使用saveOrUpdate进行批量更新和新增
+                    Map<Long, MRoleMenu> map = list.stream().collect(Collectors.toMap(MRoleMenu::getMenuId, m -> m));
+                    List<MRoleMenu> addOrUpdList = new ArrayList<>(req.getMenuIds().stream().map(m -> {
+                        MRoleMenu mr = MRoleMenu.builder()
+                                .roleId(role.getRoleId())
+                                .menuId(m)
+                                .updateUid(role.getCreateUid())
+                                .updateTime(role.getUpdateTime())
+                                .build();
+                        if (map.containsKey(m)) {
+                            mr.setId(map.get(m).getId());
+                            mr.setVersion(map.get(m).getVersion() + 1);
+                            map.remove(m);
+                        } else {
+                            mr.setCreateUid(role.getCreateUid());
+                            mr.setCreateTime(role.getUpdateTime());
+                        }
+                        return mr;
+                    }).toList());
+                    if (ObjectUtils.isNotEmpty(map)) {
+                        map.forEach((k, v) -> {
+                            v.setDelStatus(TrueFalseEnum.TRUE.getCode());
+                            v.setUpdateUid(role.getCreateUid());
+                            v.setUpdateTime(role.getUpdateTime());
+                            addOrUpdList.add(v);
+                        });
+                    }
+                    roleMenuService.saveOrUpdateBatch(addOrUpdList);
+                }
+            }
         }
+    }
+
+    @Override
+    public RoleMenuDetailRes getDetail(Long id) {
+        SRole role = baseMapper.selectById(id);
+        if (ObjectUtils.isEmpty(role)) {
+            throw new BusinessException("角色数据有误");
+        }
+        List<Long> menuIds = roleMenuService.list(new LambdaQueryWrapper<MRoleMenu>()
+                .eq(MRoleMenu::getRoleId, role.getRoleId())
+                .eq(MRoleMenu::getDelStatus, TrueFalseEnum.FALSE.getCode())).stream().map(MRoleMenu::getMenuId).toList();
+        return RoleMenuDetailRes.builder()
+                .roleId(role.getRoleId())
+                .roleName(role.getRoleName())
+                .roleType(role.getRoleType())
+                .menuIds(menuIds)
+                .build();
     }
 
     @Override
