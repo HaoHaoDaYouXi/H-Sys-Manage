@@ -53,6 +53,20 @@ export const usePermissionStore = defineStore("permission", () => {
             },
             children: [
               {
+                id: "24",
+                parentId: "11",
+                menuType: 2,
+                path: "User",
+                component: "User",
+                disabled: 0,
+                meta: {
+                  title: "用户管理",
+                  icon: "UserFilled",
+                  breadcrumb: true
+                },
+                children: []
+              },
+              {
                 id: "23",
                 parentId: "11",
                 menuType: 2,
