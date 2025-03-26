@@ -94,9 +94,9 @@ public class SRoleServiceImpl extends ServiceImpl<SRoleMapper, SRole> implements
                 roleMenuService.saveBatch(req.getMenuIds().stream().map(m -> MRoleMenu.builder()
                         .roleId(role.getRoleId())
                         .menuId(m)
-                        .createUid(role.getCreateUid())
-                        .updateUid(role.getCreateUid())
-                        .createTime(role.getCreateTime())
+                        .createUid(bo.getUserLoginCacheBO().getUserId())
+                        .updateUid(bo.getUserLoginCacheBO().getUserId())
+                        .createTime(role.getUpdateTime())
                         .updateTime(role.getUpdateTime())
                         .build()).toList());
             }
@@ -113,7 +113,7 @@ public class SRoleServiceImpl extends ServiceImpl<SRoleMapper, SRole> implements
                         MRoleMenu mr = MRoleMenu.builder()
                                 .roleId(role.getRoleId())
                                 .menuId(m)
-                                .updateUid(role.getCreateUid())
+                                .updateUid(bo.getUserLoginCacheBO().getUserId())
                                 .updateTime(role.getUpdateTime())
                                 .build();
                         if (map.containsKey(m)) {
@@ -121,7 +121,7 @@ public class SRoleServiceImpl extends ServiceImpl<SRoleMapper, SRole> implements
                             mr.setVersion(map.get(m).getVersion() + 1);
                             map.remove(m);
                         } else {
-                            mr.setCreateUid(role.getCreateUid());
+                            mr.setCreateUid(bo.getUserLoginCacheBO().getUserId());
                             mr.setCreateTime(role.getUpdateTime());
                         }
                         return mr;
@@ -129,12 +129,21 @@ public class SRoleServiceImpl extends ServiceImpl<SRoleMapper, SRole> implements
                     if (ObjectUtils.isNotEmpty(map)) {
                         map.forEach((k, v) -> {
                             v.setDelStatus(TrueFalseEnum.TRUE.getCode());
-                            v.setUpdateUid(role.getCreateUid());
+                            v.setUpdateUid(bo.getUserLoginCacheBO().getUserId());
                             v.setUpdateTime(role.getUpdateTime());
                             addOrUpdList.add(v);
                         });
                     }
                     roleMenuService.saveOrUpdateBatch(addOrUpdList);
+                } else {
+                    roleMenuService.saveBatch(req.getMenuIds().stream().map(m -> MRoleMenu.builder()
+                            .roleId(role.getRoleId())
+                            .menuId(m)
+                            .createUid(bo.getUserLoginCacheBO().getUserId())
+                            .updateUid(bo.getUserLoginCacheBO().getUserId())
+                            .createTime(role.getUpdateTime())
+                            .updateTime(role.getUpdateTime())
+                            .build()).toList());
                 }
             }
         }
