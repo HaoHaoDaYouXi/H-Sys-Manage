@@ -2,7 +2,7 @@ import { request } from "@/utils/service"
 
 const API_PREFIX = "s_param"
 
-/** 改变使用角色 */
+/** 获取所有参数 */
 export function getAllParamApi(params: any) {
   return request<ApiRes<any>>({
     url: `${API_PREFIX}/getAllParam`,
