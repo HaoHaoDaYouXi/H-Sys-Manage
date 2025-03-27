@@ -8,6 +8,7 @@ import com.haohaodayouxi.manage.constants.RedisConstants;
 import com.haohaodayouxi.manage.mapper.SParamMapper;
 import com.haohaodayouxi.manage.model.bo.param.SParamBO;
 import com.haohaodayouxi.manage.model.db.SParam;
+import com.haohaodayouxi.manage.model.req.param.SParamAddOrUpdReq;
 import com.haohaodayouxi.manage.model.req.param.SParamReq;
 import com.haohaodayouxi.manage.service.SParamService;
 import jakarta.annotation.Resource;
@@ -99,5 +100,10 @@ public class SParamServiceImpl extends ServiceImpl<SParamMapper, SParam> impleme
             res = res.stream().sorted(Comparator.comparing(SParamBO::getParamSortCode).thenComparing(SParamBO::getParamCode)).collect(Collectors.toList());
         }
         return res;
+    }
+
+    @Override
+    public void addOrUpd(SParamAddOrUpdReq req) {
+
     }
 }

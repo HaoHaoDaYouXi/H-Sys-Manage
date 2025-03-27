@@ -29,19 +29,19 @@ public class SRoleAddOrUpdReq implements Serializable {
     /**
      * ID
      */
-    @NotNull(groups = UpdValid.class)
+    @NotNull(groups = UpdValid.class, message = "id不能为空")
     private Long roleId;
 
     /**
      * 角色名称
      */
-    @NotBlank(groups = AddValid.class)
+    @NotBlank(groups = {AddValid.class, UpdValid.class}, message = "角色名称不能为空")
     private String roleName;
 
     /**
      * 角色类型(取配置表code=11)
      */
-    @NotBlank(groups = AddValid.class)
+    @NotBlank(groups = {AddValid.class, UpdValid.class}, message = "角色类型不能为空")
     private String roleType;
 
     /**

@@ -3,6 +3,7 @@ package com.haohaodayouxi.manage.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.haohaodayouxi.manage.model.bo.param.SParamBO;
 import com.haohaodayouxi.manage.model.db.SParam;
+import com.haohaodayouxi.manage.model.req.param.SParamAddOrUpdReq;
 import com.haohaodayouxi.manage.model.req.param.SParamReq;
 
 import java.util.List;
@@ -36,5 +37,7 @@ public interface SParamService extends IService<SParam> {
      * @return
      */
     List<SParamBO> getByCache(SParamReq req);
+
+    void addOrUpd(SParamAddOrUpdReq req);
 
 }
