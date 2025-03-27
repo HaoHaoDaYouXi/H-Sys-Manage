@@ -96,13 +96,17 @@ public class SMenuServiceImpl extends ServiceImpl<SMenuMapper, SMenu> implements
                 .build();
         boolean add = ObjectUtils.isEmpty(menu.getMenuId());
         if (!add && menu.getMenuId().equals(menu.getMenuParentId())) {
-            throw new BusinessException("父级菜单不能是自身");
+            throw new BusinessException("父级不能是自身");
         }
         if (!menu.getMenuParentId().equals(SysConstants.TOP_LEVEL_ID)) {
             SMenu parent = baseMapper.selectById(menu.getMenuParentId());
             if (ObjectUtils.isEmpty(parent)) {
-                throw new BusinessException("父级菜单数据错误，请重试");
+                throw new BusinessException("父级数据错误，请重试");
             } else {
+                // 判断父级路径不包含自身ID
+                if (!add && parent.getMenuParentPath().contains(String.valueOf(menu.getMenuId()))) {
+                    throw new BusinessException("父级不能是自身的子集");
+                }
                 menu.setMenuParentPath(splitParentPath(parent.getMenuParentPath(), parent.getMenuId()));
             }
         }
