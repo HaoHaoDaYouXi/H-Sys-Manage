@@ -123,7 +123,7 @@ import { batchDelApi, getMenuTypeApi, listByParentApi, changeDisableApi } from "
 import { SMenuListReq, SMenuList } from "@/api/sys/menu/types/menu"
 import { TopId, DisabledList, TrueFalseEnum } from "@/utils/enums"
 import Item from "./item.vue"
-import { ListObjectBO } from "@/api/commonTypes"
+import {LabelValue, ListObjectBO} from "@/api/commonTypes"
 
 defineOptions({
   // 命名当前组件
@@ -139,7 +139,7 @@ const searchData = reactive<SMenuListReq>({
   disabled: undefined
 })
 
-const menuTypeList = ref<[]>([])
+const menuTypeList = ref<LabelValue[]>([])
 const getMenuType = async () => {
   try {
     const { data } = await getMenuTypeApi()
