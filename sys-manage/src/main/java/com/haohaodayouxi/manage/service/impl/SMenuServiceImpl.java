@@ -104,7 +104,7 @@ public class SMenuServiceImpl extends ServiceImpl<SMenuMapper, SMenu> implements
                 throw new BusinessException("父级数据错误，请重试");
             } else {
                 // 判断父级路径不包含自身ID
-                if (!add && parent.getMenuParentPath().contains(String.valueOf(menu.getMenuId()))) {
+                if (!add && checkParentPath(parent.getMenuParentPath(), menu.getMenuId())) {
                     throw new BusinessException("父级不能是自身的子集");
                 }
                 menu.setMenuParentPath(splitParentPath(parent.getMenuParentPath(), parent.getMenuId()));
@@ -141,6 +141,10 @@ public class SMenuServiceImpl extends ServiceImpl<SMenuMapper, SMenu> implements
         return ObjectUtils.isEmpty(parentPath)
                 ? menuId.toString()
                 : parentPath + StringConstant.STRIKETHROUGH + menuId;
+    }
+
+    private boolean checkParentPath(String parentPath, Long menuId) {
+        return Arrays.stream(parentPath.split(StringConstant.STRIKETHROUGH)).anyMatch(f -> f.equals(menuId.toString()));
     }
 
     @Override
