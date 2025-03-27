@@ -8,7 +8,7 @@ import { getToken, removeToken, setToken } from "@/utils/cache/cookies"
 import { resetRouter } from "@/router"
 import { loginApi, loginCacheApi } from "@/api/login"
 import { type LoginReq, UserRoles } from "@/api/login/types/login"
-import { changeUseRole } from "@/api/sys/user";
+import { changeUseRoleApi } from "@/api/sys/user"
 
 export interface UserInfoData {
   userName: string
@@ -76,7 +76,7 @@ export const useUserStore = defineStore("user", () => {
 
   /** 更改角色 */
   const changeRole = async (id: number) => {
-    const { data } = await changeUseRole({id})
+    const { data } = await changeUseRoleApi({id})
     if (data) {
       resetState()
       permissionStore.resetState()

@@ -147,11 +147,11 @@
 
 <script lang="ts" setup>
 import { reactive, ref, watch } from "vue"
-import { tableDataApi } from "@/api/table"
+import { tableDataApi } from "@/api/sys/table"
 import {
   type CreateOrUpdateTableRequestData,
   type TableData
-} from "@/api/table/types/table"
+} from "@/api/sys/table/types/table"
 import {
   type FormInstance,
   type FormRules,

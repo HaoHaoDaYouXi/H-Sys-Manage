@@ -64,10 +64,7 @@ public class SParamServiceImpl extends ServiceImpl<SParamMapper, SParam> impleme
 
     @Override
     public List<SParamBO> getByReq(SParamReq req) {
-        if (ObjectUtils.isEmpty(req) || ObjectUtils.allNull(req.getParamCode(), req.getParamCodes(), req.getParamParentCode())) {
-            return null;
-        }
-        if (ObjectUtils.allNotNull(req.getParamCode(), req.getParamCodes())) {
+        if (ObjectUtils.isNotEmpty(req) && ObjectUtils.allNotNull(req.getParamCode(), req.getParamCodes())) {
             req.setParamCodes(req.getParamCodes() + StringConstant.EN_COMMA + req.getParamCode());
         }
         List<SParamBO> res = baseMapper.getByReq(req);
@@ -76,24 +73,25 @@ public class SParamServiceImpl extends ServiceImpl<SParamMapper, SParam> impleme
     }
 
     public List<SParamBO> getByCache(SParamReq req) {
-        if (ObjectUtils.isEmpty(req) || ObjectUtils.allNull(req.getParamCode(), req.getParamCodes(), req.getParamParentCode())) {
-            return null;
-        }
-        List<String> ids = new ArrayList<>();
-        if (ObjectUtils.isNotEmpty(req.getParamCode())) {
-            ids.add(req.getParamCode().toString());
-        }
-        if (ObjectUtils.isNotEmpty(req.getParamCodes())) {
-            ids.addAll(Arrays.stream(req.getParamCodes().split(StringConstant.EN_COMMA)).toList());
-        }
         List<SParamBO> res;
-        if (ObjectUtils.isNotEmpty(req.getParamParentCode())) {
-            res = stringRedisServiceImpl.batchGetByPattern(RedisConstants.getParamKey(req.getParamParentCode()) + StringConstant.MATCHES_PATTERN, SParamBO.class);
-            if (ObjectUtils.isNotEmpty(ids)) {
-                res = res.stream().filter(f -> ids.contains(f.getParamCode().toString())).toList();
-            }
+        if (ObjectUtils.isEmpty(req) || ObjectUtils.allNull(req.getParamCode(), req.getParamCodes(), req.getParamParentCode())) {
+            res = stringRedisServiceImpl.batchGetByPattern(RedisConstants.PARAM_KEY + StringConstant.COLON + StringConstant.MATCHES_PATTERN, SParamBO.class);
         } else {
-            res = stringRedisServiceImpl.batchGetByKeys(ids.stream().map(f -> RedisConstants.getParamKey(Long.parseLong(f))).toList(), SParamBO.class, true);
+            List<String> ids = new ArrayList<>();
+            if (ObjectUtils.isNotEmpty(req.getParamCode())) {
+                ids.add(req.getParamCode().toString());
+            }
+            if (ObjectUtils.isNotEmpty(req.getParamCodes())) {
+                ids.addAll(Arrays.stream(req.getParamCodes().split(StringConstant.EN_COMMA)).toList());
+            }
+            if (ObjectUtils.isNotEmpty(req.getParamParentCode())) {
+                res = stringRedisServiceImpl.batchGetByPattern(RedisConstants.getParamKey(req.getParamParentCode()) + StringConstant.MATCHES_PATTERN, SParamBO.class);
+                if (ObjectUtils.isNotEmpty(ids)) {
+                    res = res.stream().filter(f -> ids.contains(f.getParamCode().toString())).toList();
+                }
+            } else {
+                res = stringRedisServiceImpl.batchGetByKeys(ids.stream().map(f -> RedisConstants.getParamKey(Long.parseLong(f))).toList(), SParamBO.class, true);
+            }
         }
         if (ObjectUtils.isEmpty(res)) {
             res = getByReq(req);

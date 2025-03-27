@@ -1,5 +1,5 @@
 import { request } from "@/utils/service"
-import type * as Table from "./types/table"
+import type * as Table from "@/api/sys/table/types/table"
 
 /** 增 */
 export function createTableDataApi(data: Table.CreateOrUpdateTableRequestData) {
