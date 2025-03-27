@@ -7,29 +7,37 @@ import { useSettingsStore } from "./settings"
 import { getToken, removeToken, setToken } from "@/utils/cache/cookies"
 import { resetRouter } from "@/router"
 import { loginApi, loginCacheApi } from "@/api/login"
-import { type LoginReq } from "@/api/login/types/login"
-import { getUserInfoApi } from "@/api/user"
-import { type UserInfoData } from "@/api/user/types/user"
+import { type LoginReq, UserRoles } from "@/api/login/types/login"
+import { changeUseRole } from "@/api/sys/user";
+
+export interface UserInfoData {
+  userName: string
+  avatar: string
+  userRoleId: number
+  roleName: string
+}
 
 export const useUserStore = defineStore("user", () => {
   const token = ref<string>(getToken() || "")
   const user_info: UserInfoData = reactive({
     userName: "",
     avatar: "",
-    roleId: 0,
+    userRoleId: 0,
     roleName: ""
   })
+  const roleList = ref<UserRoles[]>([])
   /** 设置用户信息 */
-  const setUserInfo = (userInfo: UserInfoData) => {
+  const setUserInfo = (userInfo: UserInfoData, roles: UserRoles[]) => {
     user_info.userName = userInfo.userName || ""
     user_info.avatar = userInfo.avatar || ""
-    user_info.roleId = userInfo.roleId || 0
+    user_info.userRoleId = userInfo.userRoleId || 0
     user_info.roleName = userInfo.roleName || ""
+    roleList.value = roles || []
   }
   /** 重置状态 */
   const resetState = () => {
     token.value = ""
-    setUserInfo({ userName: "", avatar: "", roleId: 0, roleName: "" })
+    setUserInfo({ userName: "", avatar: "", userRoleId: 0, roleName: "" }, [])
   }
 
   const permissionStore = usePermissionStoreHook()
@@ -49,9 +57,9 @@ export const useUserStore = defineStore("user", () => {
     setUserInfo({
       userName: data.userLoginCacheBO.userName,
       avatar: data.userLoginCacheBO.userAvatar,
-      roleId: data.userLinkLoginCacheBO.userRoles[0].roleId,
+      userRoleId: data.userLinkLoginCacheBO.userRoles[0].id,
       roleName: data.userLinkLoginCacheBO.userRoles[0].roleName
-    })
+    }, data.userLinkLoginCacheBO.userRoles)
   }
 
   /** 登出 */
@@ -66,33 +74,20 @@ export const useUserStore = defineStore("user", () => {
     }
   }
 
-  const roleList = [
-    {
-      value: 1,
-      label: "系统管理员"
-    },
-    {
-      value: 2,
-      label: "测试人员1"
-    },
-    {
-      value: 3,
-      label: "测试人员2"
-    },
-    {
-      value: 4,
-      label: "测试人员3"
-    }
-  ]
   /** 更改角色 */
-  const changeRole = async (roleId: number) => {
-    roleList.forEach((r) => {
-      if (r.value === roleId) {
-        user_info.roleId = r.value
-        user_info.roleName = r.label
-        return
+  const changeRole = async (id: number) => {
+    const { data } = await changeUseRole({id})
+    if (data) {
+      resetState()
+      permissionStore.resetState()
+      resetRouter()
+      if (settingsStore.cacheTagsView) {
+        tagsViewStore.delAllVisitedViews()
+        tagsViewStore.delAllCachedViews()
       }
-    })
+      // 刷新页面
+      location.reload()
+    }
   }
 
   return { token, user_info, login, getUserInfo, logout, roleList, changeRole }

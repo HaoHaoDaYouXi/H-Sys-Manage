@@ -42,6 +42,15 @@ public class SMenuServiceImpl extends ServiceImpl<SMenuMapper, SMenu> implements
     private SParamService paramService;
 
     @Override
+    public List<SMenu> getRouterByToken() {
+        LoginCacheBO bo = (LoginCacheBO) CurrentUserContextHolder.get();
+        if (ObjectUtils.isEmpty(bo.getUserLinkLoginCacheBO().getUserRoles())) {
+            throw new BusinessException("用户角色数据错误，请重试");
+        }
+        return baseMapper.getSMenuByRole(bo.getUserLinkLoginCacheBO().getUserRoles().getFirst().getRoleId());
+    }
+
+    @Override
     public List<SMenuListRes> listByParent(SMenuListReq req) {
         if (ObjectUtils.isEmpty(req.getMenuParentId())) {
             req.setMenuParentId(SysConstants.TOP_LEVEL_ID);

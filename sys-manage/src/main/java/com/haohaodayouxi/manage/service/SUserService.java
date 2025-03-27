@@ -19,4 +19,6 @@ public interface SUserService extends IService<SUser> {
 
     int batchInsert(List<SUser> list);
 
+    void changeUseRole(Long id);
+
 }

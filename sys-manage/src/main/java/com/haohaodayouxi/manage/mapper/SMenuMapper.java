@@ -17,6 +17,8 @@ import java.util.List;
  */
 public interface SMenuMapper extends BaseMapper<SMenu> {
 
+    List<SMenu> getSMenuByRole(Long roleId);
+
     List<SMenuListRes> listByParent(SMenuListReq req);
 
     List<MenuTreeRes> labelValueByParent(Long parentId);

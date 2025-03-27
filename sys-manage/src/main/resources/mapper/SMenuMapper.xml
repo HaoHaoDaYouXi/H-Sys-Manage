@@ -94,4 +94,12 @@
     </if>
     )
   </select>
+
+  <select id="getSMenuByRole" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from s_menu
+    where del_status = 0
+    and menu_id in (select menu_id from m_role_menu where del_status = 0 and role_id = #{roleId})
+  </select>
 </mapper>

@@ -13,10 +13,6 @@ declare module "vue-router" {
      */
     icon?: string
     /**
-     * 设置该路由的图标 elIcon
-     */
-    elIcon?: string
-    /**
      * 默认 false，设置 true 的时候该路由不会在侧边栏出现
      */
     hidden?: boolean
@@ -46,5 +42,9 @@ declare module "vue-router" {
      * 默认为 false，为 true 时代表需要缓存，此时该路由和该页面都需要设置一致的 Name
      */
     cachedView?: boolean
+    /**
+     * 排序
+     */
+    showOrder?: number
   }
 }

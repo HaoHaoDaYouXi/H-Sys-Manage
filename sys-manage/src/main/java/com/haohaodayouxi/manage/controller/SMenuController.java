@@ -9,6 +9,7 @@ import com.haohaodayouxi.common.core.model.vo.keyValue.LabelValueVO;
 import com.haohaodayouxi.common.util.constants.StringConstant;
 import com.haohaodayouxi.manage.constants.enums.menu.MenuTypeEnum;
 import com.haohaodayouxi.manage.model.bo.param.SParamBO;
+import com.haohaodayouxi.manage.model.db.SMenu;
 import com.haohaodayouxi.manage.model.req.menu.ChangeDisableReq;
 import com.haohaodayouxi.manage.model.req.menu.SMenuAddOrUpdReq;
 import com.haohaodayouxi.manage.model.req.menu.SMenuListReq;
@@ -41,6 +42,16 @@ public class SMenuController {
     @Resource
     private SParamService paramService;
 
+
+    /**
+     * 获取登录缓存
+     *
+     * @return res
+     */
+    @GetMapping("/getRouterByToken")
+    public Response<List<SMenu>> getRouterByToken() {
+        return OkResponse.OK.toResponse(sMenuService.getRouterByToken());
+    }
 
     /**
      * 菜单类型

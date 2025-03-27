@@ -2,11 +2,8 @@
 import store from "@/store"
 import { defineStore } from "pinia"
 import { componentsMap, constantRoutes } from "@/router"
-import { getRouterByUserApi } from "@/api/permission"
-import {
-  PermissionRes,
-  PermissionData
-} from "@/api/permission/types/permission"
+import { getRouterByTokenApi } from "@/api/sys/menu"
+import { TopId, TrueFalseEnum } from "@/utils/enums"
 
 export const usePermissionStore = defineStore("permission", () => {
   /** 可访问的路由 */
@@ -33,144 +30,60 @@ export const usePermissionStore = defineStore("permission", () => {
 
   /** 获取路由 */
   const getRouterByUser = async () => {
-    // const { data } = await getRouterByUserApi() // 调用接口获取路由信息
-    const { data } = {
-      data: {
-        routerDetails: [
-          {
-            id: "11",
-            parentId: "0",
-            menuType: 1,
-            path: "/sys",
-            component: "Layout",
-            // redirect: "/table/element-plus",
-            disabled: 0,
-            meta: {
-              title: "系统管理",
-              icon: "setting",
-              breadcrumb: true,
-              alwaysShow: true
-            },
-            children: [
-              {
-                id: "24",
-                parentId: "11",
-                menuType: 2,
-                path: "User",
-                component: "User",
-                disabled: 0,
-                meta: {
-                  title: "用户管理",
-                  icon: "UserFilled",
-                  breadcrumb: true
-                },
-                children: []
-              },
-              {
-                id: "23",
-                parentId: "11",
-                menuType: 2,
-                path: "Role",
-                component: "Role",
-                disabled: 0,
-                meta: {
-                  title: "角色管理",
-                  icon: "Postcard",
-                  breadcrumb: true
-                },
-                children: []
-              },
-              {
-                id: "22",
-                parentId: "11",
-                menuType: 2,
-                path: "menu",
-                component: "Menu",
-                disabled: 0,
-                meta: {
-                  title: "菜单管理",
-                  icon: "menu",
-                  breadcrumb: true
-                },
-                children: []
-              },
-              {
-                id: "22",
-                parentId: "11",
-                menuType: 2,
-                path: "element-plus",
-                component: "Table",
-                disabled: 0,
-                meta: {
-                  title: "Element Plus",
-                  icon: "List",
-                  breadcrumb: true
-                  // ,cachedView: true
-                },
-                children: []
-              }
-            ]
-          },
-          {
-            id: "1",
-            parentId: "0",
-            menuType: 2,
-            path: "/test",
-            component: "Layout",
-            // redirect: "/",
-            disabled: 0,
-            meta: {
-              title: "首页",
-              icon: "el-icon-s-home",
-              hidden: false,
-              breadcrumb: true,
-              alwaysShow: true
-            },
-            children: [
-              {
-                id: "2",
-                parentId: "1",
-                menuType: 2,
-                path: "index",
-                component: "Index",
-                disabled: 0,
-                meta: {
-                  title: "首页",
-                  icon: "el-icon-s-home",
-                  breadcrumb: true,
-                  // affix: false,
-                  hidden: false
-                },
-                children: []
-              }
-            ]
-          }
-        ]
-      }
-    }
+    const { data } = await getRouterByTokenApi() // 调用接口获取路由信息
     // 格式化路由对象
-    addRouter.value = generateRoutes(data.routerDetails)
+    addRouter.value = generateRoutes(data)
     defaultOpenRoute.value = addRouter.value[0].children[0]
     routes.value = constantRoutes.concat(addRouter.value)
   }
   /** 格式化路由 */
-  const generateRoutes = (routers: PermissionData[]) => {
-    const res: any[] = []
-    routers.forEach((route) => {
-      const tmp = {
-        ...route,
-        component: componentsMap[route.component],
-        name:
-          route.component === "Layout"
-            ? route.path.replace(/^\//, "")
-            : route.component
+  const generateRoutes = (routers: any[]) => {
+    /**
+     * 将路由对象格式化为标准格式
+     */
+    const formatRoute = (item: any, children: any[]) => {
+      return {
+        id: item.menuId,
+        menuParentId: item.menuParentId,
+        menuType: item.menuType,
+        path: item.menuKey,
+        name: item.menuComponent === "Layout" ? item.menuKey.replace(/^\//, "") : item.menuComponent,
+        component: componentsMap[item.menuComponent],
+        disabled: item.disabled,
+        meta: {
+          title: item.menuName,
+          icon: item.menuIcon,
+          hidden: item.hidden === TrueFalseEnum.TRUE,
+          activeMenu: item.activeMenu,
+          breadcrumb: item.breadcrumb === TrueFalseEnum.TRUE,
+          affix: item.affix === TrueFalseEnum.TRUE,
+          alwaysShow: item.alwaysShow === TrueFalseEnum.TRUE,
+          cachedView: item.cachedView === TrueFalseEnum.TRUE,
+          showOrder: item.showOrder,
+        },
+        children: children
       }
-      if (route.children) {
-        tmp.children = generateRoutes(route.children)
+    }
+    const getChild = (data: any[], parentId: any): any[] => {
+      const child = data.filter((item) => item.menuParentId === parentId)
+        .sort((a, b) => {
+          if (a.showOrder > b.showOrder) return -1
+          if (a.showOrder < b.showOrder) return 1
+          if (a.menuId < b.menuId) {
+            return 1
+          } else {
+            return -1
+          }
+        })
+      if (child.length > 0) {
+        return child.map((item) => {
+          return formatRoute(item, getChild(data, item.menuId))
+        })
+      }else {
+        return []
       }
-      res.push(tmp)
-    })
-    return res
+    }
+    return getChild(routers, TopId);
   }
 
   return {

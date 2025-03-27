@@ -63,11 +63,11 @@
                 <el-dropdown-item
                   class="hover-focus-cancel"
                   v-for="item in userStore.roleList"
-                  :key="item.value"
-                  :disabled="item.value === user_info.roleId"
+                  :key="item.id"
+                  :disabled="item.id === user_info.userRoleId"
                 >
-                  <span class="fs-14" @click="handleRoleSelect(item.value)">
-                    {{ item.label }}
+                  <span class="fs-14" @click="handleRoleSelect(item.id)">
+                    {{ item.roleName }}
                   </span>
                 </el-dropdown-item>
               </li>
@@ -119,7 +119,7 @@ const permissionStore = usePermissionStore()
 const { layoutMode } = storeToRefs(settingsStore)
 const { resizeCount } = storeToRefs(appStore)
 
-const topNavLogoRef = ref<typeof RouterLink | null>()
+const topNavLogoRef = ref<HTMLElement | null>()
 const rightMenuRef = ref<HTMLDivElement | null>()
 
 const elMenuBoxRef = ref<HTMLDivElement | null>()
@@ -145,7 +145,7 @@ const user_info = computed(() => {
 
 const booRoleList = ref<boolean>(false)
 
-const resolvePath = (item: RouteRecordRaw) => {
+const resolvePath = (item: any) => {
   // 如果是个完成的url直接返回
   if (isExternal(item.path)) {
     return item.path

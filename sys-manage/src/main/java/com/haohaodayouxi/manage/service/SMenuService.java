@@ -18,6 +18,8 @@ import java.util.List;
  */
 public interface SMenuService extends IService<SMenu> {
 
+    List<SMenu> getRouterByToken();
+
     List<SMenuListRes> listByParent(SMenuListReq req);
 
     List<MenuTreeRes> labelValueByParent(Long parentId);
