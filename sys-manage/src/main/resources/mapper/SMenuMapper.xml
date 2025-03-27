@@ -67,18 +67,22 @@
   </select>
 
   <select id="labelValueByParent" resultType="com.haohaodayouxi.manage.model.res.menu.MenuTreeRes">
-    select menu_id                                                                           as value,
-           menu_name                                                                         as label,
-           EXISTS (select 1 from s_menu where del_status = 0 and menu_parent_id = s.menu_id) as hasChildren
+    select menu_id as value,
+    menu_name as label,
+    EXISTS (select 1 from s_menu where del_status = 0 and menu_parent_id = s.menu_id) as hasChildren
     from s_menu s
     where del_status = 0
-      and menu_parent_id = #{parentId,jdbcType=BIGINT}
+    and menu_parent_id = #{parentId,jdbcType=BIGINT}
     order by show_order desc, update_time desc
   </select>
 
   <update id="changeParentPath">
     update s_menu
-    set menu_parent_path = REPLACE(menu_parent_path, #{oldPath}, #{newPath})
+    set menu_parent_path = CONCAT(
+    SUBSTRING(menu_parent_path, 1, LOCATE(#{oldPath}, menu_parent_path) - 1),
+    #{newPath},
+    SUBSTRING(menu_parent_path, LOCATE(#{oldPath}, menu_parent_path) + LENGTH(#{oldPath}))
+    )
     where menu_parent_path rlike #{oldPath}
   </update>
 

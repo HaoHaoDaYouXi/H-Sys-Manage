@@ -1,215 +1,228 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.haohaodayouxi.manage.mapper.SParamMapper">
-    <resultMap id="BaseResultMap" type="com.haohaodayouxi.manage.model.db.SParam">
-        <!--@mbg.generated-->
-        <!--@Table s_param-->
-        <id column="param_code" jdbcType="BIGINT" property="paramCode" />
-        <result column="param_parent_code" jdbcType="BIGINT" property="paramParentCode" />
-        <result column="param_name" jdbcType="VARCHAR" property="paramName" />
-        <result column="param_value" jdbcType="VARCHAR" property="paramValue" />
-        <result column="param_remark" jdbcType="VARCHAR" property="paramRemark" />
-        <result column="param_sort_code" jdbcType="INTEGER" property="paramSortCode" />
-        <result column="version" jdbcType="INTEGER" property="version" />
-        <result column="create_uid" jdbcType="BIGINT" property="createUid" />
-        <result column="update_uid" jdbcType="BIGINT" property="updateUid" />
-        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-        <result column="del_status" jdbcType="TINYINT" property="delStatus" />
-    </resultMap>
-    <sql id="Base_Column_List">
-        <!--@mbg.generated-->
-        param_code, param_parent_code, param_name, param_value, param_remark, param_sort_code,
-        version, create_uid, update_uid, create_time, update_time, del_status
-    </sql>
-    <update id="updateBatch" parameterType="java.util.List">
-        <!--@mbg.generated-->
-        update s_param
-        <trim prefix="set" suffixOverrides=",">
-            <trim prefix="param_parent_code = case" suffix="end,">
-                <foreach collection="list" index="index" item="item">
-                    when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.paramParentCode,jdbcType=BIGINT}
-                </foreach>
-            </trim>
-            <trim prefix="param_name = case" suffix="end,">
-                <foreach collection="list" index="index" item="item">
-                    when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.paramName,jdbcType=VARCHAR}
-                </foreach>
-            </trim>
-            <trim prefix="param_value = case" suffix="end,">
-                <foreach collection="list" index="index" item="item">
-                    when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.paramValue,jdbcType=VARCHAR}
-                </foreach>
-            </trim>
-            <trim prefix="param_remark = case" suffix="end,">
-                <foreach collection="list" index="index" item="item">
-                    when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.paramRemark,jdbcType=VARCHAR}
-                </foreach>
-            </trim>
-            <trim prefix="param_sort_code = case" suffix="end,">
-                <foreach collection="list" index="index" item="item">
-                    when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.paramSortCode,jdbcType=INTEGER}
-                </foreach>
-            </trim>
-            <trim prefix="version = case" suffix="end,">
-                <foreach collection="list" index="index" item="item">
-                    when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.version,jdbcType=INTEGER}
-                </foreach>
-            </trim>
-            <trim prefix="create_uid = case" suffix="end,">
-                <foreach collection="list" index="index" item="item">
-                    when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.createUid,jdbcType=BIGINT}
-                </foreach>
-            </trim>
-            <trim prefix="update_uid = case" suffix="end,">
-                <foreach collection="list" index="index" item="item">
-                    when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.updateUid,jdbcType=BIGINT}
-                </foreach>
-            </trim>
-            <trim prefix="create_time = case" suffix="end,">
-                <foreach collection="list" index="index" item="item">
-                    when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.createTime,jdbcType=TIMESTAMP}
-                </foreach>
-            </trim>
-            <trim prefix="update_time = case" suffix="end,">
-                <foreach collection="list" index="index" item="item">
-                    when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.updateTime,jdbcType=TIMESTAMP}
-                </foreach>
-            </trim>
-            <trim prefix="del_status = case" suffix="end,">
-                <foreach collection="list" index="index" item="item">
-                    when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.delStatus,jdbcType=TINYINT}
-                </foreach>
-            </trim>
-        </trim>
-        where param_code in
-        <foreach close=")" collection="list" item="item" open="(" separator=", ">
-            #{item.paramCode,jdbcType=BIGINT}
+  <resultMap id="BaseResultMap" type="com.haohaodayouxi.manage.model.db.SParam">
+    <!--@mbg.generated-->
+    <!--@Table s_param-->
+    <id column="param_code" jdbcType="BIGINT" property="paramCode"/>
+    <result column="param_parent_code" jdbcType="BIGINT" property="paramParentCode"/>
+    <result column="param_name" jdbcType="VARCHAR" property="paramName"/>
+    <result column="param_value" jdbcType="VARCHAR" property="paramValue"/>
+    <result column="param_remark" jdbcType="VARCHAR" property="paramRemark"/>
+    <result column="param_sort_code" jdbcType="INTEGER" property="paramSortCode"/>
+    <result column="version" jdbcType="INTEGER" property="version"/>
+    <result column="create_uid" jdbcType="BIGINT" property="createUid"/>
+    <result column="update_uid" jdbcType="BIGINT" property="updateUid"/>
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    <result column="del_status" jdbcType="TINYINT" property="delStatus"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    param_code, param_parent_code, param_name, param_value, param_remark, param_sort_code,
+    version, create_uid, update_uid, create_time, update_time, del_status
+  </sql>
+  <update id="updateBatch" parameterType="java.util.List">
+    <!--@mbg.generated-->
+    update s_param
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="param_parent_code = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.paramParentCode,jdbcType=BIGINT}
         </foreach>
-    </update>
-    <update id="updateBatchSelective" parameterType="java.util.List">
-        <!--@mbg.generated-->
-        update s_param
-        <trim prefix="set" suffixOverrides=",">
-            <trim prefix="param_parent_code = case" suffix="end,">
-                <foreach collection="list" index="index" item="item">
-                    <if test="item.paramParentCode != null">
-                        when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.paramParentCode,jdbcType=BIGINT}
-                    </if>
-                </foreach>
-            </trim>
-            <trim prefix="param_name = case" suffix="end,">
-                <foreach collection="list" index="index" item="item">
-                    <if test="item.paramName != null">
-                        when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.paramName,jdbcType=VARCHAR}
-                    </if>
-                </foreach>
-            </trim>
-            <trim prefix="param_value = case" suffix="end,">
-                <foreach collection="list" index="index" item="item">
-                    <if test="item.paramValue != null">
-                        when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.paramValue,jdbcType=VARCHAR}
-                    </if>
-                </foreach>
-            </trim>
-            <trim prefix="param_remark = case" suffix="end,">
-                <foreach collection="list" index="index" item="item">
-                    <if test="item.paramRemark != null">
-                        when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.paramRemark,jdbcType=VARCHAR}
-                    </if>
-                </foreach>
-            </trim>
-            <trim prefix="param_sort_code = case" suffix="end,">
-                <foreach collection="list" index="index" item="item">
-                    <if test="item.paramSortCode != null">
-                        when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.paramSortCode,jdbcType=INTEGER}
-                    </if>
-                </foreach>
-            </trim>
-            <trim prefix="version = case" suffix="end,">
-                <foreach collection="list" index="index" item="item">
-                    <if test="item.version != null">
-                        when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.version,jdbcType=INTEGER}
-                    </if>
-                </foreach>
-            </trim>
-            <trim prefix="create_uid = case" suffix="end,">
-                <foreach collection="list" index="index" item="item">
-                    <if test="item.createUid != null">
-                        when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.createUid,jdbcType=BIGINT}
-                    </if>
-                </foreach>
-            </trim>
-            <trim prefix="update_uid = case" suffix="end,">
-                <foreach collection="list" index="index" item="item">
-                    <if test="item.updateUid != null">
-                        when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.updateUid,jdbcType=BIGINT}
-                    </if>
-                </foreach>
-            </trim>
-            <trim prefix="create_time = case" suffix="end,">
-                <foreach collection="list" index="index" item="item">
-                    <if test="item.createTime != null">
-                        when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.createTime,jdbcType=TIMESTAMP}
-                    </if>
-                </foreach>
-            </trim>
-            <trim prefix="update_time = case" suffix="end,">
-                <foreach collection="list" index="index" item="item">
-                    <if test="item.updateTime != null">
-                        when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.updateTime,jdbcType=TIMESTAMP}
-                    </if>
-                </foreach>
-            </trim>
-            <trim prefix="del_status = case" suffix="end,">
-                <foreach collection="list" index="index" item="item">
-                    <if test="item.delStatus != null">
-                        when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.delStatus,jdbcType=TINYINT}
-                    </if>
-                </foreach>
-            </trim>
-        </trim>
-        where param_code in
-        <foreach close=")" collection="list" item="item" open="(" separator=", ">
-            #{item.paramCode,jdbcType=BIGINT}
+      </trim>
+      <trim prefix="param_name = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.paramName,jdbcType=VARCHAR}
         </foreach>
-    </update>
-    <insert id="batchInsert" keyColumn="param_code" keyProperty="paramCode" parameterType="map" useGeneratedKeys="true">
-        <!--@mbg.generated-->
-        insert into s_param
-        (param_parent_code, param_name, param_value, param_remark, param_sort_code, version,
-        create_uid, update_uid, create_time, update_time, del_status)
-        values
-        <foreach collection="list" item="item" separator=",">
-            (#{item.paramParentCode,jdbcType=BIGINT}, #{item.paramName,jdbcType=VARCHAR},
-            #{item.paramValue,jdbcType=VARCHAR},
-            #{item.paramRemark,jdbcType=VARCHAR}, #{item.paramSortCode,jdbcType=INTEGER},
-            #{item.version,jdbcType=INTEGER},
-            #{item.createUid,jdbcType=BIGINT}, #{item.updateUid,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP},
-            #{item.updateTime,jdbcType=TIMESTAMP}, #{item.delStatus,jdbcType=TINYINT})
+      </trim>
+      <trim prefix="param_value = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.paramValue,jdbcType=VARCHAR}
         </foreach>
-    </insert>
+      </trim>
+      <trim prefix="param_remark = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.paramRemark,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="param_sort_code = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.paramSortCode,jdbcType=INTEGER}
+        </foreach>
+      </trim>
+      <trim prefix="version = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.version,jdbcType=INTEGER}
+        </foreach>
+      </trim>
+      <trim prefix="create_uid = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.createUid,jdbcType=BIGINT}
+        </foreach>
+      </trim>
+      <trim prefix="update_uid = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.updateUid,jdbcType=BIGINT}
+        </foreach>
+      </trim>
+      <trim prefix="create_time = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.createTime,jdbcType=TIMESTAMP}
+        </foreach>
+      </trim>
+      <trim prefix="update_time = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.updateTime,jdbcType=TIMESTAMP}
+        </foreach>
+      </trim>
+      <trim prefix="del_status = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.delStatus,jdbcType=TINYINT}
+        </foreach>
+      </trim>
+    </trim>
+    where param_code in
+    <foreach close=")" collection="list" item="item" open="(" separator=", ">
+      #{item.paramCode,jdbcType=BIGINT}
+    </foreach>
+  </update>
+  <update id="updateBatchSelective" parameterType="java.util.List">
+    <!--@mbg.generated-->
+    update s_param
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="param_parent_code = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.paramParentCode != null">
+            when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.paramParentCode,jdbcType=BIGINT}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="param_name = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.paramName != null">
+            when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.paramName,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="param_value = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.paramValue != null">
+            when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.paramValue,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="param_remark = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.paramRemark != null">
+            when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.paramRemark,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="param_sort_code = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.paramSortCode != null">
+            when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.paramSortCode,jdbcType=INTEGER}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="version = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.version != null">
+            when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.version,jdbcType=INTEGER}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="create_uid = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.createUid != null">
+            when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.createUid,jdbcType=BIGINT}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="update_uid = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.updateUid != null">
+            when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.updateUid,jdbcType=BIGINT}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="create_time = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.createTime != null">
+            when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.createTime,jdbcType=TIMESTAMP}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="update_time = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.updateTime != null">
+            when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.updateTime,jdbcType=TIMESTAMP}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="del_status = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.delStatus != null">
+            when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.delStatus,jdbcType=TINYINT}
+          </if>
+        </foreach>
+      </trim>
+    </trim>
+    where param_code in
+    <foreach close=")" collection="list" item="item" open="(" separator=", ">
+      #{item.paramCode,jdbcType=BIGINT}
+    </foreach>
+  </update>
+  <insert id="batchInsert" keyColumn="param_code" keyProperty="paramCode" parameterType="map" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into s_param
+    (param_parent_code, param_name, param_value, param_remark, param_sort_code, version,
+    create_uid, update_uid, create_time, update_time, del_status)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.paramParentCode,jdbcType=BIGINT}, #{item.paramName,jdbcType=VARCHAR},
+      #{item.paramValue,jdbcType=VARCHAR},
+      #{item.paramRemark,jdbcType=VARCHAR}, #{item.paramSortCode,jdbcType=INTEGER},
+      #{item.version,jdbcType=INTEGER},
+      #{item.createUid,jdbcType=BIGINT}, #{item.updateUid,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP},
+      #{item.updateTime,jdbcType=TIMESTAMP}, #{item.delStatus,jdbcType=TINYINT})
+    </foreach>
+  </insert>
 
-    <select id="getByReq" resultType="com.haohaodayouxi.manage.model.bo.param.SParamBO">
-        select
-        <include refid="Base_Column_List" />
-        from s_param
-        <where>
-            del_status = 0
-            <if test="paramCode != null">
-                <choose>
-                    <when test="paramCodes != null">
-                        and param_code in (${paramCodes})
-                    </when>
-                    <otherwise>
-                        and param_code = #{paramCode}
-                    </otherwise>
-                </choose>
-            </if>
-            <if test="paramParentCode != null">
-                and param_parent_code = #{paramParentCode}
-            </if>
-        </where>
-        order by param_sort_code, param_code
-    </select>
+  <select id="getByReq" resultType="com.haohaodayouxi.manage.model.bo.param.SParamBO">
+    select
+    <include refid="Base_Column_List"/>
+    from s_param
+    <where>
+      del_status = 0
+      <if test="paramCode != null">
+        <choose>
+          <when test="paramCodes != null">
+            and param_code in (${paramCodes})
+          </when>
+          <otherwise>
+            and param_code = #{paramCode}
+          </otherwise>
+        </choose>
+      </if>
+      <if test="paramParentCode != null">
+        and param_parent_code = #{paramParentCode}
+      </if>
+    </where>
+    order by param_sort_code, param_code
+  </select>
+
+  <select id="sameCheck" resultType="boolean">
+    select
+    exists (
+    select 1 from s_param
+    where del_status = 0
+    and param_parent_code = #{paramParentCode}
+    and param_name = #{paramName}
+    <if test="paramCode != null">
+      and param_code != #{paramCode}
+    </if>
+    )
+  </select>
 </mapper>

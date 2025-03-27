@@ -23,4 +23,6 @@ public interface SParamMapper extends BaseMapper<SParam> {
     int batchInsert(@Param("list") List<SParam> list);
 
     List<SParamBO> getByReq(SParamReq req);
+
+    boolean sameCheck(@Param("paramCode") Long paramCode, @Param("paramParentCode") Long paramParentCode, @Param("paramName") String paramName);
 }

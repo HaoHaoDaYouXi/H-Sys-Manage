@@ -1,11 +1,15 @@
 package com.haohaodayouxi.manage.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.haohaodayouxi.common.core.constants.CurrentUserContextHolder;
+import com.haohaodayouxi.common.core.exception.BusinessException;
 import com.haohaodayouxi.common.core.interfaces.InitService;
 import com.haohaodayouxi.common.redis.service.impl.CommonRedisServiceImpl;
 import com.haohaodayouxi.common.util.constants.StringConstant;
 import com.haohaodayouxi.manage.constants.RedisConstants;
+import com.haohaodayouxi.manage.constants.SysConstants;
 import com.haohaodayouxi.manage.mapper.SParamMapper;
+import com.haohaodayouxi.manage.model.bo.login.LoginCacheBO;
 import com.haohaodayouxi.manage.model.bo.param.SParamBO;
 import com.haohaodayouxi.manage.model.db.SParam;
 import com.haohaodayouxi.manage.model.req.param.SParamAddOrUpdReq;
@@ -16,10 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -104,6 +105,60 @@ public class SParamServiceImpl extends ServiceImpl<SParamMapper, SParam> impleme
 
     @Override
     public void addOrUpd(SParamAddOrUpdReq req) {
-
+        SParam param = SParam.builder()
+                .paramCode(req.getParamCode())
+                .paramParentCode(req.getParamParentCode())
+                .paramName(req.getParamName())
+                .paramValue(req.getParamValue())
+                .paramRemark(req.getParamRemark())
+                .paramSortCode(req.getParamSortCode())
+                .build();
+        boolean add = ObjectUtils.isEmpty(param.getParamCode());
+        if (!add && param.getParamCode().equals(param.getParamParentCode())) {
+            throw new BusinessException("父级不能是自身");
+        }
+        if (!param.getParamParentCode().equals(SysConstants.TOP_LEVEL_ID)) {
+            SParam parent = baseMapper.selectById(param.getParamParentCode());
+            if (ObjectUtils.isEmpty(parent)) {
+                throw new BusinessException("父级数据错误，请重试");
+            } else {
+                // 判断父级路径不包含自身ID
+                // 1 1001 1001001
+                // 11 11001 11001001
+                int length = parent.getParamParentCode().toString().length();
+                int size = length % 3 > 0 ? length / 3 + 1 : length / 3;
+                for (int i = size; i > 0; i--) {
+                    int start = (i - 1) * 3 - 1;
+                    if (start < 0) {
+                        start = 0;
+                    }
+                    int end = i * 3 - 1;
+                    if (end > length) {
+                        end = length;
+                    }
+                    String substring = parent.getParamParentCode().toString().substring(start, end);
+                    if (substring.equals(param.getParamCode().toString())) {
+                        throw new BusinessException("父级不能是自身的子集");
+                    }
+                }
+            }
+        }
+        if (baseMapper.sameCheck(param.getParamCode(), param.getParamParentCode(), param.getParamName())) {
+            throw new BusinessException("当前父级下 { " + param.getParamName() + " } 已存在");
+        }
+        LoginCacheBO bo = (LoginCacheBO) CurrentUserContextHolder.get();
+        param.setUpdateUid(bo.getUserLoginCacheBO().getUserId());
+        param.setUpdateTime(new Date());
+        if (add) {
+            param.setCreateUid(bo.getUserLoginCacheBO().getUserId());
+            param.setCreateTime(param.getUpdateTime());
+            baseMapper.insert(param);
+        } else {
+            SParam old = baseMapper.selectById(param.getParamCode());
+            if (ObjectUtils.isEmpty(old)) {
+                throw new BusinessException("参数编号数据错误，请重试");
+            }
+            baseMapper.updateById(param);
+        }
     }
 }
