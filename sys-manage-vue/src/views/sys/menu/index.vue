@@ -53,6 +53,7 @@
           style="width: 100%"
           row-key="menuId"
           border
+          stripe
           lazy
           :load="load"
           :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
