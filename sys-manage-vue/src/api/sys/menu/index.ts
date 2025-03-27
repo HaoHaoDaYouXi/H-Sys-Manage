@@ -4,6 +4,14 @@ import { ListObjectBO } from "@/api/commonTypes"
 
 const API_PREFIX = "s_menu"
 
+/** 获取用户路由 */
+export function getRouterByTokenApi() {
+  return request<ApiRes<[]>>({
+    url: `${API_PREFIX}/getRouterByToken`,
+    method: "get"
+  })
+}
+
 /** 查 */
 export function getMenuTypeApi() {
   return request<ApiRes<[]>>({

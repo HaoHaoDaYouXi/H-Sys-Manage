@@ -2,9 +2,9 @@ import { request } from "@/utils/service"
 import { PermissionRes } from "./types/permission"
 
 /** 获取用户路由 */
-export function getRouterByUserApi() {
+export function getRouterByTokenApi() {
   return request<PermissionRes>({
-    url: "res/getRouterByUser",
+    url: "s_menu/getRouterByToken",
     method: "get"
   })
 }
