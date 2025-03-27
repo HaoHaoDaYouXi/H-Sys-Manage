@@ -789,11 +789,7 @@
 
 // main-container global css
 .app-container {
-  padding: 20px;
-}
-
-// 内容主体
-.container {
+  //padding: 20px;
   padding: 0 10px;
   box-sizing: border-box;
 }
@@ -1033,7 +1029,7 @@
 
 /* 开始 因引入tailwindcss 样式被污染而重置的写到这里 */
 @media screen {
-  .container {
+  .app-container {
     max-width: 100%;
   }
 }

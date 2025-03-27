@@ -41,7 +41,8 @@
           ref="tableDataRef"
           :data="tableData"
           row-key="roleId"
-          border>
+          border
+          stripe>
           <el-table-column type="selection" width="50" align="center" />
           <el-table-column prop="roleName" label="用户名" align="center" />
           <el-table-column prop="roleTypeStr" label="角色" align="center">
