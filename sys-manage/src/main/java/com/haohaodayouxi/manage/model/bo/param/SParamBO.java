@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * ParamBO
@@ -46,4 +47,9 @@ public class SParamBO implements Serializable {
      * 排序code
      */
     private Integer paramSortCode;
+
+    /**
+     * 修改时间
+     */
+    private Date updateTime;
 }
