@@ -40,4 +40,6 @@ public interface SParamService extends IService<SParam> {
 
     void addOrUpd(SParamAddOrUpdReq req);
 
+    void batchDel(List<Long> ids);
+
 }

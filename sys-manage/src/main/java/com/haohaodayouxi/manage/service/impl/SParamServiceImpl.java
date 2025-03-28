@@ -1,11 +1,13 @@
 package com.haohaodayouxi.manage.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.haohaodayouxi.common.core.constants.CurrentUserContextHolder;
 import com.haohaodayouxi.common.core.exception.BusinessException;
 import com.haohaodayouxi.common.core.interfaces.InitService;
 import com.haohaodayouxi.common.redis.service.impl.CommonRedisServiceImpl;
 import com.haohaodayouxi.common.util.constants.StringConstant;
+import com.haohaodayouxi.common.util.enums.TrueFalseEnum;
 import com.haohaodayouxi.manage.constants.RedisConstants;
 import com.haohaodayouxi.manage.constants.SysConstants;
 import com.haohaodayouxi.manage.mapper.SParamMapper;
@@ -160,5 +162,15 @@ public class SParamServiceImpl extends ServiceImpl<SParamMapper, SParam> impleme
             }
             baseMapper.updateById(param);
         }
+    }
+
+    @Override
+    public void batchDel(List<Long> ids) {
+        baseMapper.update(new LambdaUpdateWrapper<SParam>()
+                .set(SParam::getDelStatus, TrueFalseEnum.TRUE.getCode())
+                .set(SParam::getUpdateTime, new Date())
+                .eq(SParam::getDelStatus, TrueFalseEnum.FALSE.getCode())
+                .in(SParam::getParamCode, ids)
+        );
     }
 }

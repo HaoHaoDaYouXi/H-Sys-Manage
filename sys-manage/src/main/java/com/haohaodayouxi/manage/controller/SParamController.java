@@ -3,6 +3,7 @@ package com.haohaodayouxi.manage.controller;
 import com.haohaodayouxi.common.core.enums.OkResponse;
 import com.haohaodayouxi.common.core.interfaces.AddValid;
 import com.haohaodayouxi.common.core.interfaces.UpdValid;
+import com.haohaodayouxi.common.core.model.bo.ListObjectBO;
 import com.haohaodayouxi.common.core.model.res.Response;
 import com.haohaodayouxi.manage.model.req.param.SParamAddOrUpdReq;
 import com.haohaodayouxi.manage.service.SParamService;
@@ -65,6 +66,17 @@ public class SParamController {
     public Response<Object> upd(@RequestBody @Validated(UpdValid.class) SParamAddOrUpdReq req) {
         paramService.addOrUpd(req);
         return OkResponse.UPDATE.toResponse(true);
+    }
+
+    /**
+     * 批量删除
+     *
+     * @return res
+     */
+    @PostMapping("/batchDel")
+    public Response<Object> batchDel(@RequestBody @Validated ListObjectBO<Long> req) {
+        paramService.batchDel(req.getList());
+        return OkResponse.DELETE.toResponse(true);
     }
 
 }
