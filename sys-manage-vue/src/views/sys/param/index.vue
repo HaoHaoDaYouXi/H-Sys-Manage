@@ -12,6 +12,16 @@
           </el-button>
           <el-button type="danger" :icon="Delete" @click="batchDel">批量删除</el-button>
         </div>
+        <div>
+          <el-tooltip content="刷新当前页">
+            <el-button
+              type="primary"
+              :icon="RefreshRight"
+              circle
+              @click="getTableData"
+            />
+          </el-tooltip>
+        </div>
       </div>
       <div class="table-wrapper">
         <el-table
@@ -65,16 +75,14 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, onMounted } from "vue"
-import { type FormInstance, type FormRules, ElMessage, ElMessageBox, ElTable } from "element-plus"
-import { Search, Refresh, CirclePlus, Delete } from "@element-plus/icons-vue"
-import { batchDelApi, getMenuTypeApi, listByParentApi, changeDisableApi } from "@/api/sys/menu"
-import { SMenuListReq, SMenuList } from "@/api/sys/menu/types/menu"
-import { TopId, DisabledList, TrueFalseEnum } from "@/utils/enums"
+import { ref, onMounted } from "vue"
+import { ElMessage, ElMessageBox, ElTable } from "element-plus"
+import {CirclePlus, Delete, Download, RefreshRight} from "@element-plus/icons-vue"
+import { batchDelApi } from "@/api/sys/param"
+import { TopId, } from "@/utils/enums"
 import Item from "./item.vue"
-import { LabelValue, ListObjectBO } from "@/api/commonTypes"
-import { getAllParamApi } from "@/api/sys/param";
-import {componentsMap} from "@/router";
+import { ListObjectBO } from "@/api/commonTypes"
+import { getAllParamApi } from "@/api/sys/param"
 
 defineOptions({
   // 命名当前组件
@@ -84,7 +92,7 @@ defineOptions({
 const loading = ref<boolean>(false)
 
 const tableDataRef = ref<InstanceType<typeof ElTable>>()
-const tableData = ref<SMenuList[]>([])
+const tableData = ref<any[]>([])
 const getTableData = async () => {
   try {
     const { data } = await getAllParamApi()
@@ -126,13 +134,13 @@ const itemSuccess = async () => {
   await getTableData()
 }
 
-const handleDelete = (row: SMenuList) => {
+const handleDelete = (row: any) => {
   ElMessageBox.confirm("确定要删除吗？", "提示", {
     type: "warning",
     confirmButtonText: "确定",
     cancelButtonText: "取消"
   }).then(async () => {
-    batchDelApi({ list: [row.menuId]} as ListObjectBO).then((res) => {
+    batchDelApi({ list: [row.paramCode]} as ListObjectBO).then((res) => {
       ElMessage.success("删除成功")
       itemSuccess()
     }).catch((error) => {
@@ -147,7 +155,7 @@ const batchDel = async () => {
     confirmButtonText: "确定",
     cancelButtonText: "取消"
   }).then(async () => {
-    batchDelApi({ list: tableDataRef.value?.getSelectionRows()?.map((m: SMenuList) => m.menuId) } as ListObjectBO).then((res) => {
+    batchDelApi({ list: tableDataRef.value?.getSelectionRows()?.map((m: any) => m.paramCode) } as ListObjectBO).then((res) => {
       ElMessage.success("删除成功")
       itemSuccess()
     }).catch((error) => {

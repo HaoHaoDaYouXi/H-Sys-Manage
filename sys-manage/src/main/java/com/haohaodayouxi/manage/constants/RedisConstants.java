@@ -81,5 +81,7 @@ public interface RedisConstants {
     static String getParamKey(Long paramCode) {
         return PARAM_KEY + StringConstant.COLON + paramCode;
     }
+    
+    String PARAM_LOCK_KEY = PARAM_KEY + ":lock";
 
 }

@@ -53,8 +53,7 @@
           <el-form-item
             label="排序："
             label-width="120px"
-            prop="paramSortCode"
-            :rules="detailFormRules.required">
+            prop="paramSortCode">
             <el-input-number
               v-model="form.paramSortCode"
               :min="1" :max="99"
@@ -89,6 +88,7 @@ import { ref, nextTick } from "vue"
 import commonFormRules from "@/utils/rules"
 import { addApi, detailApi, updApi } from "@/api/sys/param"
 import { ElMessage } from "element-plus"
+import { TopId } from "@/utils/enums"
 
 const dialogVisible = ref(false)
 const dialogTitle = ref('新增参数')
@@ -124,7 +124,7 @@ const formLoading = ref(false)
 const formRef = ref()
 const form = ref({
   paramCode: undefined,
-  paramParentCode: undefined,
+  paramParentCode: TopId,
   paramName: '',
   paramValue: '',
   paramSortCode: 99,
@@ -141,7 +141,11 @@ const handleSubmit = async () => {
     if (valid) {
       formLoading.value = true
       const api = form.value.paramCode === undefined ? addApi : updApi
-      api(form.value)
+      const formData = {
+        ...form.value,
+        paramParentCode: (Array.isArray(form.value.paramParentCode) && form.value.paramParentCode.length > 0) ? form.value.paramParentCode[form.value.paramParentCode.length-1] : TopId
+      }
+      api(formData)
         .then((res) => {
           ElMessage.success(res.message)
           emit("success",)
@@ -159,7 +163,7 @@ const resetForm = () => {
   paramParentCodes.value = []
   form.value = {
     paramCode: undefined,
-    paramParentCode: undefined,
+    paramParentCode: TopId,
     paramName: '',
     paramValue: '',
     paramSortCode: 99,

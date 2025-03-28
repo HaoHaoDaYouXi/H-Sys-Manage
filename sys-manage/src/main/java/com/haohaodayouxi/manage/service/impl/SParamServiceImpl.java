@@ -152,9 +152,12 @@ public class SParamServiceImpl extends ServiceImpl<SParamMapper, SParam> impleme
         param.setUpdateUid(bo.getUserLoginCacheBO().getUserId());
         param.setUpdateTime(new Date());
         if (add) {
+            stringRedisServiceImpl.lock(RedisConstants.PARAM_LOCK_KEY);
+            param.setParamCode(baseMapper.getMaxParamCode(param.getParamParentCode()) + 1);
             param.setCreateUid(bo.getUserLoginCacheBO().getUserId());
             param.setCreateTime(param.getUpdateTime());
             baseMapper.insert(param);
+            stringRedisServiceImpl.unLock(RedisConstants.PARAM_LOCK_KEY);
         } else {
             SParam old = baseMapper.selectById(param.getParamCode());
             if (ObjectUtils.isEmpty(old)) {
@@ -162,6 +165,14 @@ public class SParamServiceImpl extends ServiceImpl<SParamMapper, SParam> impleme
             }
             baseMapper.updateById(param);
         }
+        setCache(Collections.singletonList(SParamBO.builder()
+                .paramCode(param.getParamCode())
+                .paramParentCode(param.getParamParentCode())
+                .paramName(param.getParamName())
+                .paramValue(param.getParamValue())
+                .paramSortCode(param.getParamSortCode())
+                .updateTime(param.getUpdateTime())
+                .build()));
     }
 
     @Override
@@ -172,5 +183,6 @@ public class SParamServiceImpl extends ServiceImpl<SParamMapper, SParam> impleme
                 .eq(SParam::getDelStatus, TrueFalseEnum.FALSE.getCode())
                 .in(SParam::getParamCode, ids)
         );
+        stringRedisServiceImpl.del(ids.stream().map(RedisConstants::getParamKey).toList());
     }
 }
