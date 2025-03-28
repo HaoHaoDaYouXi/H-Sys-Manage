@@ -59,7 +59,7 @@
           :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         >
           <el-table-column type="selection" width="50" align="center" />
-          <el-table-column prop="menuName" label="菜单名称" align="center" />
+          <el-table-column prop="menuName" label="菜单名称" align="left" />
           <el-table-column prop="menuIcon" label="图标" align="center">
             <template #default="scope">
               <IconItem v-if="scope.row.menuIcon" :icon="scope.row.menuIcon" />
