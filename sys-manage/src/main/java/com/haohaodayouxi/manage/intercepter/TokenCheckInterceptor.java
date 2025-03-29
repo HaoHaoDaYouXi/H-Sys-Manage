@@ -2,7 +2,6 @@ package com.haohaodayouxi.manage.intercepter;
 
 import com.haohaodayouxi.common.core.constants.CurrentParam;
 import com.haohaodayouxi.common.core.constants.CurrentUserContextHolder;
-import com.haohaodayouxi.common.core.constants.InterceptorCode;
 import com.haohaodayouxi.manage.config.SysAuthProperties;
 import com.haohaodayouxi.manage.model.bo.login.LoginCacheBO;
 import com.haohaodayouxi.manage.utils.LoginCacheUtil;

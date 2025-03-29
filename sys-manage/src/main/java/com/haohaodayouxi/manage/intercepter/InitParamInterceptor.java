@@ -5,7 +5,6 @@ import com.haohaodayouxi.common.core.annotation.PermissionApi;
 import com.haohaodayouxi.common.core.annotation.TokenApi;
 import com.haohaodayouxi.common.core.annotation.WhiteApi;
 import com.haohaodayouxi.common.core.constants.CurrentParam;
-import com.haohaodayouxi.common.core.constants.InterceptorCode;
 import com.haohaodayouxi.common.util.business.TokenUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

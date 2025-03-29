@@ -1,7 +1,10 @@
 package com.haohaodayouxi.manage.config;
 
-import com.haohaodayouxi.manage.intercepter.*;
 import com.haohaodayouxi.common.util.business.SpringContextHolder;
+import com.haohaodayouxi.manage.intercepter.ApiCheckInterceptor;
+import com.haohaodayouxi.manage.intercepter.InitParamInterceptor;
+import com.haohaodayouxi.manage.intercepter.PathCheckInterceptor;
+import com.haohaodayouxi.manage.intercepter.TokenCheckInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -27,7 +30,6 @@ public class WebAuthConfig implements WebMvcConfigurer {
         registry.addInterceptor(SpringContextHolder.getBean(InitParamInterceptor.class)).addPathPatterns("/**");
         registry.addInterceptor(SpringContextHolder.getBean(PathCheckInterceptor.class)).addPathPatterns("/**");
         registry.addInterceptor(SpringContextHolder.getBean(TokenCheckInterceptor.class)).addPathPatterns("/**");
-        registry.addInterceptor(SpringContextHolder.getBean(UserCheckInterceptor.class)).addPathPatterns("/**");
         registry.addInterceptor(SpringContextHolder.getBean(ApiCheckInterceptor.class)).addPathPatterns("/**");
     }
 }

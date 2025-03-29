@@ -1,7 +1,6 @@
 package com.haohaodayouxi.manage.intercepter;
 
 import com.alibaba.fastjson2.JSON;
-import com.haohaodayouxi.common.core.constants.InterceptorCode;
 import com.haohaodayouxi.common.core.enums.ErrorResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +26,7 @@ public class InterceptorErrorResponse {
         try {
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             // 第三位标记token数据问题 第四位标记token获取user数据有问题
-            if ((authStatus & InterceptorCode.TOKEN) > 0 || (authStatus & InterceptorCode.USER) > 0) {
+            if ((authStatus & InterceptorCode.TOKEN) > 0) {
                 response.getWriter().print(JSON.toJSONString(ErrorResponse.ILLEGAL_TOKEN.toResponse("请先登录")));
             } else if ((authStatus & InterceptorCode.API) > 0) {
                 response.getWriter().print(JSON.toJSONString(ErrorResponse.PERMISSION_DENIED.toResponse()));

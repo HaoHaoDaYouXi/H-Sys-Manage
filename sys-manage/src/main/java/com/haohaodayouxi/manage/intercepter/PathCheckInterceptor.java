@@ -1,8 +1,7 @@
 package com.haohaodayouxi.manage.intercepter;
 
-import com.haohaodayouxi.manage.config.SysAuthProperties;
 import com.haohaodayouxi.common.core.constants.CurrentParam;
-import com.haohaodayouxi.common.core.constants.InterceptorCode;
+import com.haohaodayouxi.manage.config.SysAuthProperties;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
