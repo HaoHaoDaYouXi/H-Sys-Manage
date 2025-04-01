@@ -9,6 +9,9 @@ import com.haohaodayouxi.manage.model.bo.login.LoginCacheBO;
 import com.haohaodayouxi.manage.model.bo.user.UserRoleBO;
 import com.haohaodayouxi.manage.model.db.MUserRole;
 import com.haohaodayouxi.manage.model.db.SUser;
+import com.haohaodayouxi.manage.model.req.user.SUserAddOrUpdReq;
+import com.haohaodayouxi.manage.model.req.user.SUserPageListReq;
+import com.haohaodayouxi.manage.model.res.user.SUserDetailRes;
 import com.haohaodayouxi.manage.service.MUserRoleService;
 import com.haohaodayouxi.manage.service.SUserService;
 import com.haohaodayouxi.manage.utils.LoginCacheUtil;
@@ -77,5 +80,25 @@ public class SUserServiceImpl extends ServiceImpl<SUserMapper, SUser> implements
         });
         bo.getUserLinkLoginCacheBO().getUserRoles().sort(Comparator.comparing(UserRoleBO::getUseStatus).reversed());
         loginCacheUtil.setLoginCache(bo);
+    }
+
+    @Override
+    public List<SUser> pageList(SUserPageListReq req) {
+        return List.of();
+    }
+
+    @Override
+    public void addOrUpd(SUserAddOrUpdReq req) {
+
+    }
+
+    @Override
+    public SUserDetailRes detail(Long id) {
+        return null;
+    }
+
+    @Override
+    public void batchDel(List<Long> ids) {
+
     }
 }
