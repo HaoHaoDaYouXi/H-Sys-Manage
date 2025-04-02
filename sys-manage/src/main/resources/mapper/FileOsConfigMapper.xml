@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haohaodayouxi.manage.mapper.FileOsConfigMapper">
+  <resultMap id="BaseResultMap" type="com.haohaodayouxi.manage.model.db.FileOsConfig">
+    <!--@mbg.generated-->
+    <!--@Table file_os_config-->
+    <id column="os_id" jdbcType="BIGINT" property="osId" />
+    <result column="os_name" jdbcType="VARCHAR" property="osName" />
+    <result column="os_source_type" jdbcType="VARCHAR" property="osSourceType" />
+    <result column="end_point" jdbcType="VARCHAR" property="endPoint" />
+    <result column="access_key_id" jdbcType="VARCHAR" property="accessKeyId" />
+    <result column="access_key_secret" jdbcType="VARCHAR" property="accessKeySecret" />
+    <result column="bucket_name" jdbcType="VARCHAR" property="bucketName" />
+    <result column="domain" jdbcType="VARCHAR" property="domain" />
+    <result column="version" jdbcType="INTEGER" property="version" />
+    <result column="create_uid" jdbcType="BIGINT" property="createUid" />
+    <result column="update_uid" jdbcType="BIGINT" property="updateUid" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="del_status" jdbcType="TINYINT" property="delStatus" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    os_id, os_name, os_source_type, end_point, access_key_id, access_key_secret, bucket_name, 
+    `domain`, version, create_uid, update_uid, create_time, update_time, del_status
+  </sql>
+</mapper>
