@@ -4,21 +4,3 @@ h:
     version: "1.0.0"
     base-package: "com.haohaodayouxi.manage"
     parent-package: "com.haohaodayouxi"
-  file:
-    config:
-      # 文件系统ID
-      osId: 1
-      # 文件系统名称
-      osName: "master"
-      # 文件系统源类型，如：LOCAL=本地存储、HW=华为云、ALI=阿里云、MINIO=MinIO，具体支持源由底层工具控制
-      osSourceType: "LOCAL"
-      # 节点地址
-      endPoint: ""
-      # 账号
-      accessKeyId: ""
-      # 密钥
-      accessKeySecret: ""
-      # 桶名 多个逗号分隔
-      bucketName: ""
-      # 代理域名 多个逗号分隔
-      domain: ""
