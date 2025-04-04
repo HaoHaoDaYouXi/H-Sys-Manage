@@ -15,20 +15,20 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 文件上传表
+ * 文件上传记录表
  *
  * @author TONE
- * @date 2025/4/2
+ * @date 2025/4/4
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "file_upload")
+@TableName(value = "file_upload_log")
 @JsonIgnoreProperties(value = {"createUid", "updateUid", "version", "delStatus"})
-public class FileUpload implements Serializable {
+public class FileUploadLog implements Serializable {
     @Serial
-    private static final long serialVersionUID = 8738119597485219997L;
+    private static final long serialVersionUID = 2955916273737970923L;
     /**
      * ID
      */
