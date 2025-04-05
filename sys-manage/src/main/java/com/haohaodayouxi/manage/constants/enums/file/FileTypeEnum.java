@@ -1,5 +1,6 @@
 package com.haohaodayouxi.manage.constants.enums.file;
 
+import com.haohaodayouxi.common.core.exception.BusinessException;
 import com.haohaodayouxi.common.core.model.vo.keyValue.LabelValueVO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 文件类型枚举
@@ -43,7 +45,8 @@ public enum FileTypeEnum {
     ),
     IMAGE_OR_DOC(3, "imgOrDoc",
             "图片和附件",
-            new String[]{"jpg", "png", "jpeg", "gif", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "pdf", "txt", "zip"}
+            Stream.concat(Arrays.stream(IMAGE.getFileFormat()), Arrays.stream(DOC.getFileFormat()))
+                    .toArray(String[]::new)
     ),
     AUDIO(4, "audio",
             "音频",
@@ -52,6 +55,11 @@ public enum FileTypeEnum {
     VIDEO(5, "video",
             "视频",
             new String[]{"mp4", "avi", "mpeg", "mov", "mkv"}
+    ),
+    AUDIO_OR_VIDEO(6, "video",
+            "视频",
+            Stream.concat(Arrays.stream(AUDIO.getFileFormat()), Arrays.stream(VIDEO.getFileFormat()))
+                    .toArray(String[]::new)
     ),
     ;
     /**
@@ -119,6 +127,17 @@ public enum FileTypeEnum {
             }
         }
         return OTHER;
+    }
+
+    public static FileTypeEnum getFileType(FileTypeEnum typeEnum, String fileFormat) {
+        if (typeEnum.equals(FileTypeEnum.OTHER)) {
+            return getByFileFormat(fileFormat);
+        } else {
+            if (!Arrays.asList(typeEnum.getFileFormat()).contains(fileFormat)) {
+                throw new BusinessException("文件格式不支持");
+            }
+        }
+        return typeEnum;
     }
 
 }
