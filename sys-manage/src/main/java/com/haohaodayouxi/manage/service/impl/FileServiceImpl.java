@@ -3,6 +3,7 @@ package com.haohaodayouxi.manage.service.impl;
 import com.haohaodayouxi.manage.service.FileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * FileServiceImpl
@@ -13,5 +14,10 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class FileServiceImpl implements FileService {
-    
+
+    @Override
+    public String uploadFile(Long userId, MultipartFile file) {
+        
+        return "";
+    }
 }
