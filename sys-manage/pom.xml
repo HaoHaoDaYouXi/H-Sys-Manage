@@ -48,6 +48,17 @@
             <artifactId>hutool-all</artifactId>
         </dependency>
 
+        <!--javacv-->
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>javacv</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>ffmpeg</artifactId>
+            <classifier>${javacv-platform-os.version}</classifier>
+        </dependency>
+
     </dependencies>
 
 </project>
