@@ -3,6 +3,7 @@ package com.haohaodayouxi.manage.utils;
 import com.haohaodayouxi.common.core.exception.BusinessException;
 import com.haohaodayouxi.manage.constants.enums.file.FrameLengthTypeEnum;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
@@ -21,17 +22,43 @@ import java.io.ByteArrayOutputStream;
 public class FfmpegUtil {
 
     /**
+     * 获取视频封面图
+     *
+     * @param bytes          视频数据流
+     * @param coverImgFormat 图片格式
+     * @param videoCoverWith 图片宽度
+     * @return 图片数据
+     */
+    private byte[] getVideoCoverImg(byte[] bytes, String coverImgFormat, int videoCoverWith) {
+        ByteArrayOutputStream bos = null;
+        try {
+            // 视频对应的封面图
+            bos = FfmpegUtil.getVideoFrameImage(new ByteArrayInputStream(bytes), coverImgFormat, videoCoverWith);
+            if (ObjectUtils.isNotEmpty(bos)) {
+                return bos.toByteArray();
+            }
+        } catch (Exception e) {
+            log.error("视频封面图生成异常", e);
+        } finally {
+            IOUtils.closeQuietly(bos);
+        }
+        return null;
+    }
+
+    /**
      * 获取视频帧图片
      * 优先提取关键帧，若不存在就按照总帧数进行等份取第一份之后的
      *
-     * @param bis 视频源
+     * @param bis            视频源
+     * @param formatName     图片格式
+     * @param videoCoverWith 图片宽度
      * @return 帧数据
      */
     public static ByteArrayOutputStream getVideoFrameImage(ByteArrayInputStream bis, String formatName, int videoCoverWith) {
         if (ObjectUtils.isEmpty(bis)) {
             throw new BusinessException("视频数据为空");
         }
-        ByteArrayOutputStream byteArrayOutputStream = null;
+        ByteArrayOutputStream bos = null;
         try {
             FFmpegFrameGrabber ff = new FFmpegFrameGrabber(bis);
             long start = System.currentTimeMillis();
@@ -60,15 +87,15 @@ public class FfmpegUtil {
             ff.stop();
             if (last != null && last.image != null) {
                 BufferedImage bufferedImage = doExecuteFrame(last, videoCoverWith);
-                byteArrayOutputStream = new ByteArrayOutputStream();
-                ImageIO.write(bufferedImage, formatName, byteArrayOutputStream);
+                bos = new ByteArrayOutputStream();
+                ImageIO.write(bufferedImage, formatName, bos);
             }
             long end = System.currentTimeMillis();
             log.debug("截取图片共耗时{}", end - start);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return byteArrayOutputStream;
+        return bos;
     }
 
 
