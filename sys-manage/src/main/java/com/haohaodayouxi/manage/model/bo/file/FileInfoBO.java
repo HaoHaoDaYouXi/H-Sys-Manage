@@ -10,6 +10,9 @@ import java.io.Serializable;
 
 /**
  * 文件信息对象
+ *
+ * @author TONE
+ * @date 2025/4/9
  */
 @Data
 @Builder
