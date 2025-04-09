@@ -22,16 +22,16 @@ public interface FilePathConstants {
     /**
      * 公共资源基础路径
      */
-    String COM_RES_FILES_PATH = "common_res";
+    String COM_RES_BASE_FILES_PATH = "common_res";
 
     /**
      * 业务基础路径
      */
-    String BUS_FILES_PATH = "bus/" + SysConstants.PROJECT_NAME;
+    String BUS_BASE_FILES_PATH = "bus/" + SysConstants.PROJECT_NAME;
 
     /**
      * 普通上传基础路径
      */
-    String UPLOAD_FILES_PATH = BUS_FILES_PATH + "/upload";
+    String UPLOAD_BASE_FILES_PATH = BUS_BASE_FILES_PATH + "/upload";
 
 }
