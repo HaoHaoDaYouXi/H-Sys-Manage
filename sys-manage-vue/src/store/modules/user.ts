@@ -1,4 +1,4 @@
-﻿import { computed, reactive, ref } from "vue"
+﻿import { reactive, ref } from "vue"
 import store from "@/store"
 import { defineStore } from "pinia"
 import { usePermissionStoreHook } from "./permission"
@@ -54,12 +54,15 @@ export const useUserStore = defineStore("user", () => {
   /** 获取用户详情 */
   const getUserInfo = async () => {
     const { data } = await loginCacheApi()
-    setUserInfo({
-      userName: data.userLoginCacheBO.userName,
-      avatar: data.userLoginCacheBO.userAvatar,
-      userRoleId: data.userLinkLoginCacheBO.userRoles[0].id,
-      roleName: data.userLinkLoginCacheBO.userRoles[0].roleName
-    }, data.userLinkLoginCacheBO.userRoles)
+    setUserInfo(
+      {
+        userName: data.userLoginCacheBO.userName,
+        avatar: data.userLoginCacheBO.userAvatar,
+        userRoleId: data.userLinkLoginCacheBO.userRoles[0].id,
+        roleName: data.userLinkLoginCacheBO.userRoles[0].roleName
+      },
+      data.userLinkLoginCacheBO.userRoles
+    )
   }
 
   /** 登出 */
@@ -76,7 +79,7 @@ export const useUserStore = defineStore("user", () => {
 
   /** 更改角色 */
   const changeRole = async (id: number) => {
-    const { data } = await changeUseRoleApi({id})
+    const { data } = await changeUseRoleApi({ id })
     if (data) {
       resetState()
       permissionStore.resetState()
