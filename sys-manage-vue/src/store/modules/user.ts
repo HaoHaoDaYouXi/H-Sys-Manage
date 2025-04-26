@@ -19,7 +19,7 @@ export interface UserInfoData {
 
 export const useUserStore = defineStore("user", () => {
   const token = ref<string>(getToken() || "")
-  const user_info: UserInfoData = reactive({
+  const userInfo: UserInfoData = reactive({
     userName: "",
     avatar: "",
     userRoleId: 0,
@@ -28,10 +28,10 @@ export const useUserStore = defineStore("user", () => {
   const roleList = ref<UserRoles[]>([])
   /** 设置用户信息 */
   const setUserInfo = (userInfo: UserInfoData, roles: UserRoles[]) => {
-    user_info.userName = userInfo.userName || ""
-    user_info.avatar = userInfo.avatar || ""
-    user_info.userRoleId = userInfo.userRoleId || 0
-    user_info.roleName = userInfo.roleName || ""
+    userInfo.userName = userInfo.userName || ""
+    userInfo.avatar = userInfo.avatar || ""
+    userInfo.userRoleId = userInfo.userRoleId || 0
+    userInfo.roleName = userInfo.roleName || ""
     roleList.value = roles || []
   }
   /** 重置状态 */
@@ -90,7 +90,7 @@ export const useUserStore = defineStore("user", () => {
     }
   }
 
-  return { token, user_info, login, getUserInfo, logout, roleList, changeRole }
+  return { token, userInfo, roleList, resetState, login, logout, getUserInfo, changeRole }
 })
 
 /** 在 setup 外使用 */
