@@ -1,4 +1,4 @@
-package com.haohaodayouxi.manage.utils;
+package com.haohaodayouxi.manage.utils.file;
 
 import com.haohaodayouxi.common.core.exception.BusinessException;
 import com.haohaodayouxi.manage.constants.enums.file.FrameLengthTypeEnum;

@@ -1,4 +1,4 @@
-package com.haohaodayouxi.manage.utils;
+package com.haohaodayouxi.manage.utils.file;
 
 import com.haohaodayouxi.common.util.base.DateUtil;
 import com.haohaodayouxi.common.util.business.IdUtil;

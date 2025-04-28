@@ -59,6 +59,12 @@
             <classifier>${javacv-platform-os.version}</classifier>
         </dependency>
 
+        <dependency>
+            <groupId>org.tensorflow</groupId>
+            <artifactId>tensorflow</artifactId>
+            <version>1.15.0</version>
+        </dependency>
+        
     </dependencies>
 
 </project>
