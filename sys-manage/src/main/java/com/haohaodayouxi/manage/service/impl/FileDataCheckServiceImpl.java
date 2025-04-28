@@ -50,15 +50,15 @@ public class FileDataCheckServiceImpl implements FileDataCheckService, InitServi
     @Override
     public boolean checkNsfw(byte[] bytes) {
         if (ObjectUtils.isEmpty(NSFW_DATA)) {
-            log.info("无模型数据，不做违法鉴定");
+            log.info("无NSFW模型数据，不做鉴定");
             return true;
         }
         float prediction;
         long l = System.currentTimeMillis();
         try (Tensor<Float> image = TensorFlowUtil.constructAndExecuteGraphToNormalizeImage(bytes)) {
             float[] predictions = TensorFlowUtil.executeInceptionGraph(NSFW_DATA, image);
-            log.debug("Prediction time-consuming : {} ms", System.currentTimeMillis() - l);
-            log.debug("predictions {}", predictions);
+            log.debug("NSFW Prediction time-consuming : {} ms", System.currentTimeMillis() - l);
+            log.debug("NSFW predictions {}", predictions);
             prediction = predictions[1];
         }
         return prediction >= 0.8;
