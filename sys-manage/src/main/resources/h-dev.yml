@@ -6,3 +6,7 @@ h:
     parent-package: "com.haohaodayouxi"
   file-os:
     enable: true
+    sliceSize: 5242880
+    downloadTaskMaxSize: 5
+    videoCoverWith: 300
+    videoCoverFormat: "png"

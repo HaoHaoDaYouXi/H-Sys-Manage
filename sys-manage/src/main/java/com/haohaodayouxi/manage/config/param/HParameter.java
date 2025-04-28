@@ -22,27 +22,9 @@ public class HParameter implements Serializable {
     /**
      * 系统信息
      */
-    private Info info;
-
-    @Data
-    static class Info implements Serializable {
-        @Serial
-        private static final long serialVersionUID = -5669195804411418747L;
-        /**
-         * 系统名称
-         */
-        private String name;
-        /**
-         * 系统版本
-         */
-        private String version;
-        /**
-         * 基础包
-         */
-        private String basePackage;
-        /**
-         * 父包
-         */
-        private String parentPackage;
-    }
+    private HInfo info;
+    /**
+     * 文件系统信息
+     */
+    private HFileOS fileOS;
 }

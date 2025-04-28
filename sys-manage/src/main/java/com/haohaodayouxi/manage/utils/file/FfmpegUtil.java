@@ -29,7 +29,7 @@ public class FfmpegUtil {
      * @param videoCoverWith 图片宽度
      * @return 图片数据
      */
-    private byte[] getVideoCoverImg(byte[] bytes, String coverImgFormat, int videoCoverWith) {
+    public static byte[] getVideoCoverImg(byte[] bytes, String coverImgFormat, int videoCoverWith) {
         ByteArrayOutputStream bos = null;
         try {
             // 视频对应的封面图
