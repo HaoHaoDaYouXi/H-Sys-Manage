@@ -96,6 +96,18 @@ public class FileUploadLog implements Serializable {
     private String errorMsg;
 
     /**
+     * 对象类型 0-管理端用户 1-其他
+     */
+    @TableField(value = "obj_type")
+    private Integer objType;
+
+    /**
+     * 对象ID
+     */
+    @TableField(value = "obj_id")
+    private Long objId;
+
+    /**
      * 版本
      */
     @TableField(value = "version")
