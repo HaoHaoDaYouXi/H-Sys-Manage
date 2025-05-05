@@ -24,23 +24,29 @@ public class HFileOS implements Serializable {
     /**
      * 文件切片大小 默认5M
      */
-    @Value("${jw.file.custom.sliceSize:5242880}")
+    @Value("${h.file-os.sliceSize:5242880}")
     private Long sliceSize;
     /**
      * 文件下载任务最大数量 默认5个
      */
-    @Value("${jw.file.custom.downloadTaskMaxSize:5}")
+    @Value("${h.file-os.downloadTaskMaxSize:5}")
     private Integer downloadTaskMaxSize;
 
     /**
      * 视频封面宽度
      */
-    @Value("${jw.file.custom.videoCoverWith:400}")
+    @Value("${h.file-os.videoCoverWith:400}")
     private Integer videoCoverWith;
 
     /**
      * 视频封面格式
      */
-    @Value("${jw.file.custom.videoCoverFormat:png}")
+    @Value("${h.file-os.videoCoverFormat:png}")
     private String videoCoverFormat;
+
+    /**
+     * 预览接口地址
+     */
+    @Value("${h.file-os.previewInterface:/api/file/detail}")
+    private String previewInterface;
 }
