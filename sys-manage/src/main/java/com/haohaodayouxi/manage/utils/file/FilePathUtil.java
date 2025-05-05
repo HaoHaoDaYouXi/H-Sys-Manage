@@ -1,11 +1,18 @@
 package com.haohaodayouxi.manage.utils.file;
 
+import com.alibaba.fastjson2.JSON;
+import com.haohaodayouxi.common.util.algorithm.aes.AesUtil;
 import com.haohaodayouxi.common.util.base.DateUtil;
 import com.haohaodayouxi.common.util.business.IdUtil;
 import com.haohaodayouxi.common.util.constants.StringConstant;
+import com.haohaodayouxi.manage.model.bo.file.FileRequestSignBO;
+import com.haohaodayouxi.manage.model.bo.file.FileUtilBO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 /**
@@ -14,7 +21,40 @@ import java.util.Date;
  * @author TONE
  * @date 2025/4/5
  */
+@Slf4j
 public class FilePathUtil {
+
+    /**
+     * 生成预览地址
+     *
+     * @param utilBO           文件工具类
+     * @param filePath         文件路径
+     * @param fileName         文件名
+     * @param expire           过期时间 如果想永久访问，请将expire设置为-1
+     * @param previewInterface 预览接口
+     * @return 预览地址
+     */
+    public static String previewUrl(FileUtilBO utilBO, String filePath, String fileName, Long expire, String previewInterface) {
+        try {
+            if (StringUtils.isBlank(fileName)) {
+                fileName = FilePathUtil.getFileNameByFilePath(filePath);
+            }
+            fileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8);
+            FileRequestSignBO signRes = FileRequestSignBO.builder()
+                    .fileRealPath(utilBO.getDomain() + filePath)
+                    .token(IdUtil.getUUID())
+                    .expire(expire)
+                    .build();
+            String signStr = JSON.toJSON(signRes).toString();
+            String encrypt = AesUtil.encryptECB(signStr);
+            String sign = URLEncoder.encode(encrypt, StandardCharsets.UTF_8);
+            String parma = String.format("s=%s&t=%s&ex=%s", sign, signRes.getToken(), expire);
+            return String.format("%s/%s?%s", previewInterface, fileName, parma);
+        } catch (Exception e) {
+            log.error("预览地址生成异常", e);
+        }
+        return "";
+    }
 
     /**
      * 生成文件地址
