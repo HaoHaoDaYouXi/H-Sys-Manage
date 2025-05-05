@@ -34,4 +34,9 @@ public class FileRequestSignBO implements Serializable {
      */
     private Long expire;
 
+    /**
+     * 随机码
+     */
+    private String randomCode;
+
 }

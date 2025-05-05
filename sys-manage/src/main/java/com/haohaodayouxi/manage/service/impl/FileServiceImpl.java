@@ -11,11 +11,9 @@ import com.haohaodayouxi.manage.constants.FilePathConstants;
 import com.haohaodayouxi.manage.constants.enums.file.FileObjTypeEnum;
 import com.haohaodayouxi.manage.constants.enums.file.FileTypeEnum;
 import com.haohaodayouxi.manage.constants.enums.file.UploadStatusEnum;
-import com.haohaodayouxi.manage.model.bo.file.FileDataCheckBO;
-import com.haohaodayouxi.manage.model.bo.file.FileEncryptBO;
-import com.haohaodayouxi.manage.model.bo.file.FileInfoBO;
-import com.haohaodayouxi.manage.model.bo.file.FileUtilBO;
+import com.haohaodayouxi.manage.model.bo.file.*;
 import com.haohaodayouxi.manage.model.db.FileUploadLog;
+import com.haohaodayouxi.manage.model.req.file.FilePreviewReq;
 import com.haohaodayouxi.manage.model.req.file.FileUploadBaseReq;
 import com.haohaodayouxi.manage.model.req.file.FileUploadReq;
 import com.haohaodayouxi.manage.service.FileDataCheckService;
@@ -25,17 +23,23 @@ import com.haohaodayouxi.manage.service.FileUploadLogService;
 import com.haohaodayouxi.manage.utils.file.FfmpegUtil;
 import com.haohaodayouxi.manage.utils.file.FilePathUtil;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.client.ClientHttpRequest;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.net.URI;
+import java.util.*;
 
 /**
  * FileServiceImpl
@@ -60,12 +64,72 @@ public class FileServiceImpl implements FileService {
     private static final String ENCRYPT_KEY = "encryptKey";
 
     @Override
+    public void previewFile(HttpServletRequest request, HttpServletResponse response, FilePreviewReq req) {
+        try {
+            if (ObjectUtils.allNotNull(req.getS(), req.getT(), req.getC())) {
+                String decrypt = AesUtil.decryptECB(req.getS());
+                if (StringUtils.isNotBlank(decrypt)) {
+                    FileRequestSignBO signBO = JSON.parseObject(decrypt, FileRequestSignBO.class);
+                    long timeMillis = System.currentTimeMillis();
+                    if (Objects.nonNull(signBO) && signBO.getToken().equals(req.getT()) && signBO.getRandomCode().equals(req.getC()) && timeMillis <= signBO.getExpire()) {
+                        log.info("signRes===={}", signBO);
+                        requestForwarding(request, response, signBO.getFileRealPath());
+                    } else {
+                        throw new BusinessException("数据访问错误，请稍后重试");
+                    }
+                } else {
+                    throw new BusinessException("数据访问错误，请稍后重试");
+                }
+            } else {
+                throw new BusinessException("数据访问错误，请稍后重试");
+            }
+        } catch (Exception e) {
+            log.error("数据访问错误，请稍后重试", e);
+            throw new BusinessException("数据访问错误，请稍后重试");
+        }
+    }
+
+    /**
+     * 请求转发
+     *
+     * @param request
+     * @param response
+     * @param url
+     * @throws Exception
+     */
+    private void requestForwarding(HttpServletRequest request, HttpServletResponse response, String url) throws Exception {
+        URI newUri = new URI(url);
+        // 执行代理查询
+        String methodName = request.getMethod();
+        HttpMethod httpMethod = HttpMethod.valueOf(methodName);
+        ClientHttpRequest delegate = new SimpleClientHttpRequestFactory().createRequest(newUri, httpMethod);
+        Enumeration<String> headerNames = request.getHeaderNames();
+        // 设置请求头
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            Enumeration<String> v = request.getHeaders(headerName);
+            List<String> arr = new ArrayList<>();
+            while (v.hasMoreElements()) {
+                arr.add(v.nextElement());
+            }
+            delegate.getHeaders().addAll(headerName, arr);
+        }
+        StreamUtils.copy(request.getInputStream(), delegate.getBody());
+        // 执行远程调用
+        ClientHttpResponse clientHttpResponse = delegate.execute();
+        response.setStatus(clientHttpResponse.getStatusCode().value());
+        // 设置响应头
+        clientHttpResponse.getHeaders().forEach((key, value) -> value.forEach(it -> response.setHeader(key, it)));
+        StreamUtils.copy(clientHttpResponse.getBody(), response.getOutputStream());
+    }
+
+    @Override
     public String uploadFile(@Valid FileUploadReq req) {
         checkUploadFileReq(req);
         try {
             FileInfoBO bo = baseUploadFile(req.getObjTypeEnum(), req.getObjId(), req.getUserId(), req.getTypeEnum(), req.getFile().getOriginalFilename(), FilePathConstants.UPLOAD_BASE_FILES_PATH, req.getFileFormat(), req.getFile().getBytes(), req.getEncryptKey(), req.getUserMetadata());
             // bo转换成预览地址
-            return FilePathUtil.previewUrl(fileOsConfigService.getFileUtil(req.getObjTypeEnum(), req.getObjId()), FilePathConstants.getUploadFilePath(bo.getServiceFileName()), bo.getFileName(), hParameter.getFileOS().getPreviewExpire(), hParameter.getFileOS().getPreviewInterface());
+            return FilePathUtil.previewUrl(fileOsConfigService.getFileUtil(req.getObjTypeEnum(), req.getObjId()), FilePathConstants.getUploadFilePath(bo.getServiceFileName()), bo.getFileName(), hParameter.getFileOS().getPreviewExpire(), null, hParameter.getFileOS().getPreviewInterface());
         } catch (IOException e) {
             throw new BusinessException("文件上传异常", e);
         }

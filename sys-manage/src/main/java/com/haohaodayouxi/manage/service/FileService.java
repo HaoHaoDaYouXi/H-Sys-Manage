@@ -4,7 +4,10 @@ import com.haohaodayouxi.manage.constants.SysConstants;
 import com.haohaodayouxi.manage.constants.enums.file.FileObjTypeEnum;
 import com.haohaodayouxi.manage.constants.enums.file.FileTypeEnum;
 import com.haohaodayouxi.manage.model.bo.file.FileInfoBO;
+import com.haohaodayouxi.manage.model.req.file.FilePreviewReq;
 import com.haohaodayouxi.manage.model.req.file.FileUploadReq;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 import java.util.Map;
@@ -16,6 +19,13 @@ import java.util.Map;
  * @date 2025/4/4
  */
 public interface FileService {
+
+    /**
+     * 预览文件
+     *
+     * @param req
+     */
+    void previewFile(HttpServletRequest request, HttpServletResponse response, FilePreviewReq req);
 
     /**
      * 文件上传

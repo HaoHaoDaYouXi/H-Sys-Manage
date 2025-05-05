@@ -30,25 +30,28 @@ public class FilePathUtil {
      * @param utilBO           文件工具类
      * @param filePath         文件路径
      * @param fileName         文件名
-     * @param expire           过期时间 如果想永久访问，请将expire设置为-1
+     * @param expire           过期时间 如果想永久访问，请将expire设置长点为100年
+     * @param randomCode       随机码 为空默认使用当前时间戳10000求余
      * @param previewInterface 预览接口
      * @return 预览地址
      */
-    public static String previewUrl(FileUtilBO utilBO, String filePath, String fileName, Long expire, String previewInterface) {
+    public static String previewUrl(FileUtilBO utilBO, String filePath, String fileName, Long expire, String randomCode, String previewInterface) {
         try {
             if (StringUtils.isBlank(fileName)) {
                 fileName = FilePathUtil.getFileNameByFilePath(filePath);
             }
             fileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8);
+            long timeMillis = System.currentTimeMillis();
             FileRequestSignBO signRes = FileRequestSignBO.builder()
                     .fileRealPath(utilBO.getDomain() + filePath)
                     .token(IdUtil.getUUID())
-                    .expire(System.currentTimeMillis() + expire)
+                    .expire(timeMillis + expire)
+                    .randomCode(ObjectUtils.isEmpty(randomCode) ? String.valueOf(timeMillis % 10000) : randomCode)
                     .build();
             String signStr = JSON.toJSON(signRes).toString();
             String encrypt = AesUtil.encryptECB(signStr);
             String sign = URLEncoder.encode(encrypt, StandardCharsets.UTF_8);
-            String parma = String.format("s=%s&t=%s&ex=%s", sign, signRes.getToken(), expire);
+            String parma = String.format("s=%s&t=%s&c=%s", sign, signRes.getToken(), signRes.getRandomCode());
             return String.format("%s/%s?%s", previewInterface, fileName, parma);
         } catch (Exception e) {
             log.error("预览地址生成异常", e);
