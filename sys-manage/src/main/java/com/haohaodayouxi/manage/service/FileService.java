@@ -1,5 +1,6 @@
 package com.haohaodayouxi.manage.service;
 
+import com.haohaodayouxi.manage.constants.SysConstants;
 import com.haohaodayouxi.manage.constants.enums.file.FileObjTypeEnum;
 import com.haohaodayouxi.manage.constants.enums.file.FileTypeEnum;
 import com.haohaodayouxi.manage.model.bo.file.FileInfoBO;
@@ -84,5 +85,53 @@ public interface FileService {
                                       byte[] bytes,
                                       String encryptKey) {
         return baseUploadFile(objTypeEnum, objId, userId, typeEnum, fileName, fileIdeaDir, fileFormat, bytes, null, encryptKey, null);
+    }
+
+    /**
+     * 基础 系统内部文件上传
+     *
+     * @param typeEnum        typeEnum
+     * @param fileName        文件名
+     * @param fileIdeaDir     文件自定义目录
+     * @param fileFormat      文件格式
+     * @param bytes           数据流
+     * @param serviceFileName 服务器地址
+     * @return FileRes
+     */
+    default FileInfoBO baseUploadFileBySystem(FileTypeEnum typeEnum,
+                                              String fileName,
+                                              String fileIdeaDir,
+                                              String fileFormat,
+                                              byte[] bytes,
+                                              String serviceFileName) {
+        return baseUploadFile(FileObjTypeEnum.MANAGE,
+                SysConstants.TOP_SYS_USER_ID,
+                SysConstants.TOP_SYS_USER_ID,
+                typeEnum,
+                fileName,
+                fileIdeaDir,
+                fileFormat,
+                bytes,
+                serviceFileName,
+                null,
+                null);
+    }
+
+    default FileInfoBO baseUploadFileBySystem(FileTypeEnum typeEnum,
+                                              String fileName,
+                                              String fileIdeaDir,
+                                              String fileFormat,
+                                              byte[] bytes) {
+        return baseUploadFile(FileObjTypeEnum.MANAGE,
+                SysConstants.TOP_SYS_USER_ID,
+                SysConstants.TOP_SYS_USER_ID,
+                typeEnum,
+                fileName,
+                fileIdeaDir,
+                fileFormat,
+                bytes,
+                null,
+                null,
+                null);
     }
 }

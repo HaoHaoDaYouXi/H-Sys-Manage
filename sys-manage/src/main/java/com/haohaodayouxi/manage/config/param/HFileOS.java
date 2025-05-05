@@ -49,4 +49,10 @@ public class HFileOS implements Serializable {
      */
     @Value("${h.file-os.previewInterface:/api/file/detail}")
     private String previewInterface;
+
+    /**
+     * 预览有效期 默认5分钟 单位ms
+     */
+    @Value("${h.file-os.previewExpire:300000}")
+    private Long previewExpire;
 }

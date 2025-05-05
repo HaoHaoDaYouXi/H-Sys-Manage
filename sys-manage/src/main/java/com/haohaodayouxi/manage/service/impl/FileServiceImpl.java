@@ -64,11 +64,11 @@ public class FileServiceImpl implements FileService {
         checkUploadFileReq(req);
         try {
             FileInfoBO bo = baseUploadFile(req.getObjTypeEnum(), req.getObjId(), req.getUserId(), req.getTypeEnum(), req.getFile().getOriginalFilename(), FilePathConstants.UPLOAD_BASE_FILES_PATH, req.getFileFormat(), req.getFile().getBytes(), req.getEncryptKey(), req.getUserMetadata());
-            // todo bo转换成预览地址
+            // bo转换成预览地址
+            return FilePathUtil.previewUrl(fileOsConfigService.getFileUtil(req.getObjTypeEnum(), req.getObjId()), FilePathConstants.getUploadFilePath(bo.getServiceFileName()), bo.getFileName(), hParameter.getFileOS().getPreviewExpire(), hParameter.getFileOS().getPreviewInterface());
         } catch (IOException e) {
             throw new BusinessException("文件上传异常", e);
         }
-        return "";
     }
 
     /**

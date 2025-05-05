@@ -14,6 +14,11 @@ public interface SysConstants {
      * 目前使用场景：菜单顶级
      */
     Long TOP_LEVEL_ID = 0L;
+    /**
+     * 最顶级系统用户ID
+     * 目前使用场景：默认系统用户时可赋值
+     */
+    Long TOP_SYS_USER_ID = 1L;
 
     /**
      * 系统名称

@@ -11,3 +11,4 @@ h:
     videoCoverWith: 300
     videoCoverFormat: "png"
     previewInterface: "/manage/file/detail"
+    previewExpire: 300000

@@ -43,7 +43,7 @@ public class FilePathUtil {
             FileRequestSignBO signRes = FileRequestSignBO.builder()
                     .fileRealPath(utilBO.getDomain() + filePath)
                     .token(IdUtil.getUUID())
-                    .expire(expire)
+                    .expire(System.currentTimeMillis() + expire)
                     .build();
             String signStr = JSON.toJSON(signRes).toString();
             String encrypt = AesUtil.encryptECB(signStr);

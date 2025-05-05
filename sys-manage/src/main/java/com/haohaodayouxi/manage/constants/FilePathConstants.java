@@ -34,4 +34,11 @@ public interface FilePathConstants {
      */
     String UPLOAD_BASE_FILES_PATH = BUS_BASE_FILES_PATH + "/upload";
 
+    /**
+     * 获取上传文件路径
+     */
+    static String getUploadFilePath(String filePath) {
+        return TMP_FOLDER_PATH + StringConstant.SLASH + filePath;
+    }
+
 }
