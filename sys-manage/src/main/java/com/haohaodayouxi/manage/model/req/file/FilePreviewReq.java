@@ -32,4 +32,9 @@ public class FilePreviewReq implements Serializable {
      */
     private String token;
 
+    /**
+     * 用户token
+     */
+    private String fileName;
+
 }

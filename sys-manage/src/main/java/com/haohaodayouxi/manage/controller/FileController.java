@@ -18,10 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * FileController
@@ -45,12 +42,13 @@ public class FileController {
      * @return
      */
     @OpenApi
-    @GetMapping(value = "/preview")
-    public void detail(HttpServletRequest request, HttpServletResponse response, FilePreviewReq req) {
+    @GetMapping(value = "/preview/{fileName}")
+    public void detail(HttpServletRequest request, HttpServletResponse response, @PathVariable("fileName") String fileName, FilePreviewReq req) {
         Assert.notNull(req, "无效的请求");
         Assert.notNull(req.getToken(), "认证身份无效");
         LoginCacheBO bo = loginCacheUtil.getLoginCache(req.getToken());
         Assert.notNull(bo, "请先登录");
+        req.setFileName(fileName);
         fileService.previewFile(request, response, req);
     }
 

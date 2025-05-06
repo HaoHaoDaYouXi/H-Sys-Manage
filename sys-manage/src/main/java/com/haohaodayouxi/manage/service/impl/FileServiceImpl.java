@@ -97,11 +97,11 @@ public class FileServiceImpl implements FileService {
      * @throws Exception
      */
     private void requestForwarding(HttpServletRequest request, HttpServletResponse response, String url) throws Exception {
-        URI newUri = new URI(url);
+        URI uri = new URI(url);
         // 执行代理查询
         String methodName = request.getMethod();
         HttpMethod httpMethod = HttpMethod.valueOf(methodName);
-        ClientHttpRequest delegate = new SimpleClientHttpRequestFactory().createRequest(newUri, httpMethod);
+        ClientHttpRequest delegate = new SimpleClientHttpRequestFactory().createRequest(uri, httpMethod);
         Enumeration<String> headerNames = request.getHeaderNames();
         // 设置请求头
         while (headerNames.hasMoreElements()) {
