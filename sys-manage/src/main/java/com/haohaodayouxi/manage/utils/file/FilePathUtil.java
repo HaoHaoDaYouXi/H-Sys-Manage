@@ -65,7 +65,7 @@ public class FilePathUtil {
      * @param fileBasePath 文件基本路径
      * @param date         时间
      * @param fileFormat   文件格式
-     * @return 文件地址
+     * @return 文件地址 fileBasePath/2024/01-01/UUID.png
      */
     public static String generateFilePath(String fileBasePath, Date date, String fileFormat) {
         if (ObjectUtils.isEmpty(date)) {

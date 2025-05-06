@@ -34,7 +34,7 @@ public class FileInfoBO implements Serializable {
      */
     private Long fileSize;
     /**
-     * 服务器文件地址
+     * 服务器文件地址 /2025/01-01/UUID.png
      */
     private String serviceFileName;
     /**
