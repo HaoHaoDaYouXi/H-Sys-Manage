@@ -10,5 +10,5 @@ h:
     downloadTaskMaxSize: 5
     videoCoverWith: 300
     videoCoverFormat: "png"
-    previewInterface: "/manage/file/detail"
+    previewInterface: "/manage/file/preview"
     previewExpire: 300000

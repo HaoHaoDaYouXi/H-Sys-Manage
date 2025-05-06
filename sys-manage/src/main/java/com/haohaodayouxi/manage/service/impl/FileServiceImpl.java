@@ -72,7 +72,6 @@ public class FileServiceImpl implements FileService {
                     FileRequestSignBO signBO = JSON.parseObject(decrypt, FileRequestSignBO.class);
                     long timeMillis = System.currentTimeMillis();
                     if (Objects.nonNull(signBO) && signBO.getToken().equals(req.getT()) && signBO.getRandomCode().equals(req.getC()) && timeMillis <= signBO.getExpire()) {
-                        log.info("signRes===={}", signBO);
                         requestForwarding(request, response, signBO.getFileRealPath());
                     } else {
                         throw new BusinessException("数据访问错误，请稍后重试");
