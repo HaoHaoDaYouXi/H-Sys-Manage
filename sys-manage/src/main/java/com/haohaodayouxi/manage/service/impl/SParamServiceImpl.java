@@ -9,7 +9,6 @@ import com.haohaodayouxi.common.redis.service.impl.CommonRedisServiceImpl;
 import com.haohaodayouxi.common.util.constants.StringConstant;
 import com.haohaodayouxi.common.util.enums.TrueFalseEnum;
 import com.haohaodayouxi.manage.constants.RedisConstants;
-import com.haohaodayouxi.manage.constants.SysConstants;
 import com.haohaodayouxi.manage.mapper.SParamMapper;
 import com.haohaodayouxi.manage.model.bo.login.LoginCacheBO;
 import com.haohaodayouxi.manage.model.bo.param.SParamBO;
@@ -78,7 +77,7 @@ public class SParamServiceImpl extends ServiceImpl<SParamMapper, SParam> impleme
 
     public List<SParamBO> getByCache(SParamReq req) {
         List<SParamBO> res;
-        if (ObjectUtils.isEmpty(req) || ObjectUtils.allNull(req.getParamCode(), req.getParamCodes(), req.getParamParentCode())) {
+        if (ObjectUtils.isEmpty(req) || ObjectUtils.allNull(req.getParamCode(), req.getParamCodes())) {
             res = stringRedisServiceImpl.batchGetByPattern(RedisConstants.PARAM_KEY + StringConstant.COLON + StringConstant.MATCHES_PATTERN, SParamBO.class);
         } else {
             List<String> ids = new ArrayList<>();
@@ -88,14 +87,7 @@ public class SParamServiceImpl extends ServiceImpl<SParamMapper, SParam> impleme
             if (ObjectUtils.isNotEmpty(req.getParamCodes())) {
                 ids.addAll(Arrays.stream(req.getParamCodes().split(StringConstant.EN_COMMA)).toList());
             }
-            if (ObjectUtils.isNotEmpty(req.getParamParentCode())) {
-                res = stringRedisServiceImpl.batchGetByPattern(RedisConstants.getParamKey(req.getParamParentCode()) + StringConstant.MATCHES_PATTERN, SParamBO.class);
-                if (ObjectUtils.isNotEmpty(ids)) {
-                    res = res.stream().filter(f -> ids.contains(f.getParamCode().toString())).toList();
-                }
-            } else {
-                res = stringRedisServiceImpl.batchGetByKeys(ids.stream().map(f -> RedisConstants.getParamKey(Long.parseLong(f))).toList(), SParamBO.class, true);
-            }
+            res = stringRedisServiceImpl.batchGetByKeys(ids.stream().map(f -> RedisConstants.getParamKey(Long.parseLong(f))).toList(), SParamBO.class, true);
         }
         if (ObjectUtils.isEmpty(res)) {
             res = getByReq(req);
@@ -109,55 +101,21 @@ public class SParamServiceImpl extends ServiceImpl<SParamMapper, SParam> impleme
     public void addOrUpd(SParamAddOrUpdReq req) {
         SParam param = SParam.builder()
                 .paramCode(req.getParamCode())
-                .paramParentCode(req.getParamParentCode())
                 .paramName(req.getParamName())
                 .paramValue(req.getParamValue())
                 .paramRemark(req.getParamRemark())
                 .paramSortCode(req.getParamSortCode())
                 .build();
-        boolean add = ObjectUtils.isEmpty(param.getParamCode());
-        if (!add && param.getParamCode().equals(param.getParamParentCode())) {
-            throw new BusinessException("父级不能是自身");
-        }
-        if (!param.getParamParentCode().equals(SysConstants.TOP_LEVEL_ID)) {
-            SParam parent = baseMapper.selectById(param.getParamParentCode());
-            if (ObjectUtils.isEmpty(parent)) {
-                throw new BusinessException("父级数据错误，请重试");
-            } else {
-                // 判断父级路径不包含自身ID
-                // 1 1001 1001001
-                // 11 11001 11001001
-                int length = parent.getParamParentCode().toString().length();
-                int size = length % 3 > 0 ? length / 3 + 1 : length / 3;
-                for (int i = size; i > 0; i--) {
-                    int start = (i - 1) * 3 - 1;
-                    if (start < 0) {
-                        start = 0;
-                    }
-                    int end = i * 3 - 1;
-                    if (end > length) {
-                        end = length;
-                    }
-                    String substring = parent.getParamParentCode().toString().substring(start, end);
-                    if (substring.equals(param.getParamCode().toString())) {
-                        throw new BusinessException("父级不能是自身的子集");
-                    }
-                }
-            }
-        }
-        if (baseMapper.sameCheck(param.getParamCode(), param.getParamParentCode(), param.getParamName())) {
-            throw new BusinessException("当前父级下 { " + param.getParamName() + " } 已存在");
+        if (baseMapper.sameCheck(param.getParamCode(), param.getParamName())) {
+            throw new BusinessException("当前 { " + param.getParamName() + " } 参数已存在");
         }
         LoginCacheBO bo = (LoginCacheBO) CurrentUserContextHolder.get();
         param.setUpdateUid(bo.getUserLoginCacheBO().getUserId());
         param.setUpdateTime(new Date());
-        if (add) {
-            stringRedisServiceImpl.lock(RedisConstants.PARAM_LOCK_KEY);
-            param.setParamCode(baseMapper.getMaxParamCode(param.getParamParentCode()) + 1);
+        if (ObjectUtils.isEmpty(param.getParamCode())) {
             param.setCreateUid(bo.getUserLoginCacheBO().getUserId());
             param.setCreateTime(param.getUpdateTime());
             baseMapper.insert(param);
-            stringRedisServiceImpl.unLock(RedisConstants.PARAM_LOCK_KEY);
         } else {
             SParam old = baseMapper.selectById(param.getParamCode());
             if (ObjectUtils.isEmpty(old)) {
@@ -167,7 +125,6 @@ public class SParamServiceImpl extends ServiceImpl<SParamMapper, SParam> impleme
         }
         setCache(Collections.singletonList(SParamBO.builder()
                 .paramCode(param.getParamCode())
-                .paramParentCode(param.getParamParentCode())
                 .paramName(param.getParamName())
                 .paramValue(param.getParamValue())
                 .paramSortCode(param.getParamSortCode())

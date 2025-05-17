@@ -30,9 +30,4 @@ public class SParamReq implements Serializable {
      * 批量查询的编码
      */
     private String paramCodes;
-
-    /**
-     * 参数分类(上级编码，0-第一级)
-     */
-    private Long paramParentCode;
 }

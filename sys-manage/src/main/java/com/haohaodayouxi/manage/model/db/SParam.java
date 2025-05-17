@@ -18,7 +18,7 @@ import java.util.Date;
  * 系统参数表
  *
  * @author TONE
- * @date 2024/12/8
+ * @date 2025/5/13
  */
 @Data
 @Builder
@@ -28,18 +28,12 @@ import java.util.Date;
 @JsonIgnoreProperties(value = {"createUid", "updateUid", "version", "delStatus"})
 public class SParam implements Serializable {
     @Serial
-    private static final long serialVersionUID = 2252165608264894195L;
+    private static final long serialVersionUID = -4588172337386072154L;
     /**
-     * 编码（1001，每3位代表一级，非自增，由开发人员控制)
+     * 编码（由开发人员控制)
      */
     @TableId(value = "param_code", type = IdType.AUTO)
     private Long paramCode;
-
-    /**
-     * 参数分类(上级编码，0-第一级)
-     */
-    @TableField(value = "param_parent_code")
-    private Long paramParentCode;
 
     /**
      * 参数名称

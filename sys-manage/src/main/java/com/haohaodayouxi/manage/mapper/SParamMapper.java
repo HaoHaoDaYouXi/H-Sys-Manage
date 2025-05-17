@@ -12,7 +12,7 @@ import java.util.List;
  * SParamMapper
  *
  * @author TONE
- * @date 2024/12/8
+ * @date 2025/5/13
  */
 public interface SParamMapper extends BaseMapper<SParam> {
 
@@ -24,7 +24,5 @@ public interface SParamMapper extends BaseMapper<SParam> {
 
     List<SParamBO> getByReq(SParamReq req);
 
-    Long getMaxParamCode(@Param("paramParentCode") Long paramParentCode);
-
-    boolean sameCheck(@Param("paramCode") Long paramCode, @Param("paramParentCode") Long paramParentCode, @Param("paramName") String paramName);
+    boolean sameCheck(@Param("paramCode") Long paramCode, @Param("paramName") String paramName);
 }
