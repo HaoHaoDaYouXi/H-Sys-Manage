@@ -194,9 +194,6 @@
                     </otherwise>
                 </choose>
             </if>
-            <if test="paramParentCode != null">
-                and param_parent_code = #{paramParentCode}
-            </if>
         </where>
         order by param_sort_code, param_code
     </select>
