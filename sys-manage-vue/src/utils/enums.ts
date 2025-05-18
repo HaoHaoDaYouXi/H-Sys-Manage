@@ -6,6 +6,6 @@ export const TrueFalseEnum = {
 }
 
 export const DisabledList = [
-  { value: TrueFalseEnum.FALSE, label: '启用' },
-  { value: TrueFalseEnum.TRUE, label: '禁用' }
+  { value: TrueFalseEnum.FALSE, label: "启用" },
+  { value: TrueFalseEnum.TRUE, label: "禁用" }
 ]
