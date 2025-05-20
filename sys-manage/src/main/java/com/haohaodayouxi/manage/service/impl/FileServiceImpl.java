@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.haohaodayouxi.common.core.exception.BusinessException;
 import com.haohaodayouxi.common.util.algorithm.aes.AesUtil;
+import com.haohaodayouxi.common.util.business.IdUtil;
 import com.haohaodayouxi.common.util.enums.TrueFalseEnum;
 import com.haohaodayouxi.file.core.service.FileUploadCoreService;
 import com.haohaodayouxi.manage.config.param.HParameter;
@@ -16,6 +17,7 @@ import com.haohaodayouxi.manage.model.db.FileUploadLog;
 import com.haohaodayouxi.manage.model.req.file.FilePreviewReq;
 import com.haohaodayouxi.manage.model.req.file.FileUploadBaseReq;
 import com.haohaodayouxi.manage.model.req.file.FileUploadReq;
+import com.haohaodayouxi.manage.model.res.file.FileUploadRes;
 import com.haohaodayouxi.manage.service.FileDataCheckService;
 import com.haohaodayouxi.manage.service.FileOsConfigService;
 import com.haohaodayouxi.manage.service.FileService;
@@ -123,12 +125,13 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public String uploadFile(@Valid FileUploadReq req) {
+    public FileUploadRes uploadFile(@Valid FileUploadReq req) {
         checkUploadFileReq(req);
         try {
             FileInfoBO bo = baseUploadFile(req.getObjTypeEnum(), req.getObjId(), req.getUserId(), req.getTypeEnum(), req.getFile().getOriginalFilename(), FilePathConstants.UPLOAD_BASE_FILES_PATH, req.getFileFormat(), req.getFile().getBytes(), req.getEncryptKey(), req.getUserMetadata());
             // bo转换成预览地址
-            return FilePathUtil.previewUrl(fileOsConfigService.getFileUtil(req.getObjTypeEnum(), req.getObjId()), FilePathConstants.getUploadFilePath(bo.getServiceFileName()), bo.getFileName(), hParameter.getFileOS().getPreviewExpire(), null, hParameter.getFileOS().getPreviewInterface());
+            String previewUrl = FilePathUtil.previewUrl(fileOsConfigService.getFileUtil(req.getObjTypeEnum(), req.getObjId()), FilePathConstants.getUploadFilePath(bo.getServiceFileName()), bo.getFileName(), hParameter.getFileOS().getPreviewExpire(), null, hParameter.getFileOS().getPreviewInterface());
+            return FileUploadRes.builder().fileCode(bo.getFileCode()).previewUrl(previewUrl).build();
         } catch (IOException e) {
             throw new BusinessException("文件上传异常", e);
         }
@@ -183,16 +186,17 @@ public class FileServiceImpl implements FileService {
             fileIdeaDir = FilePathConstants.UPLOAD_BASE_FILES_PATH;
         }
         FileUploadLog uploadLog;
+        String fileCode = IdUtil.getUUID();
         if (ObjectUtils.isEmpty(serviceFileName)) {
-            serviceFileName = FilePathUtil.generateFilePath(fileIdeaDir, now, fileFormat);
-            uploadLog = addFileUploadLog(utilBO.getOsId(), fileName, encryptKey, fileSize, serviceFileName, now, objTypeEnum, objId, userId);
+            serviceFileName = FilePathUtil.generateFilePath(fileIdeaDir, now, fileCode, fileFormat);
+            uploadLog = addFileUploadLog(utilBO.getOsId(), fileCode, fileName, encryptKey, fileSize, serviceFileName, now, objTypeEnum, objId, userId);
         } else {
             serviceFileName = fileIdeaDir + serviceFileName;
             uploadLog = fileUploadLogService.getOne(new LambdaQueryWrapper<FileUploadLog>().eq(FileUploadLog::getServiceFileName, serviceFileName).eq(FileUploadLog::getDelStatus, TrueFalseEnum.FALSE.getCode()).last(" limit 1"));
             if (ObjectUtils.isEmpty(uploadLog)) {
-                uploadLog = addFileUploadLog(utilBO.getOsId(), fileName, encryptKey, fileSize, serviceFileName, now, objTypeEnum, objId, userId);
+                uploadLog = addFileUploadLog(utilBO.getOsId(), fileCode, fileName, encryptKey, fileSize, serviceFileName, now, objTypeEnum, objId, userId);
             } else {
-                uploadLog = updFileUploadLog(uploadLog.getFileId(), utilBO.getOsId(), fileName, encryptKey, fileSize, serviceFileName, now, objTypeEnum, objId, userId);
+                uploadLog = updFileUploadLog(uploadLog.getFileId(), utilBO.getOsId(), fileCode, fileName, encryptKey, fileSize, serviceFileName, now, objTypeEnum, objId, userId);
             }
         }
         try {
@@ -205,6 +209,7 @@ public class FileServiceImpl implements FileService {
             }
             fileUploadCoreService.uploadFile(utilBO.getFileUtilService(), utilBO.getBucketName(), serviceFileName, bytes, userMetadata);
             FileInfoBO res = FileInfoBO.builder()
+                    .fileCode(fileCode)
                     .prefixUrl(utilBO.getDomain())
                     .fileName(fileName)
                     .fileSize(fileSize)
@@ -212,7 +217,7 @@ public class FileServiceImpl implements FileService {
                     .build();
             if (ObjectUtils.isNotEmpty(checkBO.getZoomData())) {
                 uploadLog.setFileZoomImg(res.getZoomFile());
-                res.setZoomFile(zoomFile(utilBO, typeEnum, now, checkBO.getZoomData()));
+                res.setZoomFile(zoomFile(utilBO, typeEnum, now, checkBO.getZoomData(), fileCode));
                 res.setZoomFileSize((long) checkBO.getZoomData().length);
             }
             uploadLog.setUploadStatus(UploadStatusEnum.SUCCESS.getCode());
@@ -235,11 +240,11 @@ public class FileServiceImpl implements FileService {
      * @param now
      * @param bytes
      */
-    private String zoomFile(FileUtilBO utilBO, FileTypeEnum typeEnum, Date now, byte[] bytes) {
+    private String zoomFile(FileUtilBO utilBO, FileTypeEnum typeEnum, Date now, byte[] bytes, String fileCode) {
         String zoomFilePath = null;
         if (ObjectUtils.isNotEmpty(bytes)) {
             if (typeEnum == FileTypeEnum.VIDEO) {
-                zoomFilePath = FilePathUtil.generateFilePath(FilePathConstants.UPLOAD_BASE_FILES_PATH, now, hParameter.getFileOS().getVideoCoverFormat());
+                zoomFilePath = FilePathUtil.generateFilePath(FilePathConstants.UPLOAD_BASE_FILES_PATH, now, fileCode, hParameter.getFileOS().getVideoCoverFormat());
                 fileUploadCoreService.uploadFile(utilBO.getFileUtilService(), utilBO.getBucketName(), zoomFilePath, bytes);
                 zoomFilePath = zoomFilePath.replace(FilePathConstants.UPLOAD_BASE_FILES_PATH, "");
             }
@@ -251,6 +256,7 @@ public class FileServiceImpl implements FileService {
      * 添加文件上传日志
      */
     private FileUploadLog addFileUploadLog(Long osId,
+                                           String fileCode,
                                            String fileName,
                                            String encryptKey,
                                            Long fileSize,
@@ -261,6 +267,7 @@ public class FileServiceImpl implements FileService {
                                            Long userId) {
         FileUploadLog log = FileUploadLog.builder()
                 .osId(osId)
+                .fileCode(fileCode)
                 .fileName(fileName)
                 .encryptInfo(JSON.toJSONString(FileEncryptBO.builder().encryptKey(encryptKey).build()))
                 .fileSize(fileSize)
@@ -286,6 +293,7 @@ public class FileServiceImpl implements FileService {
      */
     private FileUploadLog updFileUploadLog(Long id,
                                            Long osId,
+                                           String fileCode,
                                            String fileName,
                                            String encryptKey,
                                            Long fileSize,
@@ -301,7 +309,7 @@ public class FileServiceImpl implements FileService {
                 .delStatus(TrueFalseEnum.TRUE.getCode())
                 .build();
         fileUploadLogService.updateById(log);
-        return addFileUploadLog(osId, fileName, encryptKey, fileSize, filePath, now, objTypeEnum, objId, userId);
+        return addFileUploadLog(osId, fileCode, fileName, encryptKey, fileSize, filePath, now, objTypeEnum, objId, userId);
     }
 
     /**

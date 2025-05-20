@@ -9,6 +9,7 @@ import com.haohaodayouxi.manage.constants.enums.file.FileTypeEnum;
 import com.haohaodayouxi.manage.model.bo.login.LoginCacheBO;
 import com.haohaodayouxi.manage.model.req.file.FilePreviewReq;
 import com.haohaodayouxi.manage.model.req.file.FileUploadReq;
+import com.haohaodayouxi.manage.model.res.file.FileUploadRes;
 import com.haohaodayouxi.manage.service.FileService;
 import com.haohaodayouxi.manage.utils.LoginCacheUtil;
 import jakarta.annotation.Resource;
@@ -60,7 +61,7 @@ public class FileController {
      */
     @ResponseBody
     @PostMapping(value = "/upload/img")
-    public Response<String> uploadImg(@Validated FileUploadReq req) {
+    public Response<FileUploadRes> uploadImg(@Validated FileUploadReq req) {
         LoginCacheBO bo = (LoginCacheBO) CurrentUserContextHolder.get();
         req.setUserId(bo.getUserLoginCacheBO().getUserId());
         req.setObjTypeEnum(FileObjTypeEnum.MANAGE);
@@ -77,7 +78,7 @@ public class FileController {
      */
     @ResponseBody
     @PostMapping(value = "/upload/doc")
-    public Response<String> uploadDoc(@Validated FileUploadReq req) {
+    public Response<FileUploadRes> uploadDoc(@Validated FileUploadReq req) {
         LoginCacheBO bo = (LoginCacheBO) CurrentUserContextHolder.get();
         req.setUserId(bo.getUserLoginCacheBO().getUserId());
         req.setObjTypeEnum(FileObjTypeEnum.MANAGE);
@@ -94,7 +95,7 @@ public class FileController {
      */
     @ResponseBody
     @PostMapping(value = "/upload/imgOrDoc")
-    public Response<String> uploadImgOrDoc(@Validated FileUploadReq req) {
+    public Response<FileUploadRes> uploadImgOrDoc(@Validated FileUploadReq req) {
         LoginCacheBO bo = (LoginCacheBO) CurrentUserContextHolder.get();
         req.setUserId(bo.getUserLoginCacheBO().getUserId());
         req.setObjTypeEnum(FileObjTypeEnum.MANAGE);
@@ -111,7 +112,7 @@ public class FileController {
      */
     @ResponseBody
     @PostMapping(value = "/upload/audio")
-    public Response<String> uploadAudio(@Validated FileUploadReq req) {
+    public Response<FileUploadRes> uploadAudio(@Validated FileUploadReq req) {
         LoginCacheBO bo = (LoginCacheBO) CurrentUserContextHolder.get();
         req.setUserId(bo.getUserLoginCacheBO().getUserId());
         req.setObjTypeEnum(FileObjTypeEnum.MANAGE);
@@ -128,7 +129,7 @@ public class FileController {
      */
     @ResponseBody
     @PostMapping(value = "/upload/video")
-    public Response<String> uploadVideo(@Validated FileUploadReq req) {
+    public Response<FileUploadRes> uploadVideo(@Validated FileUploadReq req) {
         LoginCacheBO bo = (LoginCacheBO) CurrentUserContextHolder.get();
         req.setUserId(bo.getUserLoginCacheBO().getUserId());
         req.setObjTypeEnum(FileObjTypeEnum.MANAGE);

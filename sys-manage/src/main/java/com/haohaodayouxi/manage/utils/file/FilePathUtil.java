@@ -67,11 +67,14 @@ public class FilePathUtil {
      * @param fileFormat   文件格式
      * @return 文件地址 fileBasePath/2024/01-01/UUID.png
      */
-    public static String generateFilePath(String fileBasePath, Date date, String fileFormat) {
-        if (ObjectUtils.isEmpty(date)) {
+    public static String generateFilePath(String fileBasePath, Date date, String fileCode, String fileFormat) {
+        if (date == null) {
             date = new Date();
         }
-        return getFilePath(fileBasePath, date, IdUtil.getUUID() + StringConstant.POINT + fileFormat);
+        if (ObjectUtils.isEmpty(fileCode)) {
+            fileCode = IdUtil.getUUID();
+        }
+        return getFilePath(fileBasePath, date, (fileCode + StringConstant.POINT + fileFormat));
     }
 
     /**

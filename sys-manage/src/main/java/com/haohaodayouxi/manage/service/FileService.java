@@ -6,6 +6,7 @@ import com.haohaodayouxi.manage.constants.enums.file.FileTypeEnum;
 import com.haohaodayouxi.manage.model.bo.file.FileInfoBO;
 import com.haohaodayouxi.manage.model.req.file.FilePreviewReq;
 import com.haohaodayouxi.manage.model.req.file.FileUploadReq;
+import com.haohaodayouxi.manage.model.res.file.FileUploadRes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -33,7 +34,7 @@ public interface FileService {
      * @param req req
      * @return FileRes
      */
-    String uploadFile(@Valid FileUploadReq req);
+    FileUploadRes uploadFile(@Valid FileUploadReq req);
 
     /**
      * 基础 文件上传 不走前置和后置处理

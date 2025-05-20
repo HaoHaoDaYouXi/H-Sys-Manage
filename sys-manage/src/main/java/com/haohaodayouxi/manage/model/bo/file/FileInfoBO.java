@@ -22,6 +22,10 @@ public class FileInfoBO implements Serializable {
     @Serial
     private static final long serialVersionUID = 301501306588526684L;
     /**
+     * 文件编码
+     */
+    private String fileCode;
+    /**
      * 域名前缀
      */
     private String prefixUrl;

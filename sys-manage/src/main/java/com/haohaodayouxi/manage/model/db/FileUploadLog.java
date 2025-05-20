@@ -42,6 +42,12 @@ public class FileUploadLog implements Serializable {
     private Long osId;
 
     /**
+     * 文件编码
+     */
+    @TableField(value = "file_code")
+    private String fileCode;
+
+    /**
      * 文件原名称，上传时获取到的文件名
      */
     @TableField(value = "file_name")
