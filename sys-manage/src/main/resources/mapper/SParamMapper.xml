@@ -5,9 +5,10 @@
         <!--@mbg.generated-->
         <!--@Table s_param-->
         <id column="param_code" jdbcType="BIGINT" property="paramCode"/>
+        <result column="param_parent_code" jdbcType="BIGINT" property="paramParentCode"/>
         <result column="param_name" jdbcType="VARCHAR" property="paramName"/>
         <result column="param_value" jdbcType="LONGVARCHAR" property="paramValue"/>
-        <result column="param_remark" jdbcType="LONGVARCHAR" property="paramRemark"/>
+        <result column="param_remark" jdbcType="VARCHAR" property="paramRemark"/>
         <result column="param_sort_code" jdbcType="INTEGER" property="paramSortCode"/>
         <result column="version" jdbcType="INTEGER" property="version"/>
         <result column="create_uid" jdbcType="BIGINT" property="createUid"/>
@@ -18,13 +19,18 @@
     </resultMap>
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
-        param_code, param_name, param_value, param_remark, param_sort_code, version, create_uid,
-        update_uid, create_time, update_time, del_status
+        param_code, param_parent_code, param_name, param_value, param_remark, param_sort_code,
+        version, create_uid, update_uid, create_time, update_time, del_status
     </sql>
     <update id="updateBatch" parameterType="java.util.List">
         <!--@mbg.generated-->
         update s_param
         <trim prefix="set" suffixOverrides=",">
+            <trim prefix="param_parent_code = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.paramParentCode,jdbcType=BIGINT}
+                </foreach>
+            </trim>
             <trim prefix="param_name = case" suffix="end,">
                 <foreach collection="list" index="index" item="item">
                     when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.paramName,jdbcType=VARCHAR}
@@ -37,7 +43,7 @@
             </trim>
             <trim prefix="param_remark = case" suffix="end,">
                 <foreach collection="list" index="index" item="item">
-                    when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.paramRemark,jdbcType=LONGVARCHAR}
+                    when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.paramRemark,jdbcType=VARCHAR}
                 </foreach>
             </trim>
             <trim prefix="param_sort_code = case" suffix="end,">
@@ -85,6 +91,13 @@
         <!--@mbg.generated-->
         update s_param
         <trim prefix="set" suffixOverrides=",">
+            <trim prefix="param_parent_code = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    <if test="item.paramParentCode != null">
+                        when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.paramParentCode,jdbcType=BIGINT}
+                    </if>
+                </foreach>
+            </trim>
             <trim prefix="param_name = case" suffix="end,">
                 <foreach collection="list" index="index" item="item">
                     <if test="item.paramName != null">
@@ -102,8 +115,7 @@
             <trim prefix="param_remark = case" suffix="end,">
                 <foreach collection="list" index="index" item="item">
                     <if test="item.paramRemark != null">
-                        when param_code = #{item.paramCode,jdbcType=BIGINT} then
-                        #{item.paramRemark,jdbcType=LONGVARCHAR}
+                        when param_code = #{item.paramCode,jdbcType=BIGINT} then #{item.paramRemark,jdbcType=VARCHAR}
                     </if>
                 </foreach>
             </trim>
@@ -165,16 +177,16 @@
     <insert id="batchInsert" keyColumn="param_code" keyProperty="paramCode" parameterType="map" useGeneratedKeys="true">
         <!--@mbg.generated-->
         insert into s_param
-        (param_name, param_value, param_remark, param_sort_code, version, create_uid, update_uid,
-        create_time, update_time, del_status)
+        (param_parent_code, param_name, param_value, param_remark, param_sort_code, version,
+        create_uid, update_uid, create_time, update_time, del_status)
         values
         <foreach collection="list" item="item" separator=",">
-            (#{item.paramName,jdbcType=VARCHAR}, #{item.paramValue,jdbcType=LONGVARCHAR},
-            #{item.paramRemark,jdbcType=LONGVARCHAR},
-            #{item.paramSortCode,jdbcType=INTEGER}, #{item.version,jdbcType=INTEGER}, #{item.createUid,jdbcType=BIGINT},
-            #{item.updateUid,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP},
-            #{item.updateTime,jdbcType=TIMESTAMP},
-            #{item.delStatus,jdbcType=TINYINT})
+            (#{item.paramParentCode,jdbcType=BIGINT}, #{item.paramName,jdbcType=VARCHAR},
+            #{item.paramValue,jdbcType=LONGVARCHAR},
+            #{item.paramRemark,jdbcType=VARCHAR}, #{item.paramSortCode,jdbcType=INTEGER},
+            #{item.version,jdbcType=INTEGER},
+            #{item.createUid,jdbcType=BIGINT}, #{item.updateUid,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP},
+            #{item.updateTime,jdbcType=TIMESTAMP}, #{item.delStatus,jdbcType=TINYINT})
         </foreach>
     </insert>
 
@@ -194,6 +206,9 @@
                     </otherwise>
                 </choose>
             </if>
+            <if test="paramParentCode != null">
+                and param_parent_code = #{paramParentCode}
+            </if>
         </where>
         order by param_sort_code, param_code
     </select>
@@ -203,10 +218,18 @@
         exists (
         select 1 from s_param
         where del_status = 0
+        and param_parent_code = #{paramParentCode}
         and param_name = #{paramName}
         <if test="paramCode != null">
             and param_code != #{paramCode}
         </if>
         )
+    </select>
+
+    <select id="getMaxParamCode" resultType="java.lang.Long">
+        select max(param_code)
+        from s_param
+        where del_status = 0
+          and param_parent_code = #{paramParentCode}
     </select>
 </mapper>

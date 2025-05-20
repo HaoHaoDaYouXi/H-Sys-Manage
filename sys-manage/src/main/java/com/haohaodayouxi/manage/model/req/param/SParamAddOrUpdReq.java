@@ -33,6 +33,12 @@ public class SParamAddOrUpdReq implements Serializable {
     private Long paramCode;
 
     /**
+     * 上级编码，0-第一级
+     */
+    @NotNull(groups = {AddValid.class, UpdValid.class}, message = "上级编码不能为空")
+    private Long paramParentCode;
+
+    /**
      * 参数名称
      */
     @NotBlank(groups = {AddValid.class, UpdValid.class}, message = "参数名称不能为空")

@@ -29,6 +29,11 @@ public class SParamBO implements Serializable {
     private Long paramCode;
 
     /**
+     * 参数分类(上级编码，0-第一级)
+     */
+    private Long paramParentCode;
+
+    /**
      * 参数名称
      */
     private String paramName;

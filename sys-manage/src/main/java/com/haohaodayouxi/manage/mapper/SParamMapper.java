@@ -24,5 +24,7 @@ public interface SParamMapper extends BaseMapper<SParam> {
 
     List<SParamBO> getByReq(SParamReq req);
 
-    boolean sameCheck(@Param("paramCode") Long paramCode, @Param("paramName") String paramName);
+    Long getMaxParamCode(@Param("paramParentCode") Long paramParentCode);
+
+    boolean sameCheck(@Param("paramCode") Long paramCode, @Param("paramParentCode") Long paramParentCode, @Param("paramName") String paramName);
 }
