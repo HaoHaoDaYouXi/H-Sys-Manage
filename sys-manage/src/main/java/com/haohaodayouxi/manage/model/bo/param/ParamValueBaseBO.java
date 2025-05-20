@@ -9,7 +9,7 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * ParamValueBO
+ * ParamValueBaseBO
  *
  * @author TONE
  * @date 2025/5/18
@@ -18,21 +18,21 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ParamValueBO implements Serializable {
+public class ParamValueBaseBO implements Serializable {
     @Serial
     private static final long serialVersionUID = -4026041908545609729L;
 
     private Long code;
 
-    private String label;
+    private String name;
 
     private String value;
 
     private String remark;
 
-    public ParamValueBO(Long code, String label, String value) {
+    public ParamValueBaseBO(Long code, String name, String value) {
         this.code = code;
-        this.label = label;
+        this.name = name;
         this.value = value;
     }
 }
