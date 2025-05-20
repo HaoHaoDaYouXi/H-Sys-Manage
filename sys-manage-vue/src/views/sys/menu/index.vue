@@ -7,28 +7,16 @@
         </el-form-item>
         <el-form-item prop="menuType" label="菜单类型">
           <el-select v-model="searchData.menuType" placeholder="请选择菜单类型" clearable>
-            <el-option
-              v-for="item in menuTypeList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
+            <el-option v-for="item in menuTypeList" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
         <el-form-item prop="disabled" label="禁用状态">
           <el-select v-model="searchData.disabled" placeholder="请选择禁用状态" clearable>
-            <el-option
-              v-for="item in DisabledList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
+            <el-option v-for="item in DisabledList" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" :icon="Search" @click="getTableData">
-            查询
-          </el-button>
+          <el-button type="primary" :icon="Search" @click="getTableData">查询</el-button>
           <el-button :icon="Refresh" @click="resetSearch">重置</el-button>
         </el-form-item>
       </el-form>
@@ -36,13 +24,7 @@
     <el-card v-loading="loading" shadow="never">
       <div class="toolbar-wrapper">
         <div>
-          <el-button
-            type="primary"
-            :icon="CirclePlus"
-            @click="openItem(undefined)"
-          >
-            新增菜单
-          </el-button>
+          <el-button type="primary" :icon="CirclePlus" @click="openItem(undefined)">新增菜单</el-button>
           <el-button type="danger" :icon="Delete" @click="batchDel">批量删除</el-button>
         </div>
       </div>
@@ -71,39 +53,20 @@
           <el-table-column prop="showOrder" label="顺序" align="center" />
           <el-table-column prop="disabled" label="禁用" align="center">
             <template #default="scope">
-              <el-switch v-model="scope.row.disabled"
-                         :active-value="TrueFalseEnum.TRUE"
-                         :inactive-value="TrueFalseEnum.FALSE"
-                         :loading="changeDisableLoading"
-                         @change="ChangeDisable(scope.row)"/>
+              <el-switch
+                v-model="scope.row.disabled"
+                :active-value="TrueFalseEnum.TRUE"
+                :inactive-value="TrueFalseEnum.FALSE"
+                :loading="changeDisableLoading"
+                @change="ChangeDisable(scope.row)"
+              />
             </template>
           </el-table-column>
           <el-table-column prop="updateTime" label="更新时间" align="center" />
-          <el-table-column
-            fixed="right"
-            label="操作"
-            width="150"
-            align="center"
-          >
+          <el-table-column fixed="right" label="操作" width="150" align="center">
             <template #default="scope">
-              <el-button
-                type="primary"
-                text
-                bg
-                size="small"
-                @click="openItem(scope.row.menuId)"
-              >
-                修改
-              </el-button>
-              <el-button
-                type="danger"
-                text
-                bg
-                size="small"
-                @click="handleDelete(scope.row)"
-              >
-                删除
-              </el-button>
+              <el-button type="primary" text bg size="small" @click="openItem(scope.row.menuId)">修改</el-button>
+              <el-button type="danger" text bg size="small" @click="handleDelete(scope.row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -115,15 +78,14 @@
 
 <script lang="ts" setup>
 import { reactive, ref, onMounted } from "vue"
-import { type FormInstance, type FormRules, ElMessage, ElMessageBox, ElTable } from "element-plus"
+import { type FormInstance, ElMessage, ElMessageBox, ElTable } from "element-plus"
 import { Search, Refresh, CirclePlus, Delete } from "@element-plus/icons-vue"
 import IconItem from "@/components/Icon/item.vue"
-import { cloneDeep } from "lodash-es"
 import { batchDelApi, getMenuTypeApi, listByParentApi, changeDisableApi } from "@/api/sys/menu"
 import { SMenuListReq, SMenuList } from "@/api/sys/menu/types/menu"
 import { TopId, DisabledList, TrueFalseEnum } from "@/utils/enums"
 import Item from "./item.vue"
-import {LabelValue, ListObjectBO} from "@/api/commonTypes"
+import { LabelValue, ListObjectBO } from "@/api/commonTypes"
 
 defineOptions({
   // 命名当前组件
@@ -164,12 +126,14 @@ const changeDisableLoading = ref(false)
 
 const ChangeDisable = async (row: SMenuList) => {
   changeDisableLoading.value = true
-  changeDisableApi({menuId: row.menuId, disabled: row.disabled}).then((res) => {
-    ElMessage.success(res.message)
-  }).catch((error) => {
-    ElMessage.error("更新失败，请稍后重试")
-    row.disabled = (row.disabled === TrueFalseEnum.TRUE) ? TrueFalseEnum.FALSE : TrueFalseEnum.TRUE
-  })
+  changeDisableApi({ menuId: row.menuId, disabled: row.disabled })
+    .then((res) => {
+      ElMessage.success(res.message)
+    })
+    .catch((error) => {
+      ElMessage.error("更新失败，请稍后重试")
+      row.disabled = row.disabled === TrueFalseEnum.TRUE ? TrueFalseEnum.FALSE : TrueFalseEnum.TRUE
+    })
   changeDisableLoading.value = false
 }
 
@@ -197,7 +161,7 @@ const itemSuccess = async (value: { menuParentId: number }) => {
   if (!value.menuParentId || value.menuParentId === TopId) {
     await getTableData()
   } else {
-    const { data } = await listByParentApi({menuParentId: value.menuParentId} as SMenuListReq)
+    const { data } = await listByParentApi({ menuParentId: value.menuParentId } as SMenuListReq)
     tableDataRef.value?.updateKeyChildren(value.menuParentId.toString(), data)
   }
 }
@@ -208,12 +172,14 @@ const handleDelete = (row: SMenuList) => {
     confirmButtonText: "确定",
     cancelButtonText: "取消"
   }).then(async () => {
-    batchDelApi({ list: [row.menuId]} as ListObjectBO).then((res) => {
-      ElMessage.success("删除成功")
-      itemSuccess({ menuParentId: row.menuParentId })
-    }).catch((error) => {
-      ElMessage.error("删除失败")
-    })
+    batchDelApi({ list: [row.menuId] } as ListObjectBO)
+      .then((res) => {
+        ElMessage.success("删除成功")
+        itemSuccess({ menuParentId: row.menuParentId })
+      })
+      .catch((error) => {
+        ElMessage.error("删除失败")
+      })
   })
 }
 
@@ -223,17 +189,19 @@ const batchDel = async () => {
     confirmButtonText: "确定",
     cancelButtonText: "取消"
   }).then(async () => {
-    batchDelApi({ list: tableDataRef.value?.getSelectionRows()?.map((m: SMenuList) => m.menuId) } as ListObjectBO).then((res) => {
-      ElMessage.success("删除成功")
-      itemSuccess({ menuParentId: TopId })
-    }).catch((error) => {
-      ElMessage.error("删除失败")
-    })
+    batchDelApi({ list: tableDataRef.value?.getSelectionRows()?.map((m: SMenuList) => m.menuId) } as ListObjectBO)
+      .then((res) => {
+        ElMessage.success("删除成功")
+        itemSuccess({ menuParentId: TopId })
+      })
+      .catch((error) => {
+        ElMessage.error("删除失败")
+      })
   })
 }
 
 const init = async () => {
-  if (loading.value) return;
+  if (loading.value) return
   loading.value = true
   await getMenuType()
   await getTableData()
@@ -243,9 +211,6 @@ const init = async () => {
 onMounted(async () => {
   await init()
 })
-
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
