@@ -45,7 +45,7 @@ public class SParamServiceImpl extends ServiceImpl<SParamMapper, SParam> impleme
     }
 
     private void setCache(List<SParamBO> bos) {
-        if (ObjectUtils.isNotEmpty(bos)) {
+        if (!bos.isEmpty()) {
             stringRedisServiceImpl.batchSet(bos.stream().collect(Collectors.toMap(k -> RedisConstants.getParamKey(k.getParamCode()), v -> v, (v1, v2) -> v2)));
         }
     }
@@ -112,13 +112,13 @@ public class SParamServiceImpl extends ServiceImpl<SParamMapper, SParam> impleme
         LoginCacheBO bo = (LoginCacheBO) CurrentUserContextHolder.get();
         param.setUpdateUid(bo.getUserLoginCacheBO().getUserId());
         param.setUpdateTime(new Date());
-        if (ObjectUtils.isEmpty(param.getParamCode())) {
+        if (param.getParamCode() == null) {
             param.setCreateUid(bo.getUserLoginCacheBO().getUserId());
             param.setCreateTime(param.getUpdateTime());
             baseMapper.insert(param);
         } else {
             SParam old = baseMapper.selectById(param.getParamCode());
-            if (ObjectUtils.isEmpty(old)) {
+            if (old == null) {
                 throw new BusinessException("参数编号数据错误，请重试");
             }
             baseMapper.updateById(param);
