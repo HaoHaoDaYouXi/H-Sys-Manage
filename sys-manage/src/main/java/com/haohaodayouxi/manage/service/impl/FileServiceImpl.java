@@ -66,6 +66,33 @@ public class FileServiceImpl implements FileService {
     private static final String ENCRYPT_KEY = "encryptKey";
 
     @Override
+    public void prefixFileByFileCode(HttpServletRequest request, HttpServletResponse response, String fileCode) {
+        try {
+            FileUploadLog uploadLog = fileUploadLogService.getOne(new LambdaQueryWrapper<FileUploadLog>().eq(FileUploadLog::getDelStatus, TrueFalseEnum.FALSE.getCode()).eq(FileUploadLog::getFileCode, fileCode));
+            if (ObjectUtils.isNotEmpty(uploadLog)) {
+                FileUtilBO utilBO = fileOsConfigService.getFileUtil(uploadLog.getOsId());
+                if (ObjectUtils.isNotEmpty(utilBO)) {
+                    requestForwarding(request, response, (utilBO.getDomain() + uploadLog.getFilePath()));
+                } else {
+                    response.setStatus(404);
+                    response.getWriter().print("404 FILE OS IS NOT FOUND");
+                }
+            } else {
+                // todo 404
+                response.setStatus(404);
+                response.getWriter().print("404 FILE IS NOT FOUND");
+            }
+        } catch (Exception e) {
+            response.setStatus(500);
+            try {
+                response.getWriter().print("500");
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
+
+    @Override
     public void previewFile(HttpServletRequest request, HttpServletResponse response, FilePreviewReq req) {
         try {
             if (ObjectUtils.allNotNull(req.getS(), req.getT(), req.getC())) {
@@ -130,7 +157,7 @@ public class FileServiceImpl implements FileService {
         try {
             FileInfoBO bo = baseUploadFile(req.getObjTypeEnum(), req.getObjId(), req.getUserId(), req.getTypeEnum(), req.getFile().getOriginalFilename(), FilePathConstants.UPLOAD_BASE_FILES_PATH, req.getFileFormat(), req.getFile().getBytes(), req.getEncryptKey(), req.getUserMetadata());
             // bo转换成预览地址
-            String previewUrl = FilePathUtil.previewUrl(fileOsConfigService.getFileUtil(req.getObjTypeEnum(), req.getObjId()), FilePathConstants.getUploadFilePath(bo.getServiceFileName()), bo.getFileName(), hParameter.getFileOS().getPreviewExpire(), null, hParameter.getFileOS().getPreviewInterface());
+            String previewUrl = FilePathUtil.previewUrl(fileOsConfigService.getFileUtil(req.getObjTypeEnum(), req.getObjId()), FilePathConstants.getUploadFilePath(bo.getFilePath()), bo.getFileName(), hParameter.getFileOS().getPreviewExpire(), null, hParameter.getFileOS().getPreviewInterface());
             return FileUploadRes.builder().fileCode(bo.getFileCode()).previewUrl(previewUrl).build();
         } catch (IOException e) {
             throw new BusinessException("文件上传异常", e);
@@ -172,7 +199,7 @@ public class FileServiceImpl implements FileService {
                                      String fileIdeaDir,
                                      String fileFormat,
                                      byte[] bytes,
-                                     String serviceFileName,
+                                     String filePath,
                                      String encryptKey,
                                      Map<String, String> userMetadata) {
         FileUtilBO utilBO = fileOsConfigService.getFileUtil(objTypeEnum, objId);
@@ -187,16 +214,16 @@ public class FileServiceImpl implements FileService {
         }
         FileUploadLog uploadLog;
         String fileCode = IdUtil.getUUID();
-        if (ObjectUtils.isEmpty(serviceFileName)) {
-            serviceFileName = FilePathUtil.generateFilePath(fileIdeaDir, now, fileCode, fileFormat);
-            uploadLog = addFileUploadLog(utilBO.getOsId(), fileCode, fileName, encryptKey, fileSize, serviceFileName, now, objTypeEnum, objId, userId);
+        if (ObjectUtils.isEmpty(filePath)) {
+            filePath = FilePathUtil.generateFilePath(fileIdeaDir, now, fileCode, fileFormat);
+            uploadLog = addFileUploadLog(utilBO.getOsId(), utilBO.getBucketName(), fileCode, fileName, encryptKey, fileSize, filePath, now, objTypeEnum, objId, userId);
         } else {
-            serviceFileName = fileIdeaDir + serviceFileName;
-            uploadLog = fileUploadLogService.getOne(new LambdaQueryWrapper<FileUploadLog>().eq(FileUploadLog::getServiceFileName, serviceFileName).eq(FileUploadLog::getDelStatus, TrueFalseEnum.FALSE.getCode()).last(" limit 1"));
+            filePath = fileIdeaDir + filePath;
+            uploadLog = fileUploadLogService.getOne(new LambdaQueryWrapper<FileUploadLog>().eq(FileUploadLog::getFilePath, filePath).eq(FileUploadLog::getDelStatus, TrueFalseEnum.FALSE.getCode()).last(" limit 1"));
             if (ObjectUtils.isEmpty(uploadLog)) {
-                uploadLog = addFileUploadLog(utilBO.getOsId(), fileCode, fileName, encryptKey, fileSize, serviceFileName, now, objTypeEnum, objId, userId);
+                uploadLog = addFileUploadLog(utilBO.getOsId(), utilBO.getBucketName(), fileCode, fileName, encryptKey, fileSize, filePath, now, objTypeEnum, objId, userId);
             } else {
-                uploadLog = updFileUploadLog(uploadLog.getFileId(), utilBO.getOsId(), fileCode, fileName, encryptKey, fileSize, serviceFileName, now, objTypeEnum, objId, userId);
+                uploadLog = updFileUploadLog(uploadLog.getFileId(), utilBO.getOsId(), utilBO.getBucketName(), fileCode, fileName, encryptKey, fileSize, filePath, now, objTypeEnum, objId, userId);
             }
         }
         try {
@@ -207,13 +234,13 @@ public class FileServiceImpl implements FileService {
                 bytes = AesUtil.encryptECB(bytes, Base64.decodeBase64(encryptKey));
                 userMetadata.put(ENCRYPT_KEY, encryptKey);
             }
-            fileUploadCoreService.uploadFile(utilBO.getFileUtilService(), utilBO.getBucketName(), serviceFileName, bytes, userMetadata);
+            fileUploadCoreService.uploadFile(utilBO.getFileUtilService(), utilBO.getBucketName(), filePath, bytes, userMetadata);
             FileInfoBO res = FileInfoBO.builder()
                     .fileCode(fileCode)
                     .prefixUrl(utilBO.getDomain())
                     .fileName(fileName)
                     .fileSize(fileSize)
-                    .serviceFileName(serviceFileName.replace(fileIdeaDir, ""))
+                    .filePath(filePath.replace(fileIdeaDir, ""))
                     .build();
             if (ObjectUtils.isNotEmpty(checkBO.getZoomData())) {
                 uploadLog.setFileZoomImg(res.getZoomFile());
@@ -256,6 +283,7 @@ public class FileServiceImpl implements FileService {
      * 添加文件上传日志
      */
     private FileUploadLog addFileUploadLog(Long osId,
+                                           String bucketName,
                                            String fileCode,
                                            String fileName,
                                            String encryptKey,
@@ -267,11 +295,11 @@ public class FileServiceImpl implements FileService {
                                            Long userId) {
         FileUploadLog log = FileUploadLog.builder()
                 .osId(osId)
+                .bucketName(bucketName)
                 .fileCode(fileCode)
                 .fileName(fileName)
                 .encryptInfo(JSON.toJSONString(FileEncryptBO.builder().encryptKey(encryptKey).build()))
                 .fileSize(fileSize)
-                .serviceFileName(FilePathUtil.getFileNameByFilePath(filePath))
                 .filePath(filePath)
                 .objType(objTypeEnum.getType())
                 .objId(objId)
@@ -293,6 +321,7 @@ public class FileServiceImpl implements FileService {
      */
     private FileUploadLog updFileUploadLog(Long id,
                                            Long osId,
+                                           String bucketName,
                                            String fileCode,
                                            String fileName,
                                            String encryptKey,
@@ -309,7 +338,7 @@ public class FileServiceImpl implements FileService {
                 .delStatus(TrueFalseEnum.TRUE.getCode())
                 .build();
         fileUploadLogService.updateById(log);
-        return addFileUploadLog(osId, fileCode, fileName, encryptKey, fileSize, filePath, now, objTypeEnum, objId, userId);
+        return addFileUploadLog(osId, bucketName, fileCode, fileName, encryptKey, fileSize, filePath, now, objTypeEnum, objId, userId);
     }
 
     /**

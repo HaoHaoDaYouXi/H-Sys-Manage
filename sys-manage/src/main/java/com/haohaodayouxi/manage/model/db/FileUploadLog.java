@@ -42,6 +42,12 @@ public class FileUploadLog implements Serializable {
     private Long osId;
 
     /**
+     * 桶名 多个逗号分隔
+     */
+    @TableField(value = "bucket_name")
+    private String bucketName;
+
+    /**
      * 文件编码
      */
     @TableField(value = "file_code")
@@ -72,13 +78,7 @@ public class FileUploadLog implements Serializable {
     private Long fileDataSize;
 
     /**
-     * 存入服务器的文件名
-     */
-    @TableField(value = "service_file_name")
-    private String serviceFileName;
-
-    /**
-     * 文件路径 完整路径不包含桶名 /2025/04-02/a.png 业务表存的
+     * 文件路径 完整路径不包含桶名 /xxxx/2025/04-02/a.png
      */
     @TableField(value = "file_path")
     private String filePath;

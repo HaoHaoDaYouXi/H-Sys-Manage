@@ -40,7 +40,7 @@ public class FileInfoBO implements Serializable {
     /**
      * 服务器文件地址 /2025/01-01/UUID.png
      */
-    private String serviceFileName;
+    private String filePath;
     /**
      * 缩放文件地址 例如：视频封面图、图片缩略图 等源文件压缩后的文件
      */

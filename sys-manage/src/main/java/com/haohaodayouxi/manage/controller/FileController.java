@@ -39,18 +39,29 @@ public class FileController {
     /**
      * 预览文件
      *
-     * @param req
-     * @return
+     * @param req req
      */
     @OpenApi
     @GetMapping(value = "/preview/{fileName}")
-    public void detail(HttpServletRequest request, HttpServletResponse response, @PathVariable("fileName") String fileName, FilePreviewReq req) {
+    public void openPreviewFile(HttpServletRequest request, HttpServletResponse response, @PathVariable("fileName") String fileName, FilePreviewReq req) {
         Assert.notNull(req, "无效的请求");
         Assert.notNull(req.getToken(), "认证身份无效");
         LoginCacheBO bo = loginCacheUtil.getLoginCache(req.getToken());
         Assert.notNull(bo, "请先登录");
         req.setFileName(fileName);
         fileService.previewFile(request, response, req);
+    }
+
+    /**
+     * 根据编码获取文件
+     *
+     * @param request  req
+     * @param response res
+     * @param fileCode fileCode
+     */
+    @GetMapping(value = "/detail/{fileCode}")
+    public void previewByFileCode(HttpServletRequest request, HttpServletResponse response, @PathVariable("fileCode") String fileCode) {
+        fileService.prefixFileByFileCode(request, response, fileCode);
     }
 
     /**

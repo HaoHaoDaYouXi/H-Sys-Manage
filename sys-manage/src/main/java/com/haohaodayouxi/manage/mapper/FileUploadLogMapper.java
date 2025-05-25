@@ -7,7 +7,7 @@ import com.haohaodayouxi.manage.model.db.FileUploadLog;
  * FileUploadLogMapper
  *
  * @author TONE
- * @date 2025/5/20
+ * @date 2025/5/25
  */
 public interface FileUploadLogMapper extends BaseMapper<FileUploadLog> {
 }

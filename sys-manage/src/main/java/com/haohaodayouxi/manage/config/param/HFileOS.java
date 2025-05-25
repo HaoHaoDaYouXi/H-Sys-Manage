@@ -47,7 +47,7 @@ public class HFileOS implements Serializable {
     /**
      * 预览接口地址
      */
-    @Value("${h.file-os.previewInterface:/api/file/detail}")
+    @Value("${h.file-os.previewInterface:/manage/file/preview}")
     private String previewInterface;
 
     /**

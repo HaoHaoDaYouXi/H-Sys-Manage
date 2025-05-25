@@ -13,6 +13,14 @@ import com.haohaodayouxi.manage.model.db.FileOsConfig;
  */
 public interface FileOsConfigService extends IService<FileOsConfig> {
     /**
+     * 根据文件系统ID获取
+     *
+     * @param osId
+     * @return
+     */
+    FileUtilBO getFileUtil(Long osId);
+
+    /**
      * 根据对象类型和对象id获取文件工具类
      *
      * @param objTypeEnum 文件对象类型

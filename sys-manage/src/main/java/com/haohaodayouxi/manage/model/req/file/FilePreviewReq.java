@@ -33,7 +33,7 @@ public class FilePreviewReq implements Serializable {
     private String token;
 
     /**
-     * 用户token
+     * 文件名称
      */
     private String fileName;
 

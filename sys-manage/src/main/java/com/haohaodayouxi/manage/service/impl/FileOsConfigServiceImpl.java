@@ -90,6 +90,11 @@ public class FileOsConfigServiceImpl extends ServiceImpl<FileOsConfigMapper, Fil
     }
 
     @Override
+    public FileUtilBO getFileUtil(Long osId) {
+        return FILE_UTILS_MAP.get(osId);
+    }
+
+    @Override
     public FileUtilBO getFileUtil(FileObjTypeEnum objTypeEnum, Long objId) {
         Long osId = FILE_USER_AUTH_MAP.get(objTypeEnum.getDirPrefix() + objId);
         if (ObjectUtils.isNotEmpty(osId)) {

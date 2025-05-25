@@ -6,12 +6,12 @@
     <!--@Table file_upload_log-->
     <id column="file_id" jdbcType="BIGINT" property="fileId" />
     <result column="os_id" jdbcType="BIGINT" property="osId" />
+    <result column="bucket_name" jdbcType="VARCHAR" property="bucketName" />
     <result column="file_code" jdbcType="VARCHAR" property="fileCode" />
     <result column="file_name" jdbcType="VARCHAR" property="fileName" />
     <result column="encrypt_info" jdbcType="VARCHAR" property="encryptInfo" />
     <result column="file_size" jdbcType="BIGINT" property="fileSize" />
     <result column="file_data_size" jdbcType="BIGINT" property="fileDataSize" />
-    <result column="service_file_name" jdbcType="VARCHAR" property="serviceFileName" />
     <result column="file_path" jdbcType="VARCHAR" property="filePath" />
     <result column="file_zoom_img" jdbcType="VARCHAR" property="fileZoomImg" />
     <result column="upload_status" jdbcType="TINYINT" property="uploadStatus" />
@@ -27,7 +27,7 @@
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    file_id, os_id, file_code, file_name, encrypt_info, file_size, file_data_size, service_file_name, 
+    file_id, os_id, bucket_name, file_code, file_name, encrypt_info, file_size, file_data_size, 
     file_path, file_zoom_img, upload_status, error_msg, obj_type, obj_id, version, create_uid, 
     update_uid, create_time, update_time, del_status
   </sql>
