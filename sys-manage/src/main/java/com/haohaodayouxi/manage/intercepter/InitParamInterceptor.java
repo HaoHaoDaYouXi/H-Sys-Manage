@@ -43,7 +43,7 @@ public class InitParamInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         log.debug("InitParamInterceptor");
         CurrentParam.reset();
-        // 如果不是 HandlerMethod，直接放行
+        // 如果不是 HandlerMethod
         if (!(handler instanceof HandlerMethod handlerMethod)) {
             log.debug("非 HandlerMethod：{}", request.getRequestURI());
             // 如果是静态资源，直接放行
