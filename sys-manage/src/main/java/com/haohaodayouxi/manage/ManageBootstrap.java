@@ -25,16 +25,19 @@ public class ManageBootstrap {
     }
 
     private static void init(ApplicationContext applicationContext) {
-        log.info("-----------启动成功，开始初始化-----------");
-        try {
-            // 调用初始化方法
-            Map<String, InitService> beansOfType = applicationContext.getBeansOfType(InitService.class);
-            beansOfType.forEach((name, value) -> value.init());
-            log.info("-----------初始化成功-----------");
-        } catch (Exception e) {
-            log.error("-----------初始化异常-----------");
-            // 自行判断是否要结束项目
-            // System.exit(1);
-        }
+        log.info("----------- 启动成功，开始初始化 -----------");
+        // 调用初始化方法
+        Map<String, InitService> beansOfType = applicationContext.getBeansOfType(InitService.class);
+        beansOfType.forEach((name, value) -> {
+            try {
+                value.init();
+                log.info("----------- [{}] 初始化成功 -----------", name);
+            } catch (Exception e) {
+                log.error("----------- [{}] 初始化异常 -----------", name);
+                // 自行判断是否要结束项目
+                // System.exit(1);
+            }
+        });
+        log.info("----------- 启动结束 -----------");
     }
 }
