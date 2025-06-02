@@ -15,11 +15,13 @@ import com.haohaodayouxi.manage.utils.LoginCacheUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * FileController
@@ -37,22 +39,6 @@ public class FileController {
     private LoginCacheUtil loginCacheUtil;
 
     /**
-     * 预览文件
-     *
-     * @param req req
-     */
-    @OpenApi
-    @GetMapping(value = "/preview/{fileName}")
-    public void openPreviewFile(HttpServletRequest request, HttpServletResponse response, @PathVariable("fileName") String fileName, FilePreviewReq req) {
-        Assert.notNull(req, "无效的请求");
-        Assert.notNull(req.getToken(), "认证身份无效");
-        LoginCacheBO bo = loginCacheUtil.getLoginCache(req.getToken());
-        Assert.notNull(bo, "请先登录");
-        req.setFileName(fileName);
-        fileService.previewFile(request, response, req);
-    }
-
-    /**
      * 根据编码获取文件
      *
      * @param request  req
@@ -65,87 +51,123 @@ public class FileController {
     }
 
     /**
+     * 根据编码获取文件预览地址
+     *
+     * @param fileCode fileCode
+     */
+    @GetMapping(value = "/getPreviewUrl/{fileCode}")
+    public Response<String> getPreviewUrlByFileCode(@PathVariable("fileCode") String fileCode) {
+        return OkResponse.OK.toResponse(fileService.getPreviewUrlByFileCode(fileCode));
+    }
+
+    /**
+     * 预览文件
+     *
+     * @param req req
+     */
+    @OpenApi
+    @GetMapping(value = "/preview/{fileName}")
+    public void openPreviewFile(HttpServletRequest request, HttpServletResponse response, @PathVariable("fileName") String fileName, FilePreviewReq req) {
+        Assert.notNull(req, "无效的请求");
+        Assert.notNull(req.getT(), "认证身份无效");
+        LoginCacheBO bo = loginCacheUtil.getLoginCache(req.getT());
+        Assert.notNull(bo, "请先登录");
+        req.setFileName(fileName);
+        fileService.previewFile(request, response, req);
+    }
+
+    /**
      * 上传图片
      *
-     * @param req 文件
+     * @param file 文件
      * @return FileRes
      */
     @ResponseBody
     @PostMapping(value = "/upload/img")
-    public Response<FileUploadRes> uploadImg(@Validated FileUploadReq req) {
+    public Response<FileUploadRes> uploadImg(@Validated @NotNull(message = "文件不能为空") MultipartFile file) {
         LoginCacheBO bo = (LoginCacheBO) CurrentUserContextHolder.get();
-        req.setUserId(bo.getUserLoginCacheBO().getUserId());
-        req.setObjTypeEnum(FileObjTypeEnum.MANAGE);
-        req.setObjId(bo.getUserLoginCacheBO().getUserId());
-        req.setTypeEnum(FileTypeEnum.IMAGE);
-        return OkResponse.UPLOAD_FILE.toResponse(fileService.uploadFile(req));
+        return OkResponse.UPLOAD_FILE.toResponse(fileService.uploadFile(FileUploadReq.builder()
+                .file(file)
+                .userId(bo.getUserLoginCacheBO().getUserId())
+                .objTypeEnum(FileObjTypeEnum.MANAGE)
+                .objId(bo.getUserLoginCacheBO().getUserId())
+                .typeEnum(FileTypeEnum.IMAGE)
+                .build()));
     }
 
     /**
      * 上传文档
      *
-     * @param req 文件
+     * @param file 文件
      * @return FileRes
      */
     @ResponseBody
     @PostMapping(value = "/upload/doc")
-    public Response<FileUploadRes> uploadDoc(@Validated FileUploadReq req) {
+    public Response<FileUploadRes> uploadDoc(@Validated @NotNull(message = "文件不能为空") MultipartFile file) {
         LoginCacheBO bo = (LoginCacheBO) CurrentUserContextHolder.get();
-        req.setUserId(bo.getUserLoginCacheBO().getUserId());
-        req.setObjTypeEnum(FileObjTypeEnum.MANAGE);
-        req.setObjId(bo.getUserLoginCacheBO().getUserId());
-        req.setTypeEnum(FileTypeEnum.DOC);
-        return OkResponse.UPLOAD_FILE.toResponse(fileService.uploadFile(req));
+        return OkResponse.UPLOAD_FILE.toResponse(fileService.uploadFile(FileUploadReq.builder()
+                .file(file)
+                .userId(bo.getUserLoginCacheBO().getUserId())
+                .objTypeEnum(FileObjTypeEnum.MANAGE)
+                .objId(bo.getUserLoginCacheBO().getUserId())
+                .typeEnum(FileTypeEnum.DOC)
+                .build()));
     }
 
     /**
      * 上传图片或文档
      *
-     * @param req 文件
+     * @param file 文件
      * @return FileRes
      */
     @ResponseBody
     @PostMapping(value = "/upload/imgOrDoc")
-    public Response<FileUploadRes> uploadImgOrDoc(@Validated FileUploadReq req) {
+    public Response<FileUploadRes> uploadImgOrDoc(@Validated @NotNull(message = "文件不能为空") MultipartFile file) {
         LoginCacheBO bo = (LoginCacheBO) CurrentUserContextHolder.get();
-        req.setUserId(bo.getUserLoginCacheBO().getUserId());
-        req.setObjTypeEnum(FileObjTypeEnum.MANAGE);
-        req.setObjId(bo.getUserLoginCacheBO().getUserId());
-        req.setTypeEnum(FileTypeEnum.IMAGE_OR_DOC);
-        return OkResponse.UPLOAD_FILE.toResponse(fileService.uploadFile(req));
+        return OkResponse.UPLOAD_FILE.toResponse(fileService.uploadFile(FileUploadReq.builder()
+                .file(file)
+                .userId(bo.getUserLoginCacheBO().getUserId())
+                .objTypeEnum(FileObjTypeEnum.MANAGE)
+                .objId(bo.getUserLoginCacheBO().getUserId())
+                .typeEnum(FileTypeEnum.IMAGE_OR_DOC)
+                .build()));
     }
 
     /**
      * 上传音频
      *
-     * @param req 文件
+     * @param file 文件
      * @return FileRes
      */
     @ResponseBody
     @PostMapping(value = "/upload/audio")
-    public Response<FileUploadRes> uploadAudio(@Validated FileUploadReq req) {
+    public Response<FileUploadRes> uploadAudio(@Validated @NotNull(message = "文件不能为空") MultipartFile file) {
         LoginCacheBO bo = (LoginCacheBO) CurrentUserContextHolder.get();
-        req.setUserId(bo.getUserLoginCacheBO().getUserId());
-        req.setObjTypeEnum(FileObjTypeEnum.MANAGE);
-        req.setObjId(bo.getUserLoginCacheBO().getUserId());
-        req.setTypeEnum(FileTypeEnum.AUDIO);
-        return OkResponse.UPLOAD_FILE.toResponse(fileService.uploadFile(req));
+        return OkResponse.UPLOAD_FILE.toResponse(fileService.uploadFile(FileUploadReq.builder()
+                .file(file)
+                .userId(bo.getUserLoginCacheBO().getUserId())
+                .objTypeEnum(FileObjTypeEnum.MANAGE)
+                .objId(bo.getUserLoginCacheBO().getUserId())
+                .typeEnum(FileTypeEnum.AUDIO)
+                .build()));
     }
 
     /**
      * 上传视频
      *
-     * @param req 文件
+     * @param file 文件
      * @return FileRes
      */
     @ResponseBody
     @PostMapping(value = "/upload/video")
-    public Response<FileUploadRes> uploadVideo(@Validated FileUploadReq req) {
+    public Response<FileUploadRes> uploadVideo(@Validated @NotNull(message = "文件不能为空") MultipartFile file) {
         LoginCacheBO bo = (LoginCacheBO) CurrentUserContextHolder.get();
-        req.setUserId(bo.getUserLoginCacheBO().getUserId());
-        req.setObjTypeEnum(FileObjTypeEnum.MANAGE);
-        req.setObjId(bo.getUserLoginCacheBO().getUserId());
-        req.setTypeEnum(FileTypeEnum.VIDEO);
-        return OkResponse.UPLOAD_FILE.toResponse(fileService.uploadFile(req));
+        return OkResponse.UPLOAD_FILE.toResponse(fileService.uploadFile(FileUploadReq.builder()
+                .file(file)
+                .userId(bo.getUserLoginCacheBO().getUserId())
+                .objTypeEnum(FileObjTypeEnum.MANAGE)
+                .objId(bo.getUserLoginCacheBO().getUserId())
+                .typeEnum(FileTypeEnum.VIDEO)
+                .build()));
     }
 }

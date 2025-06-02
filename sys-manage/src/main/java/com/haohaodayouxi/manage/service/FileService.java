@@ -23,6 +23,8 @@ public interface FileService {
 
     void prefixFileByFileCode(HttpServletRequest request, HttpServletResponse response, String fileCode);
 
+    String getPreviewUrlByFileCode(String fileCode);
+
     /**
      * 预览文件
      *

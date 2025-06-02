@@ -51,7 +51,7 @@ public class FileDataCheckServiceImpl implements FileDataCheckService, InitServi
     public boolean checkNsfw(byte[] bytes) {
         if (ObjectUtils.isEmpty(NSFW_DATA)) {
             log.info("无NSFW模型数据，不做鉴定");
-            return true;
+            return false;
         }
         float prediction;
         long l = System.currentTimeMillis();

@@ -28,11 +28,6 @@ public class FilePreviewReq implements Serializable {
     private String c;
 
     /**
-     * 用户token
-     */
-    private String token;
-
-    /**
      * 文件名称
      */
     private String fileName;

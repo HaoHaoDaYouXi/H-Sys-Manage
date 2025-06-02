@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.haohaodayouxi.common.core.interfaces.InitService;
 import com.haohaodayouxi.common.util.enums.TrueFalseEnum;
+import com.haohaodayouxi.file.core.constants.OSSourceType;
 import com.haohaodayouxi.file.core.service.FileUtilService;
 import com.haohaodayouxi.manage.constants.enums.file.FileObjTypeEnum;
 import com.haohaodayouxi.manage.mapper.FileOsConfigMapper;
@@ -72,7 +73,8 @@ public class FileOsConfigServiceImpl extends ServiceImpl<FileOsConfigMapper, Fil
             }
         }
         configs.forEach(f -> {
-            if (ObjectUtils.anyNull(f.getOsName(), f.getOsSourceType(), f.getEndPoint(), f.getAccessKeyId(), f.getAccessKeySecret(), f.getBucketName(), f.getDomain())) {
+            if (ObjectUtils.anyNull(f.getOsName(), f.getOsSourceType(), f.getDomain()) ||
+                    (!f.getOsSourceType().equals(OSSourceType.LOCAL.toString()) && ObjectUtils.anyNull(f.getEndPoint(), f.getAccessKeyId(), f.getAccessKeySecret(), f.getBucketName()))) {
                 log.error("文件存储配置信息存在空===={}", f);
                 throw new NoSuchBeanDefinitionException("文件存储配置信息存在空");
             }

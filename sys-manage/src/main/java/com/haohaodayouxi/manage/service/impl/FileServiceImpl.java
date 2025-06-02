@@ -83,6 +83,7 @@ public class FileServiceImpl implements FileService {
                 response.getWriter().print("404 FILE IS NOT FOUND");
             }
         } catch (Exception e) {
+            log.error("response error code 500", e);
             response.setStatus(500);
             try {
                 response.getWriter().print("500");
@@ -90,6 +91,19 @@ public class FileServiceImpl implements FileService {
                 throw new RuntimeException(ex);
             }
         }
+    }
+
+    @Override
+    public String getPreviewUrlByFileCode(String fileCode) {
+        FileUploadLog uploadLog = fileUploadLogService.getOne(new LambdaQueryWrapper<FileUploadLog>().eq(FileUploadLog::getDelStatus, TrueFalseEnum.FALSE.getCode()).eq(FileUploadLog::getFileCode, fileCode));
+        if (ObjectUtils.isEmpty(uploadLog)) {
+            throw new BusinessException("数据访问错误，请稍后重试");
+        }
+        FileUtilBO utilBO = fileOsConfigService.getFileUtil(uploadLog.getOsId());
+        if (ObjectUtils.isEmpty(utilBO)) {
+            throw new BusinessException("数据访问错误，请稍后重试");
+        }
+        return FilePathUtil.previewUrl(utilBO, FilePathConstants.getUploadFilePath(uploadLog.getFilePath()), uploadLog.getFileName(), hParameter.getFileOS().getPreviewExpire(), null, hParameter.getFileOS().getPreviewInterface());
     }
 
     @Override
