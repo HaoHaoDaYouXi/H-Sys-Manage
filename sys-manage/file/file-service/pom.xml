@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.haohaodayouxi</groupId>
+        <artifactId>file</artifactId>
+        <version>1.0.0-21-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>file-service</artifactId>
+    <version>1.0.0-21-SNAPSHOT</version>
+
+    <properties>
+        <common-redis.version>1.0.0-21-SNAPSHOT</common-redis.version>
+        <common-file-util.version>1.0.0-21-SNAPSHOT</common-file-util.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.haohaodayouxi</groupId>
+            <artifactId>file-service-api</artifactId>
+            <version>1.0.0-21-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.haohaodayouxi</groupId>
+            <artifactId>common-redis</artifactId>
+            <version>${common-redis.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.haohaodayouxi</groupId>
+            <artifactId>common-file-util</artifactId>
+            <version>${common-file-util.version}</version>
+        </dependency>
+
+        <!--javacv-->
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>javacv</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>ffmpeg</artifactId>
+            <classifier>${javacv-platform-os.version}</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>org.tensorflow</groupId>
+            <artifactId>tensorflow</artifactId>
+            <version>1.15.0</version>
+        </dependency>
+    </dependencies>
+
+</project>
