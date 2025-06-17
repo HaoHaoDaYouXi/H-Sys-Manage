@@ -6,6 +6,7 @@ import com.haohaodayouxi.common.core.exception.BusinessException;
 import com.haohaodayouxi.common.util.algorithm.aes.AesUtil;
 import com.haohaodayouxi.common.util.business.IdUtil;
 import com.haohaodayouxi.common.util.enums.TrueFalseEnum;
+import com.haohaodayouxi.common.util.file.FileUtils;
 import com.haohaodayouxi.file.core.service.FileUploadCoreService;
 import com.haohaodayouxi.manage.config.param.HParameter;
 import com.haohaodayouxi.manage.constants.FilePathConstants;
@@ -32,16 +33,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.client.ClientHttpRequest;
-import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
-import java.net.URI;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * FileServiceImpl
@@ -72,13 +70,12 @@ public class FileServiceImpl implements FileService {
             if (ObjectUtils.isNotEmpty(uploadLog)) {
                 FileUtilBO utilBO = fileOsConfigService.getFileUtil(uploadLog.getOsId());
                 if (ObjectUtils.isNotEmpty(utilBO)) {
-                    requestForwarding(request, response, (utilBO.getDomain() + uploadLog.getFilePath()));
+                    FileUtils.requestForwarding(request, response, (utilBO.getDomain() + uploadLog.getFilePath()), uploadLog.getFileName());
                 } else {
                     response.setStatus(404);
                     response.getWriter().print("404 FILE OS IS NOT FOUND");
                 }
             } else {
-                // todo 404
                 response.setStatus(404);
                 response.getWriter().print("404 FILE IS NOT FOUND");
             }
@@ -115,7 +112,7 @@ public class FileServiceImpl implements FileService {
                     FileRequestSignBO signBO = JSON.parseObject(decrypt, FileRequestSignBO.class);
                     long timeMillis = System.currentTimeMillis();
                     if (Objects.nonNull(signBO) && signBO.getToken().equals(req.getT()) && signBO.getRandomCode().equals(req.getC()) && timeMillis <= signBO.getExpire()) {
-                        requestForwarding(request, response, signBO.getFileRealPath());
+                        FileUtils.requestForwarding(request, response, signBO.getFileRealPath(), req.getFileName());
                     } else {
                         throw new BusinessException("数据访问错误，请稍后重试");
                     }
@@ -129,40 +126,6 @@ public class FileServiceImpl implements FileService {
             log.error("数据访问错误，请稍后重试", e);
             throw new BusinessException("数据访问错误，请稍后重试");
         }
-    }
-
-    /**
-     * 请求转发
-     *
-     * @param request
-     * @param response
-     * @param url
-     * @throws Exception
-     */
-    private void requestForwarding(HttpServletRequest request, HttpServletResponse response, String url) throws Exception {
-        URI uri = new URI(url);
-        // 执行代理查询
-        String methodName = request.getMethod();
-        HttpMethod httpMethod = HttpMethod.valueOf(methodName);
-        ClientHttpRequest delegate = new SimpleClientHttpRequestFactory().createRequest(uri, httpMethod);
-        Enumeration<String> headerNames = request.getHeaderNames();
-        // 设置请求头
-        while (headerNames.hasMoreElements()) {
-            String headerName = headerNames.nextElement();
-            Enumeration<String> v = request.getHeaders(headerName);
-            List<String> arr = new ArrayList<>();
-            while (v.hasMoreElements()) {
-                arr.add(v.nextElement());
-            }
-            delegate.getHeaders().addAll(headerName, arr);
-        }
-        StreamUtils.copy(request.getInputStream(), delegate.getBody());
-        // 执行远程调用
-        ClientHttpResponse clientHttpResponse = delegate.execute();
-        response.setStatus(clientHttpResponse.getStatusCode().value());
-        // 设置响应头
-        clientHttpResponse.getHeaders().forEach((key, value) -> value.forEach(it -> response.setHeader(key, it)));
-        StreamUtils.copy(clientHttpResponse.getBody(), response.getOutputStream());
     }
 
     @Override
