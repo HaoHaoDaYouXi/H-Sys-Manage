@@ -21,8 +21,21 @@ import java.util.Map;
  */
 public interface FileService {
 
+    /**
+     * 获取文件
+     *
+     * @param request  请求
+     * @param response 响应
+     * @param fileCode 文件编号
+     */
     void prefixFileByFileCode(HttpServletRequest request, HttpServletResponse response, String fileCode);
 
+    /**
+     * 获取文件预览地址
+     *
+     * @param fileCode 文件编号
+     * @return 文件预览地址
+     */
     String getPreviewUrlByFileCode(String fileCode);
 
     /**
