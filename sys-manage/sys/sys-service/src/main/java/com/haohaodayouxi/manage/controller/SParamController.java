@@ -5,7 +5,9 @@ import com.haohaodayouxi.common.core.interfaces.AddValid;
 import com.haohaodayouxi.common.core.interfaces.UpdValid;
 import com.haohaodayouxi.common.core.model.bo.ListObjectBO;
 import com.haohaodayouxi.common.core.model.res.Response;
+import com.haohaodayouxi.manage.constants.SysConstants;
 import com.haohaodayouxi.manage.model.req.param.SParamAddOrUpdReq;
+import com.haohaodayouxi.manage.model.req.param.SParamReq;
 import com.haohaodayouxi.manage.service.SParamService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +36,19 @@ public class SParamController {
     @GetMapping("/getAllParam")
     public Response<Object> getAllParam() {
         return OkResponse.QUERY.toResponse(paramService.getByCache(null));
+    }
+
+    /**
+     * 根据参数获取
+     *
+     * @return res
+     */
+    @GetMapping("/getSParamByParentCode")
+    public Response<Object> getSParamByReq(@RequestParam("paramParentCode") Long paramParentCode) {
+        if (paramParentCode == null) {
+            paramParentCode = SysConstants.TOP_LEVEL_ID;
+        }
+        return OkResponse.QUERY.toResponse(paramService.getByCache(SParamReq.builder().paramParentCode(paramParentCode).build()));
     }
 
     /**
