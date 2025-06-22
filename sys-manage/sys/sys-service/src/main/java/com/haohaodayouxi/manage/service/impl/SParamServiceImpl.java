@@ -88,11 +88,8 @@ public class SParamServiceImpl extends ServiceImpl<SParamMapper, SParam> impleme
             if (ObjectUtils.isNotEmpty(req.getParamCodes())) {
                 ids.addAll(Arrays.stream(req.getParamCodes().split(StringConstant.EN_COMMA)).toList());
             }
-            if (ObjectUtils.isNotEmpty(req.getParamParentCode())) {
+            if (ObjectUtils.isEmpty(ids)) {
                 res = stringRedisServiceImpl.batchGetByPattern(RedisConstants.getParamKey(req.getParamParentCode()) + StringConstant.MATCHES_PATTERN, SParamBO.class);
-                if (ObjectUtils.isNotEmpty(ids)) {
-                    res = res.stream().filter(f -> ids.contains(f.getParamCode().toString())).toList();
-                }
             } else {
                 res = stringRedisServiceImpl.batchGetByKeys(ids.stream().map(f -> RedisConstants.getParamKey(Long.parseLong(f))).toList(), SParamBO.class, true);
             }
