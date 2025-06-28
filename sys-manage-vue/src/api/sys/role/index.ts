@@ -1,7 +1,13 @@
 import { request } from "@/utils/service"
-import { LabelValue, ListObjectBO } from "@/api/commonTypes"
+import { LabelValue } from "@/api/commonTypes"
+import { commonApi } from "@/api/commonApi"
 
 const API_PREFIX = "s_role"
+const baseApi = commonApi(API_PREFIX)
+export const addApi = baseApi.addApi
+export const detailApi = baseApi.detailApi
+export const updApi = baseApi.updApi
+export const batchDelApi = baseApi.batchDelApi
 
 /** 查 */
 export function getRoleTypeApi() {
@@ -14,37 +20,6 @@ export function getRoleTypeApi() {
 export function pageListApi(data: any) {
   return request<ApiRes<any>>({
     url: `${API_PREFIX}/pageList`,
-    method: "post",
-    data
-  })
-}
-
-export function addApi(data: any) {
-  return request<ApiRes<boolean>>({
-    url: `${API_PREFIX}/add`,
-    method: "post",
-    data
-  })
-}
-
-export function detailApi(id: any) {
-  return request<ApiRes<any>>({
-    url: `${API_PREFIX}/detail/${id}`,
-    method: "get"
-  })
-}
-
-export function updApi(data: any) {
-  return request<ApiRes<boolean>>({
-    url: `${API_PREFIX}/upd`,
-    method: "post",
-    data
-  })
-}
-
-export function batchDelApi(data: ListObjectBO) {
-  return request<ApiRes<boolean>>({
-    url: `${API_PREFIX}/batchDel`,
     method: "post",
     data
   })
