@@ -230,6 +230,6 @@
         select max(param_code)
         from s_param
         where del_status = 0
-          and param_parent_code = #{paramParentCode}
+        and param_parent_code = #{paramParentCode}
     </select>
 </mapper>

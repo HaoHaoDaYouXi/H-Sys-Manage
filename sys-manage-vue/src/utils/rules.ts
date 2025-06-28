@@ -1,16 +1,16 @@
-﻿
-// 下拉框
+﻿// 下拉框
 const selectValidator = (rule: any, value: any, callback: any) => {
+  console.log(value)
   if (!value || (Array.isArray(value) && value.length < 1)) {
-    return callback("请选择");
+    return callback("请选择")
   }
-  callback();
+  callback()
 }
 
 /** 公共表单校验规则 */
 const commonFormRules = {
   required: [{ required: true, min: 1, message: "必填", trigger: "blur" }],
-  select: [{required: true, validator: selectValidator, trigger: 'change'}],
+  select: [{ required: true, validator: selectValidator, trigger: "change" }]
 }
 
 export default commonFormRules

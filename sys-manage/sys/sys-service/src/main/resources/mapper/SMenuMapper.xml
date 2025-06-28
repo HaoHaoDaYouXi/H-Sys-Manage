@@ -100,10 +100,11 @@
   </select>
 
   <select id="getSMenuByRole" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List"/>
-    from s_menu
-    where del_status = 0
-    and menu_id in (select menu_id from m_role_menu where del_status = 0 and role_id = #{roleId})
+    select m.*
+    from s_menu m
+    left join m_role_menu rm on m.menu_id = rm.menu_id
+    where m.del_status = 0
+    and rm.del_status = 0
+    and rm.role_id = #{roleId}
   </select>
 </mapper>
