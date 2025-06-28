@@ -122,16 +122,16 @@ public class SParamServiceImpl extends ServiceImpl<SParamMapper, SParam> impleme
                 throw new BusinessException("父级数据错误，请重试");
             } else {
                 // 判断父级路径不包含自身ID
-                // 1 1001 1001001
-                // 11 11001 11001001
+                // 1 100001 10000100001
+                // 11 1100001 110000100001
                 int length = parent.getParamParentCode().toString().length();
-                int size = length % 3 > 0 ? length / 3 + 1 : length / 3;
+                int size = length % 5 > 0 ? length / 5 + 1 : length / 5;
                 for (int i = size; i > 0; i--) {
-                    int start = (i - 1) * 3 - 1;
+                    int start = (i - 1) * 5 - 1;
                     if (start < 0) {
                         start = 0;
                     }
-                    int end = i * 3 - 1;
+                    int end = i * 5 - 1;
                     if (end > length) {
                         end = length;
                     }

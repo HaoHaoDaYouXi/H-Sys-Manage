@@ -13,9 +13,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum MenuTypeEnum {
 
-    FOLDER(1001L, "目录", 1),
-    PAGE(1002L, "页面", 2),
-    BUTTON(1003L, "按钮", 3),
+    FOLDER(100001L, "目录", 1),
+    PAGE(100002L, "页面", 2),
+    BUTTON(100003L, "按钮", 3),
     ;
     private final Long code;
 
