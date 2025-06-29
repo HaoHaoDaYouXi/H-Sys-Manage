@@ -21,6 +21,11 @@ public interface SysConstants {
     Long TOP_SYS_USER_ID = 1L;
 
     /**
+     * 参数ID长度
+     */
+    Integer PARAM_ID_LENGTH = 5;
+
+    /**
      * 系统名称
      */
     String PROJECT_NAME = System.getProperty("spring.application.name", "manage");
