@@ -5,7 +5,7 @@ import com.haohaodayouxi.common.core.interfaces.AddValid;
 import com.haohaodayouxi.common.core.interfaces.UpdValid;
 import com.haohaodayouxi.common.core.model.bo.ListObjectBO;
 import com.haohaodayouxi.common.core.model.res.Response;
-import com.haohaodayouxi.manage.constants.SysConstants;
+import com.haohaodayouxi.manage.constants.enums.param.RootParamCodeEnum;
 import com.haohaodayouxi.manage.model.bo.param.SParamBO;
 import com.haohaodayouxi.manage.model.db.SParam;
 import com.haohaodayouxi.manage.model.req.param.SParamAddOrUpdReq;
@@ -50,7 +50,7 @@ public class SParamController {
     @GetMapping("/getSParamByParentCode")
     public Response<List<SParamBO>> getSParamByReq(@RequestParam("paramParentCode") Long paramParentCode) {
         if (paramParentCode == null) {
-            paramParentCode = SysConstants.TOP_LEVEL_ID;
+            paramParentCode = RootParamCodeEnum.SYS_PARAM.getCode();
         }
         return OkResponse.QUERY.toResponse(paramService.getByCache(SParamReq.builder().paramParentCode(paramParentCode).build()));
     }

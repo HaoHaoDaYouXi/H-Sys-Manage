@@ -10,6 +10,7 @@ import com.haohaodayouxi.common.util.constants.StringConstant;
 import com.haohaodayouxi.common.util.enums.TrueFalseEnum;
 import com.haohaodayouxi.manage.constants.RedisConstants;
 import com.haohaodayouxi.manage.constants.SysConstants;
+import com.haohaodayouxi.manage.constants.enums.param.RootParamCodeEnum;
 import com.haohaodayouxi.manage.mapper.SParamMapper;
 import com.haohaodayouxi.manage.model.bo.login.LoginCacheBO;
 import com.haohaodayouxi.manage.model.bo.param.SParamBO;
@@ -89,7 +90,13 @@ public class SParamServiceImpl extends ServiceImpl<SParamMapper, SParam> impleme
                 ids.addAll(Arrays.stream(req.getParamCodes().split(StringConstant.EN_COMMA)).toList());
             }
             if (ObjectUtils.isEmpty(ids)) {
-                res = stringRedisServiceImpl.batchGetByPattern(RedisConstants.getParamKey(req.getParamParentCode()) + StringConstant.MATCHES_PATTERN, SParamBO.class);
+                if (ObjectUtils.isEmpty(req.getChildDeep())) {
+                    res = stringRedisServiceImpl.batchGetByPattern(RedisConstants.getParamKey(req.getParamParentCode()) + StringConstant.MATCHES_PATTERN, SParamBO.class);
+                } else {
+                    String parentKeys = RedisConstants.getParamKey(req.getParamParentCode());
+                    parentKeys += "?".repeat(req.getChildDeep() * SysConstants.PARAM_ID_LENGTH);
+                    res = stringRedisServiceImpl.batchGetByPattern(parentKeys, SParamBO.class);
+                }
             } else {
                 res = stringRedisServiceImpl.batchGetByKeys(ids.stream().map(f -> RedisConstants.getParamKey(Long.parseLong(f))).toList(), SParamBO.class, true);
             }
@@ -116,7 +123,7 @@ public class SParamServiceImpl extends ServiceImpl<SParamMapper, SParam> impleme
         if (!add && param.getParamCode().equals(param.getParamParentCode())) {
             throw new BusinessException("父级不能是自身");
         }
-        if (!param.getParamParentCode().equals(SysConstants.TOP_LEVEL_ID)) {
+        if (!param.getParamParentCode().equals(RootParamCodeEnum.SYS_PARAM.getCode())) {
             SParam parent = baseMapper.selectById(param.getParamParentCode());
             if (ObjectUtils.isEmpty(parent)) {
                 throw new BusinessException("父级数据错误，请重试");
@@ -125,13 +132,13 @@ public class SParamServiceImpl extends ServiceImpl<SParamMapper, SParam> impleme
                 // 1 100001 10000100001
                 // 11 1100001 110000100001
                 int length = parent.getParamParentCode().toString().length();
-                int size = length % 5 > 0 ? length / 5 + 1 : length / 5;
+                int size = length % SysConstants.PARAM_ID_LENGTH > 0 ? length / SysConstants.PARAM_ID_LENGTH + 1 : length / SysConstants.PARAM_ID_LENGTH;
                 for (int i = size; i > 0; i--) {
-                    int start = (i - 1) * 5 - 1;
+                    int start = (i - 1) * SysConstants.PARAM_ID_LENGTH - 1;
                     if (start < 0) {
                         start = 0;
                     }
-                    int end = i * 5 - 1;
+                    int end = i * SysConstants.PARAM_ID_LENGTH - 1;
                     if (end > length) {
                         end = length;
                     }
