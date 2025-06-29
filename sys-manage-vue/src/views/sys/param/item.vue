@@ -1,22 +1,9 @@
 <template>
   <div>
-    <el-drawer
-      class="base-el-drawer"
-      :title="dialogTitle"
-      v-model="dialogVisible"
-      size="36%"
-      append-to-body>
+    <el-drawer class="base-el-drawer" :title="dialogTitle" v-model="dialogVisible" size="36%" append-to-body>
       <el-scrollbar class="base-scrollbar">
-        <el-form
-          ref="formRef"
-          :model="form"
-          :rules="detailFormRules"
-          style="width: 90%"
-          v-loading="formLoading">
-          <el-form-item
-            label="父级："
-            label-width="120px"
-            prop="paramParentCode">
+        <el-form ref="formRef" :model="form" :rules="detailFormRules" style="width: 90%" v-loading="formLoading">
+          <el-form-item label="父级：" label-width="120px" prop="paramParentCode" :rules="detailFormRules.select">
             <el-cascader
               v-model="form.paramParentCode"
               clearable
@@ -24,54 +11,34 @@
               :options="paramParentCodes"
               placeholder="请选择父级"
               :append-to-body="false"
-              class="area-choose"></el-cascader>
+              class="area-choose"
+            />
           </el-form-item>
-          <el-form-item
-            label="参数名称："
-            label-width="120px"
-            prop="paramName"
-            :rules="detailFormRules.required">
-            <el-input
-              v-model="form.paramName"
-              maxlength="20"
-              show-word-limit
-              clearable
-              placeholder="请输入参数名称"></el-input>
+          <el-form-item label="参数名称：" label-width="120px" prop="paramName" :rules="detailFormRules.required">
+            <el-input v-model="form.paramName" maxlength="20" show-word-limit clearable placeholder="请输入参数名称" />
           </el-form-item>
-          <el-form-item
-            label="参数值："
-            label-width="120px"
-            prop="paramValue"
-            :rules="detailFormRules.required">
-            <el-input
-              v-model="form.paramValue"
-              maxlength="20"
-              show-word-limit
-              clearable
-              placeholder="请输入参数值"></el-input>
+          <el-form-item label="参数值：" label-width="120px" prop="paramValue" :rules="detailFormRules.required">
+            <el-input v-model="form.paramValue" maxlength="20" show-word-limit clearable placeholder="请输入参数值" />
           </el-form-item>
-          <el-form-item
-            label="排序："
-            label-width="120px"
-            prop="paramSortCode">
+          <el-form-item label="排序：" label-width="120px" prop="paramSortCode">
             <el-input-number
               v-model="form.paramSortCode"
-              :min="1" :max="99"
+              :min="1"
+              :max="99"
               value-on-clear="max"
-              placeholder="请输入排序" />
+              placeholder="请输入排序"
+            />
           </el-form-item>
-          <el-form-item
-            label="参数备注："
-            label-width="120px"
-            prop="paramRemark">
+          <el-form-item label="参数备注：" label-width="120px" prop="paramRemark">
             <el-input
               v-model="form.paramRemark"
-              type="textarea" :rows="5"
+              type="textarea"
+              :rows="5"
               placeholder="请输入备注"
               maxlength="200"
               show-word-limit
-              clearable>
-            </el-input>
+              clearable
+            />
           </el-form-item>
         </el-form>
       </el-scrollbar>
@@ -88,16 +55,15 @@ import { ref, nextTick } from "vue"
 import commonFormRules from "@/utils/rules"
 import { addApi, detailApi, updApi } from "@/api/sys/param"
 import { ElMessage } from "element-plus"
-import { TopId } from "@/utils/enums"
 
 const dialogVisible = ref(false)
-const dialogTitle = ref('新增参数')
+const dialogTitle = ref("新增参数")
 const paramParentCodes = ref([])
 
 const paramParentCodeProps = {
-  label: 'paramName',
-  value: 'paramCode',
-  checkStrictly: true,
+  label: "paramName",
+  value: "paramCode",
+  checkStrictly: true
 }
 
 /** 打开弹窗 */
@@ -106,12 +72,12 @@ const open = async (tableData: any, id?: number) => {
   dialogVisible.value = true
   formLoading.value = true
   paramParentCodes.value = tableData
-  dialogTitle.value = (id ? '修改参数' : '新增参数')
+  dialogTitle.value = id ? "修改参数" : "新增参数"
   if (id) {
     try {
       const detail = await detailApi(id)
       form.value = detail.data
-    }catch (e) {
+    } catch (e) {
       ElMessage.error("获取详情失败")
     }
   }
@@ -124,36 +90,36 @@ const formLoading = ref(false)
 const formRef = ref()
 const form = ref({
   paramCode: undefined,
-  paramParentCode: TopId,
-  paramName: '',
-  paramValue: '',
+  paramParentCode: 1,
+  paramName: "",
+  paramValue: "",
   paramSortCode: 99,
-  paramRemark: '',
+  paramRemark: ""
 })
 const detailFormRules = {
-  ...commonFormRules,
+  ...commonFormRules
 }
 
-const emit = defineEmits(['success'])
+const emit = defineEmits(["success"])
 
 const handleSubmit = async () => {
   formRef.value?.validate((valid: boolean) => {
-    if (valid) {
+    if (valid && !formLoading.value) {
+      if (!Array.isArray(form.value.paramParentCode) || form.value.paramParentCode.length == 0) {
+        ElMessage.error("请选择父级")
+        return
+      }
       formLoading.value = true
       const api = form.value.paramCode === undefined ? addApi : updApi
       const formData = {
         ...form.value,
-        paramParentCode: (Array.isArray(form.value.paramParentCode) && form.value.paramParentCode.length > 0) ? form.value.paramParentCode[form.value.paramParentCode.length-1] : TopId
+        paramParentCode: form.value.paramParentCode[form.value.paramParentCode.length - 1]
       }
-      api(formData)
-        .then((res) => {
-          ElMessage.success(res.message)
-          emit("success",)
-          dialogVisible.value = false
-        })
-        .catch((error) => {
-          ElMessage.error("提交失败，请稍后重试");
-        })
+      api(formData).then((res) => {
+        ElMessage.success(res.message)
+        emit("success")
+        dialogVisible.value = false
+      })
       formLoading.value = false
     }
   })
@@ -163,17 +129,14 @@ const resetForm = () => {
   paramParentCodes.value = []
   form.value = {
     paramCode: undefined,
-    paramParentCode: TopId,
-    paramName: '',
-    paramValue: '',
+    paramParentCode: 1,
+    paramName: "",
+    paramValue: "",
     paramSortCode: 99,
-    paramRemark: '',
+    paramRemark: ""
   }
   formRef.value?.resetFields()
 }
-
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
