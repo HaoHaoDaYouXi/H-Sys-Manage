@@ -13,8 +13,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum RoleTypeEnum {
 
-    SYS_ADMIN("1100001", "系统管理员"),
-    REGULAR_USER("1100002", "普通用户"),
+    SYS_ADMIN("10001100001", "系统管理员"),
+    REGULAR_USER("10001100002", "普通用户"),
     ;
     private final String code;
 

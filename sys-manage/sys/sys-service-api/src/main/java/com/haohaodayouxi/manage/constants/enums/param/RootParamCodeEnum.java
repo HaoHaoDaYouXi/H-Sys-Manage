@@ -13,10 +13,11 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum RootParamCodeEnum {
 
-    MENU_TYPE(1L, "菜单类型"),
-    MENU_BUTTON_TYPE(2L, "菜单按钮类型"),
-    ROLE_TYPE(11L, "角色类型"),
-    LOGIN_LIMIT(21L, "登录限制控制"),
+    SYS_PARAM(1L, "系统参数"),
+    MENU_TYPE(100001L, "菜单类型"),
+    MENU_BUTTON_TYPE(100002L, "菜单按钮类型"),
+    ROLE_TYPE(100011L, "角色类型"),
+    LOGIN_LIMIT(100021L, "登录限制控制"),
     ;
     private final Long code;
 
