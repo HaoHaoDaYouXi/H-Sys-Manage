@@ -52,7 +52,7 @@ public class SParamController {
         if (paramParentCode == null) {
             paramParentCode = RootParamCodeEnum.SYS_PARAM.getCode();
         }
-        return OkResponse.QUERY.toResponse(paramService.getByCache(SParamReq.builder().paramParentCode(paramParentCode).build()));
+        return OkResponse.QUERY.toResponse(paramService.getByCache(SParamReq.builder().paramParentCode(paramParentCode).childDeep(1).build()));
     }
 
     /**
