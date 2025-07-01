@@ -28,7 +28,7 @@
           <el-button type="danger" :icon="Delete" @click="batchDel">批量删除</el-button>
         </div>
       </div>
-      <div class="table-wrapper">
+      <div class="marginB-20">
         <el-table
           ref="tableDataRef"
           :data="tableData"

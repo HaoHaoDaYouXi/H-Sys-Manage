@@ -42,7 +42,7 @@
           </el-tooltip>
         </div>
       </div>
-      <div class="table-wrapper">
+      <div class="marginB-20">
         <el-table :data="tableData">
           <el-table-column type="selection" width="50" align="center" />
           <el-table-column prop="username" label="用户名" align="center" />

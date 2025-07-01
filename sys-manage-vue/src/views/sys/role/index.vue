@@ -7,18 +7,11 @@
         </el-form-item>
         <el-form-item prop="roleType" label="角色类型">
           <el-select v-model="searchData.roleType" placeholder="请选择角色类型" clearable>
-            <el-option
-              v-for="item in roleTypeList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
+            <el-option v-for="item in roleTypeList" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" :icon="Search" @click="handleSearch">
-            查询
-          </el-button>
+          <el-button type="primary" :icon="Search" @click="handleSearch">查询</el-button>
           <el-button :icon="Refresh" @click="resetSearch">重置</el-button>
         </el-form-item>
       </el-form>
@@ -26,23 +19,12 @@
     <el-card v-loading="loading" shadow="never">
       <div class="toolbar-wrapper">
         <div>
-          <el-button
-            type="primary"
-            :icon="CirclePlus"
-            @click="openItem(undefined)"
-          >
-            新增角色
-          </el-button>
+          <el-button type="primary" :icon="CirclePlus" @click="openItem(undefined)">新增角色</el-button>
           <el-button type="danger" :icon="Delete" @click="batchDel">批量删除</el-button>
         </div>
       </div>
-      <div class="table-wrapper">
-        <el-table
-          ref="tableDataRef"
-          :data="tableData"
-          row-key="roleId"
-          border
-          stripe>
+      <div class="marginB-20">
+        <el-table ref="tableDataRef" :data="tableData" row-key="roleId" border stripe>
           <el-table-column type="selection" width="50" align="center" />
           <el-table-column prop="roleName" label="用户名" align="center" />
           <el-table-column prop="roleTypeStr" label="角色" align="center">
@@ -53,31 +35,10 @@
             </template>
           </el-table-column>
           <el-table-column prop="updateTime" label="更新时间" align="center" />
-          <el-table-column
-            fixed="right"
-            label="操作"
-            width="150"
-            align="center"
-          >
+          <el-table-column fixed="right" label="操作" width="150" align="center">
             <template #default="scope">
-              <el-button
-                type="primary"
-                text
-                bg
-                size="small"
-                @click="openItem(scope.row.roleId)"
-              >
-                修改
-              </el-button>
-              <el-button
-                type="danger"
-                text
-                bg
-                size="small"
-                @click="handleDelete(scope.row)"
-              >
-                删除
-              </el-button>
+              <el-button type="primary" text bg size="small" @click="openItem(scope.row.roleId)">修改</el-button>
+              <el-button type="danger" text bg size="small" @click="handleDelete(scope.row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -106,7 +67,7 @@ import { Search, Refresh, CirclePlus, Delete } from "@element-plus/icons-vue"
 import { usePagination } from "@/hooks/usePagination"
 import { cloneDeep } from "lodash-es"
 import { getRoleTypeApi, pageListApi, batchDelApi } from "@/api/sys/role"
-import { LabelValue, ListObjectBO} from "@/api/commonTypes"
+import { LabelValue, ListObjectBO } from "@/api/commonTypes"
 import Item from "./item.vue"
 
 defineOptions({
@@ -139,11 +100,11 @@ const tableData = ref<any[]>([])
 const getTableData = async () => {
   loading.value = true
   pageListApi({
-      pageNum: paginationData.currentPage,
-      pageSize: paginationData.pageSize,
-      roleName: searchData.roleName || "",
-      roleType: searchData.roleType || ""
-    })
+    pageNum: paginationData.currentPage,
+    pageSize: paginationData.pageSize,
+    roleName: searchData.roleName || "",
+    roleType: searchData.roleType || ""
+  })
     .then(({ data }) => {
       paginationData.total = data.total
       tableData.value = data.list
@@ -157,9 +118,7 @@ const getTableData = async () => {
 }
 
 const handleSearch = () => {
-  paginationData.currentPage === 1
-    ? getTableData()
-    : (paginationData.currentPage = 1)
+  paginationData.currentPage === 1 ? getTableData() : (paginationData.currentPage = 1)
 }
 const resetSearch = () => {
   searchFormRef.value?.resetFields()
@@ -177,11 +136,10 @@ const handleDelete = (row: any) => {
     cancelButtonText: "取消",
     type: "warning"
   }).then(() => {
-    batchDelApi({ list: [row.roleId] } as ListObjectBO)
-      .then(() => {
-        ElMessage.success("删除成功")
-        getTableData()
-      })
+    batchDelApi({ list: [row.roleId] } as ListObjectBO).then(() => {
+      ElMessage.success("删除成功")
+      getTableData()
+    })
   })
 }
 
@@ -191,13 +149,15 @@ const batchDel = async () => {
     confirmButtonText: "确定",
     cancelButtonText: "取消"
   }).then(async () => {
-    batchDelApi({ list: tableDataRef.value?.getSelectionRows()?.map((m: any) => m.roleId) } as ListObjectBO).then((res) => {
-      ElMessage.success("删除成功")
-      // 刷新列表
-      getTableData()
-    }).catch((error) => {
-      ElMessage.error("删除失败")
-    })
+    batchDelApi({ list: tableDataRef.value?.getSelectionRows()?.map((m: any) => m.roleId) } as ListObjectBO)
+      .then((res) => {
+        ElMessage.success("删除成功")
+        // 刷新列表
+        getTableData()
+      })
+      .catch((error) => {
+        ElMessage.error("删除失败")
+      })
   })
 }
 
@@ -212,9 +172,6 @@ const init = async () => {
 onMounted(async () => {
   await init()
 })
-
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
