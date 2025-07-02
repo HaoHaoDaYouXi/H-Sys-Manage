@@ -48,11 +48,11 @@ public class SParamController {
      * @return res
      */
     @GetMapping("/getSParamByParentCode")
-    public Response<List<SParamBO>> getSParamByReq(@RequestParam("paramParentCode") Long paramParentCode) {
-        if (paramParentCode == null) {
+    public Response<List<SParamBO>> getSParamByReq(@RequestParam(value = "paramCode", required = false) Long paramCode, @RequestParam(value = "paramParentCode", required = false) Long paramParentCode) {
+        if (paramCode == null && paramParentCode == null) {
             paramParentCode = RootParamCodeEnum.SYS_PARAM.getCode();
         }
-        return OkResponse.QUERY.toResponse(paramService.getByCache(SParamReq.builder().paramParentCode(paramParentCode).childDeep(1).build()));
+        return OkResponse.QUERY.toResponse(paramService.getByCache(SParamReq.builder().paramCode(paramCode).paramParentCode(paramParentCode).childDeep(1).build()));
     }
 
     /**

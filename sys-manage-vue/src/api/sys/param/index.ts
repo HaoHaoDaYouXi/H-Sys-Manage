@@ -15,3 +15,11 @@ export function getAllParamApi() {
     method: "get"
   })
 }
+/** 根据父级Code获取 */
+export function getSParamByParentCodeApi(params: any) {
+  return request<ApiRes<any>>({
+    url: `${API_PREFIX}/getSParamByParentCode`,
+    method: "get",
+    params
+  })
+}
