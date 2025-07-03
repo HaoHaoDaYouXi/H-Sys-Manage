@@ -119,38 +119,38 @@ public class SParamServiceImpl extends ServiceImpl<SParamMapper, SParam> impleme
                 .paramRemark(req.getParamRemark())
                 .paramSortCode(req.getParamSortCode())
                 .build();
-        boolean add = ObjectUtils.isEmpty(param.getParamCode());
-        if (!add && param.getParamCode().equals(param.getParamParentCode())) {
-            throw new BusinessException("父级不能是自身");
+        if (baseMapper.sameCheck(param.getParamCode(), param.getParamParentCode(), param.getParamName())) {
+            throw new BusinessException("当前父级下 { " + param.getParamName() + " } 已存在");
         }
-        if (!param.getParamParentCode().equals(RootParamCodeEnum.SYS_PARAM.getCode())) {
-            SParam parent = baseMapper.selectById(param.getParamParentCode());
-            if (ObjectUtils.isEmpty(parent)) {
-                throw new BusinessException("父级数据错误，请重试");
-            } else {
-                // 判断父级路径不包含自身ID
-                // 1 100001 10000100001
-                // 11 1100001 110000100001
-                int length = parent.getParamParentCode().toString().length();
-                int size = length % SysConstants.PARAM_ID_LENGTH > 0 ? length / SysConstants.PARAM_ID_LENGTH + 1 : length / SysConstants.PARAM_ID_LENGTH;
-                for (int i = size; i > 0; i--) {
-                    int start = (i - 1) * SysConstants.PARAM_ID_LENGTH - 1;
-                    if (start < 0) {
-                        start = 0;
-                    }
-                    int end = i * SysConstants.PARAM_ID_LENGTH - 1;
-                    if (end > length) {
-                        end = length;
-                    }
-                    String substring = parent.getParamParentCode().toString().substring(start, end);
-                    if (substring.equals(param.getParamCode().toString())) {
-                        throw new BusinessException("父级不能是自身的子集");
+        boolean add = ObjectUtils.isEmpty(param.getParamCode());
+        if (!add) {
+            if (param.getParamCode().equals(param.getParamParentCode())) {
+                throw new BusinessException("父级不能是自身");
+            }
+            if (!param.getParamParentCode().equals(RootParamCodeEnum.SYS_PARAM.getCode())) {
+                SParam parent = baseMapper.selectById(param.getParamParentCode());
+                if (ObjectUtils.isNotEmpty(parent)) {
+                    // 判断父级路径不包含自身ID
+                    // 1 100001 10000100001
+                    // 11 1100001 110000100001
+                    int length = parent.getParamParentCode().toString().length();
+                    int size = length % SysConstants.PARAM_ID_LENGTH > 0 ? length / SysConstants.PARAM_ID_LENGTH + 1 : length / SysConstants.PARAM_ID_LENGTH;
+                    for (int i = size; i > 0; i--) {
+                        int start = (i - 1) * SysConstants.PARAM_ID_LENGTH - 1;
+                        if (start < 0) {
+                            start = 0;
+                        }
+                        int end = i * SysConstants.PARAM_ID_LENGTH - 1;
+                        if (end > length) {
+                            end = length;
+                        }
+                        String substring = parent.getParamParentCode().toString().substring(start, end);
+                        if (substring.equals(param.getParamCode().toString())) {
+                            throw new BusinessException("父级不能是自身的子集");
+                        }
                     }
                 }
             }
-        }
-        if (baseMapper.sameCheck(param.getParamCode(), param.getParamParentCode(), param.getParamName())) {
-            throw new BusinessException("当前父级下 { " + param.getParamName() + " } 已存在");
         }
         LoginCacheBO bo = (LoginCacheBO) CurrentUserContextHolder.get();
         param.setUpdateUid(bo.getUserLoginCacheBO().getUserId());

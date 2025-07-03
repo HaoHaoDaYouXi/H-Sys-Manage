@@ -1,6 +1,5 @@
 ﻿// 下拉框
 const selectValidator = (rule: any, value: any, callback: any) => {
-  console.log(value)
   if (!value || (Array.isArray(value) && value.length < 1)) {
     return callback("请选择")
   }

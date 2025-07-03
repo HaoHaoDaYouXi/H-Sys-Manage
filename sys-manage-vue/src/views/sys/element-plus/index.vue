@@ -171,7 +171,7 @@ import { cloneDeep } from "lodash-es"
 
 defineOptions({
   // 命名当前组件
-  name: "Table"
+  name: "TestTable"
 })
 
 const loading = ref<boolean>(false)

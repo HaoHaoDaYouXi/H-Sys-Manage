@@ -89,7 +89,7 @@ import { LabelValue, ListObjectBO } from "@/api/commonTypes"
 
 defineOptions({
   // 命名当前组件
-  name: "Menu"
+  name: "SMenu"
 })
 
 const loading = ref<boolean>(false)

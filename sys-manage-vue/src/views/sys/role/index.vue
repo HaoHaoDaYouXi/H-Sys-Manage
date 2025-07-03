@@ -72,7 +72,7 @@ import Item from "./item.vue"
 
 defineOptions({
   // 命名当前组件
-  name: "Role"
+  name: "SRole"
 })
 
 const { paginationData, handleCurrentChange, handleSizeChange } = usePagination()
