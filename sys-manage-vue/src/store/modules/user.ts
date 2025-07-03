@@ -27,11 +27,11 @@ export const useUserStore = defineStore("user", () => {
   })
   const roleList = ref<UserRoles[]>([])
   /** 设置用户信息 */
-  const setUserInfo = (userInfo: UserInfoData, roles: UserRoles[]) => {
-    userInfo.userName = userInfo.userName || ""
-    userInfo.avatar = userInfo.avatar || ""
-    userInfo.userRoleId = userInfo.userRoleId || 0
-    userInfo.roleName = userInfo.roleName || ""
+  const setUserInfo = (_userInfo: UserInfoData, roles: UserRoles[]) => {
+    userInfo.userName = _userInfo.userName || ""
+    userInfo.avatar = _userInfo.avatar || ""
+    userInfo.userRoleId = _userInfo.userRoleId || 0
+    userInfo.roleName = _userInfo.roleName || ""
     roleList.value = roles || []
   }
   /** 重置状态 */
