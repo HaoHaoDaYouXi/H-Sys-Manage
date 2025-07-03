@@ -8,7 +8,6 @@
               v-model="form.paramParentCode"
               clearable
               :props="paramParentCodeProps"
-              :options="paramParentCodes"
               placeholder="请选择父级"
               :append-to-body="false"
               class="area-choose"
@@ -53,17 +52,30 @@
 <script lang="ts" setup>
 import { ref, nextTick } from "vue"
 import commonFormRules from "@/utils/rules"
-import { addApi, detailApi, updApi } from "@/api/sys/param"
+import { addApi, detailApi, getSParamByParentCodeApi, updApi } from "@/api/sys/param"
 import { ElMessage } from "element-plus"
 
 const dialogVisible = ref(false)
 const dialogTitle = ref("新增参数")
-const paramParentCodes = ref([])
 
 const paramParentCodeProps = {
   label: "paramName",
   value: "paramCode",
-  checkStrictly: true
+  checkStrictly: true,
+  lazy: true,
+  async lazyLoad(node: any, resolve: any) {
+    const params: {
+      paramCode?: number
+      paramParentCode?: number
+    } = {}
+    if (node?.data?.paramCode) {
+      params.paramParentCode = node?.data?.paramCode
+    } else {
+      params.paramCode = 1
+    }
+    const { data } = await getSParamByParentCodeApi(params)
+    resolve(data)
+  }
 }
 
 /** 打开弹窗 */
@@ -71,7 +83,6 @@ const open = async (tableData: any, id?: number) => {
   resetForm()
   dialogVisible.value = true
   formLoading.value = true
-  paramParentCodes.value = tableData
   dialogTitle.value = id ? "修改参数" : "新增参数"
   if (id) {
     try {
@@ -126,7 +137,6 @@ const handleSubmit = async () => {
 }
 
 const resetForm = () => {
-  paramParentCodes.value = []
   form.value = {
     paramCode: undefined,
     paramParentCode: 1,

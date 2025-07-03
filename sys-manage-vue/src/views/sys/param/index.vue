@@ -1,42 +1,51 @@
 <template>
   <div class="app-container">
     <el-card v-loading="loading" shadow="never">
-      <div class="toolbar-wrapper">
-        <div>
-          <el-button type="primary" :icon="CirclePlus" @click="openItem(undefined)">新增</el-button>
-          <el-button type="danger" :icon="Delete" @click="batchDel">批量删除</el-button>
+      <el-row :gutter="20">
+        <div class="toolbar-wrapper">
+          <div>
+            <el-button type="primary" :icon="CirclePlus" @click="openItem(undefined)">新增</el-button>
+            <el-button type="danger" :icon="Delete" @click="batchDel">批量删除</el-button>
+          </div>
         </div>
-        <div>
-          <el-tooltip content="刷新当前页">
-            <el-button type="primary" :icon="RefreshRight" circle @click="getTableData" />
-          </el-tooltip>
-        </div>
-      </div>
-      <div class="table-wrapper">
-        <el-table
-          ref="tableDataRef"
-          :data="tableData"
-          style="width: 100%"
-          row-key="paramCode"
-          border
-          stripe
-          :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
-        >
-          <el-table-column type="selection" width="50" align="center" />
-          <el-table-column prop="paramCode" label="参数编码" align="left" />
-          <el-table-column prop="paramParentCode" label="参数上级编码" align="center" />
-          <el-table-column prop="paramName" label="参数名称" align="center" />
-          <el-table-column prop="paramValue" label="参数值" align="center" />
-          <el-table-column prop="paramSortCode" label="顺序" align="center" />
-          <el-table-column prop="updateTime" label="更新时间" align="center" />
-          <el-table-column fixed="right" label="操作" width="150" align="center">
-            <template #default="scope">
-              <el-button type="primary" text bg size="small" @click="openItem(scope.row.paramCode)">修改</el-button>
-              <el-button type="danger" text bg size="small" @click="handleDelete(scope.row)">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
+      </el-row>
+      <el-row :gutter="20" class="marginB-20">
+        <el-col :span="6">
+          <el-tree
+            style="width: 100%; height: 100%; border: 1px solid #ebeef5"
+            :props="props"
+            :load="loadNode"
+            @node-click="treeClick"
+            :expand-on-click-node="false"
+            lazy
+          />
+        </el-col>
+        <el-col :span="18">
+          <el-table
+            ref="tableDataRef"
+            :data="tableData"
+            style="width: 100%"
+            row-key="paramCode"
+            border
+            stripe
+            :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+          >
+            <el-table-column type="selection" width="50" align="center" />
+            <el-table-column prop="paramCode" label="参数编码" align="left" />
+            <el-table-column prop="paramParentCode" label="参数上级编码" align="center" />
+            <el-table-column prop="paramName" label="参数名称" align="center" />
+            <el-table-column prop="paramValue" label="参数值" align="center" />
+            <el-table-column prop="paramSortCode" label="顺序" align="center" />
+            <el-table-column prop="updateTime" label="更新时间" align="center" />
+            <el-table-column fixed="right" label="操作" width="150" align="center">
+              <template #default="scope">
+                <el-button type="primary" text bg size="small" @click="openItem(scope.row.paramCode)">修改</el-button>
+                <el-button type="danger" text bg size="small" @click="handleDelete(scope.row)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-col>
+      </el-row>
     </el-card>
     <Item ref="itemRef" @success="itemSuccess" />
   </div>
@@ -44,30 +53,51 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from "vue"
-import { ElMessage, ElMessageBox, ElTable } from "element-plus"
-import { CirclePlus, Delete, Download, RefreshRight } from "@element-plus/icons-vue"
-import { batchDelApi } from "@/api/sys/param"
-import { TopId } from "@/utils/enums"
+import { LoadFunction, ElMessage, ElMessageBox, ElTable } from "element-plus"
+import { CirclePlus, Delete } from "@element-plus/icons-vue"
+import { batchDelApi, getSParamByParentCodeApi } from "@/api/sys/param"
 import Item from "./item.vue"
 import { ListObjectBO } from "@/api/commonTypes"
-import { getAllParamApi } from "@/api/sys/param"
 
 defineOptions({
   // 命名当前组件
-  name: "Param"
+  name: "SParam"
 })
 
 const loading = ref<boolean>(false)
 
+const props = {
+  label: "paramName",
+  isLeaf: "leaf"
+}
+
+const loadNode: LoadFunction = async (node, resolve) => {
+  const params: {
+    paramCode?: number
+    paramParentCode?: number
+  } = {}
+  if (node?.data?.paramCode) {
+    params.paramParentCode = node?.data?.paramCode
+  } else {
+    params.paramCode = 1
+  }
+  const { data } = await getSParamByParentCodeApi(params)
+  return resolve(data)
+}
+const treeClick = async (node: any) => {
+  treeClickNode.value = node ? node : ""
+  await getTableData()
+}
+const treeClickNode = ref()
+
 const tableDataRef = ref<InstanceType<typeof ElTable>>()
 const tableData = ref<any[]>([])
 const getTableData = async () => {
-  try {
-    const { data } = await getAllParamApi()
-    tableData.value = getChild(data, TopId)
-  } catch (error) {
-    ElMessage.error("获取列表失败")
+  const params = {
+    paramParentCode: treeClickNode.value ? treeClickNode.value.paramCode : 1
   }
+  const { data } = await getSParamByParentCodeApi(params)
+  tableData.value = data
 }
 
 const getChild = (data: any[], parentId: any): any[] => {
