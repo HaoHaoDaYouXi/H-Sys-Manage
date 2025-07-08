@@ -53,7 +53,6 @@ public class SMenuAddOrUpdReq implements Serializable {
     /**
      * 图标
      */
-    @NotBlank(groups = {AddValid.class, UpdValid.class}, message = "图标不能为空")
     private String menuIcon;
 
     /**
@@ -75,7 +74,6 @@ public class SMenuAddOrUpdReq implements Serializable {
     /**
      * 组件地址
      */
-    @NotBlank(groups = {AddValid.class, UpdValid.class}, message = "组件地址不能为空")
     private String menuComponent;
 
     /**

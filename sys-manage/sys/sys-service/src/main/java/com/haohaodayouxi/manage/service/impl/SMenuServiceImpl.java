@@ -72,8 +72,24 @@ public class SMenuServiceImpl extends ServiceImpl<SMenuMapper, SMenu> implements
         return baseMapper.labelValueByParent(parentId);
     }
 
+    private void savePreCheck(SMenuAddOrUpdReq req) {
+        String errorMsg = "";
+        if (!MenuTypeEnum.BUTTON.getValue().equals(req.getMenuType())) {
+            if (req.getMenuIcon().isEmpty()) {
+                errorMsg += "，菜单图标不能为空";
+            }
+            if (req.getMenuComponent().isEmpty()) {
+                errorMsg += "，菜单图标不能为空";
+            }
+        }
+        if (!errorMsg.isEmpty()) {
+            throw new BusinessException("参数错误" + errorMsg);
+        }
+    }
+
     @Override
     public void addOrUpd(SMenuAddOrUpdReq req) {
+        savePreCheck(req);
         SMenu menu = SMenu.builder()
                 .menuId(req.getMenuId())
                 .menuParentId(ObjectUtils.isEmpty(req.getMenuParentId()) ? SysConstants.TOP_LEVEL_ID : req.getMenuParentId())
