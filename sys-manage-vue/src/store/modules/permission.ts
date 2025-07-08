@@ -42,6 +42,15 @@ export const usePermissionStore = defineStore("permission", () => {
      * 将路由对象格式化为标准格式
      */
     const formatRoute = (item: any, children: any[]) => {
+      const child: any[] = []
+      const btnKeys: string[] = []
+      children.forEach((item) => {
+        if (item.menuType === 3) {
+          btnKeys.push(item.menuKey)
+        } else {
+          child.push(item)
+        }
+      })
       return {
         id: item.menuId,
         menuParentId: item.menuParentId,
@@ -60,12 +69,14 @@ export const usePermissionStore = defineStore("permission", () => {
           alwaysShow: item.alwaysShow === TrueFalseEnum.TRUE,
           cachedView: item.cachedView === TrueFalseEnum.TRUE,
           showOrder: item.showOrder,
+          btnKeys: btnKeys
         },
-        children: children
+        children: child
       }
     }
     const getChild = (data: any[], parentId: any): any[] => {
-      const child = data.filter((item) => item.menuParentId === parentId)
+      const child = data
+        .filter((item) => item.menuParentId === parentId)
         .sort((a, b) => {
           if (a.showOrder > b.showOrder) return -1
           if (a.showOrder < b.showOrder) return 1
@@ -79,11 +90,11 @@ export const usePermissionStore = defineStore("permission", () => {
         return child.map((item) => {
           return formatRoute(item, getChild(data, item.menuId))
         })
-      }else {
+      } else {
         return []
       }
     }
-    return getChild(routers, TopId);
+    return getChild(routers, TopId)
   }
 
   return {

@@ -46,5 +46,9 @@ declare module "vue-router" {
      * 排序
      */
     showOrder?: number
+    /**
+     * 按钮权限
+     */
+    btnKeys?: string[]
   }
 }
