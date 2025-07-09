@@ -12,11 +12,7 @@
         :default-active="activeMenu"
         mode="horizontal"
       >
-        <div
-          v-for="item in permission_routes"
-          :key="item.path"
-          class="nav-item"
-        >
+        <div v-for="item in permission_routes" :key="item.path" class="nav-item">
           <SidebarItemLink :to="resolvePath(item)">
             <el-menu-item v-if="!item.meta?.hidden" :index="item.path">
               <i v-if="item.meta?.icon.includes('el-icon')" :class="item.meta?.icon" />
@@ -52,10 +48,7 @@
                 <div class="top-nav-user-roles">
                   <p>{{ userInfo.roleName }}</p>
                   <!-- 按钮：角色选择 -->
-                  <i
-                    class="iconfont icon-jiantou_zuoyouqiehuan"
-                    @click="booRoleList = !booRoleList"
-                  />
+                  <i class="iconfont icon-jiantou_zuoyouqiehuan" @click="booRoleList = !booRoleList" />
                 </div>
               </el-dropdown-item>
               <li class="top-nav-role-list list-style-none" v-if="booRoleList">
@@ -89,12 +82,7 @@
 
 <script lang="ts" setup>
 import { computed, nextTick, onMounted, ref, watch } from "vue"
-import {
-  type RouteRecordRaw,
-  RouterLink,
-  useRoute,
-  useRouter
-} from "vue-router"
+import { type RouteRecordRaw, RouterLink, useRoute, useRouter } from "vue-router"
 import { storeToRefs } from "pinia"
 import { useSettingsStore } from "@/store/modules/settings"
 import { useAppStore } from "@/store/modules/app"
@@ -205,9 +193,7 @@ const initTopbar = async () => {
 
 const initCurrentRoutes = () => {
   const { path } = route
-  let currentRoutes = permission_routes.value.find(
-    (item) => item.path === "/" + path.split("/")[1]
-  )
+  let currentRoutes = permission_routes.value.find((item) => item.path === "/" + path.split("/")[1])
   if (!currentRoutes) {
     // 找不到，认定为首页
     currentRoutes = permission_routes.value.find((item) => item.path === "/")

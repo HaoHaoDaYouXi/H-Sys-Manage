@@ -4,8 +4,7 @@
       v-if="
         !alwaysShowRootMenu &&
         hasOneShowingChild &&
-        (!hasOneShowingChild.children ||
-          hasOneShowingChild.children?.length == 0)
+        (!hasOneShowingChild.children || hasOneShowingChild.children?.length == 0)
       "
     >
       <SidebarItemLink
@@ -13,10 +12,7 @@
         :to="resolvePath(hasOneShowingChild.path)"
         :key="resolvePath(hasOneShowingChild.path)"
       >
-        <el-menu-item
-          :index="resolvePath(hasOneShowingChild.path)"
-          :class="{ 'sub-menu-title-noDropdown': !isNest }"
-        >
+        <el-menu-item :index="resolvePath(hasOneShowingChild.path)" :class="{ 'sub-menu-title-noDropdown': !isNest }">
           <template v-if="hasOneShowingChild.meta?.title">
             <Icon :icon="hasOneShowingChild.meta?.icon" />
             <span>{{ hasOneShowingChild.meta?.title }}</span>
@@ -107,5 +103,4 @@ const resolvePath = (routePath: string) => {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

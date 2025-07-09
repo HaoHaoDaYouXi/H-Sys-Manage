@@ -1,15 +1,9 @@
 <template>
   <el-breadcrumb class="app-breadcrumb" separator="/">
     <transition-group name="breadcrumb">
-      <el-breadcrumb-item
-        v-for="(item, index) in permissionStore.breadcrumbList"
-        :key="item.path"
-      >
+      <el-breadcrumb-item v-for="(item, index) in permissionStore.breadcrumbList" :key="item.path">
         <span
-          v-if="
-            item.redirect === 'noRedirect' ||
-            index === permissionStore.breadcrumbList.length - 1
-          "
+          v-if="item.redirect === 'noRedirect' || index === permissionStore.breadcrumbList.length - 1"
           class="no-redirect"
         >
           {{ item.meta.title }}

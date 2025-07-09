@@ -17,9 +17,7 @@
           :key="item.path"
           :item="item"
           :base-path="
-            layoutMode === LayoutModeEnum.Left
-              ? item.path
-              : permissionStore.currentRoutes?.path + '/' + item.path
+            layoutMode === LayoutModeEnum.Left ? item.path : permissionStore.currentRoutes?.path + '/' + item.path
           "
         />
       </el-menu>
