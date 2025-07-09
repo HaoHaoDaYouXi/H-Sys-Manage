@@ -2,7 +2,10 @@ package com.haohaodayouxi.manage.intercepter;
 
 import com.haohaodayouxi.common.core.annotation.PermissionApi;
 import com.haohaodayouxi.common.core.constants.CurrentParam;
+import com.haohaodayouxi.common.core.constants.CurrentUserContextHolder;
 import com.haohaodayouxi.manage.config.SysAuthProperties;
+import com.haohaodayouxi.manage.model.bo.login.LoginCacheBO;
+import com.haohaodayouxi.manage.service.SApiService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,6 +26,8 @@ public class ApiCheckInterceptor implements HandlerInterceptor {
 
     @Resource
     private SysAuthProperties sysAuthProperties;
+    @Resource
+    private SApiService apiService;
 
     /**
      * 用户访问的接口判断、检查用户的角色和菜单的关系
@@ -41,25 +46,20 @@ public class ApiCheckInterceptor implements HandlerInterceptor {
         Integer authStatus = (Integer) CurrentParam.get(CurrentParam.AUTH_STATUS_KEY);
         // 2&4=0   4&4=4   6&4=4
         // 只有非公开接口，并且有用户信息时需要校验接口权限，否则直接通过
-//        if (authStatus.equals(InterceptorCode.TOKEN)) {
-        if ((authStatus & InterceptorCode.TOKEN) != 0) {
+        if (authStatus.equals(InterceptorCode.TOKEN)) {
             // 检查用户的角色和菜单的关系
-            String key;
             PermissionApi permissionApi = (PermissionApi) CurrentParam.get(CurrentParam.PERMISSION_API_KEY);
-            if (ObjectUtils.isEmpty(permissionApi)) {
-                // 若没有注解定义，则使用请求路径
-                key = request.getRequestURI();
-            } else {
-                key = permissionApi.value();
-            }
+            // 若没有注解定义，则使用请求路径
+            String key = ObjectUtils.isEmpty(permissionApi) ? request.getRequestURI() : permissionApi.value();
             // 没有@WhiteApi注解，并且白名单中不包含当前请求路径，则查询是否有对应API权限
             if (!CurrentParam.has(CurrentParam.WHITE_API_KEY) && sysAuthProperties.getWhiteApis().stream().anyMatch(key::contains)) {
-                // todo 获取api权限缓存 判断是否可访问
-                // if (不可访问) {
-                //     log.error("Api不可访问");
-                //     InterceptorErrorResponse.responseErrorByCode(response, InterceptorCode.API);
-                //     return false;
-                // }
+                LoginCacheBO bo = (LoginCacheBO) CurrentUserContextHolder.get();
+                // 判断api是否可访问
+                if (!apiService.checkRoleApi(bo.getUserLinkLoginCacheBO().getUserRoles().getFirst().getRoleId(), key)) {
+                    log.error("ApiKey: {}，不可访问", key);
+                    InterceptorErrorResponse.responseErrorByCode(response, InterceptorCode.API);
+                    return false;
+                }
             }
             CurrentParam.put(CurrentParam.AUTH_STATUS_KEY, authStatus | InterceptorCode.API);
         }

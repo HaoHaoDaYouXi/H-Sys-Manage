@@ -26,4 +26,9 @@ public class SApiServiceImpl extends ServiceImpl<SApiMapper, SApi> implements SA
     public int batchInsert(List<SApi> list) {
         return baseMapper.batchInsert(list);
     }
+
+    @Override
+    public boolean checkRoleApi(Long roleId, String apiKey) {
+        return true;
+    }
 }
