@@ -8,8 +8,8 @@ import com.haohaodayouxi.common.core.interfaces.InitService;
 import com.haohaodayouxi.common.redis.service.impl.CommonRedisServiceImpl;
 import com.haohaodayouxi.common.util.constants.StringConstant;
 import com.haohaodayouxi.common.util.enums.TrueFalseEnum;
-import com.haohaodayouxi.manage.constants.RedisConstants;
 import com.haohaodayouxi.manage.constants.SysConstants;
+import com.haohaodayouxi.manage.constants.SysRedisConstants;
 import com.haohaodayouxi.manage.constants.enums.param.RootParamCodeEnum;
 import com.haohaodayouxi.manage.mapper.SParamMapper;
 import com.haohaodayouxi.manage.model.bo.login.LoginCacheBO;
@@ -48,7 +48,7 @@ public class SParamServiceImpl extends ServiceImpl<SParamMapper, SParam> impleme
 
     private void setCache(List<SParamBO> bos) {
         if (!bos.isEmpty()) {
-            stringRedisServiceImpl.batchSet(bos.stream().collect(Collectors.toMap(k -> RedisConstants.getParamKey(k.getParamCode()), v -> v, (v1, v2) -> v2)));
+            stringRedisServiceImpl.batchSet(bos.stream().collect(Collectors.toMap(k -> SysRedisConstants.getParamKey(k.getParamCode()), v -> v, (v1, v2) -> v2)));
         }
     }
 
@@ -80,7 +80,7 @@ public class SParamServiceImpl extends ServiceImpl<SParamMapper, SParam> impleme
     public List<SParamBO> getByCache(SParamReq req) {
         List<SParamBO> res;
         if (ObjectUtils.isEmpty(req) || ObjectUtils.allNull(req.getParamCode(), req.getParamCodes(), req.getParamParentCode())) {
-            res = stringRedisServiceImpl.batchGetByPattern(RedisConstants.PARAM_KEY + StringConstant.COLON + StringConstant.MATCHES_PATTERN, SParamBO.class);
+            res = stringRedisServiceImpl.batchGetByPattern(SysRedisConstants.PARAM_KEY + StringConstant.COLON + StringConstant.MATCHES_PATTERN, SParamBO.class);
         } else {
             List<String> ids = new ArrayList<>();
             if (ObjectUtils.isNotEmpty(req.getParamCode())) {
@@ -91,14 +91,14 @@ public class SParamServiceImpl extends ServiceImpl<SParamMapper, SParam> impleme
             }
             if (ObjectUtils.isEmpty(ids)) {
                 if (ObjectUtils.isEmpty(req.getChildDeep())) {
-                    res = stringRedisServiceImpl.batchGetByPattern(RedisConstants.getParamKey(req.getParamParentCode()) + StringConstant.MATCHES_PATTERN, SParamBO.class);
+                    res = stringRedisServiceImpl.batchGetByPattern(SysRedisConstants.getParamKey(req.getParamParentCode()) + StringConstant.MATCHES_PATTERN, SParamBO.class);
                 } else {
-                    String parentKeys = RedisConstants.getParamKey(req.getParamParentCode());
+                    String parentKeys = SysRedisConstants.getParamKey(req.getParamParentCode());
                     parentKeys += "?".repeat(req.getChildDeep() * SysConstants.PARAM_ID_LENGTH);
                     res = stringRedisServiceImpl.batchGetByPattern(parentKeys, SParamBO.class);
                 }
             } else {
-                res = stringRedisServiceImpl.batchGetByKeys(ids.stream().map(f -> RedisConstants.getParamKey(Long.parseLong(f))).toList(), SParamBO.class, true);
+                res = stringRedisServiceImpl.batchGetByKeys(ids.stream().map(f -> SysRedisConstants.getParamKey(Long.parseLong(f))).toList(), SParamBO.class, true);
             }
         }
         if (ObjectUtils.isEmpty(res)) {
@@ -156,12 +156,12 @@ public class SParamServiceImpl extends ServiceImpl<SParamMapper, SParam> impleme
         param.setUpdateUid(bo.getUserLoginCacheBO().getUserId());
         param.setUpdateTime(new Date());
         if (add) {
-            stringRedisServiceImpl.lock(RedisConstants.PARAM_LOCK_KEY);
+            stringRedisServiceImpl.lock(SysRedisConstants.PARAM_LOCK_KEY);
             param.setParamCode(baseMapper.getMaxParamCode(param.getParamParentCode()) + 1);
             param.setCreateUid(bo.getUserLoginCacheBO().getUserId());
             param.setCreateTime(param.getUpdateTime());
             baseMapper.insert(param);
-            stringRedisServiceImpl.unLock(RedisConstants.PARAM_LOCK_KEY);
+            stringRedisServiceImpl.unLock(SysRedisConstants.PARAM_LOCK_KEY);
         } else {
             SParam old = baseMapper.selectById(param.getParamCode());
             if (ObjectUtils.isEmpty(old)) {
@@ -187,6 +187,6 @@ public class SParamServiceImpl extends ServiceImpl<SParamMapper, SParam> impleme
                 .eq(SParam::getDelStatus, TrueFalseEnum.FALSE.getCode())
                 .in(SParam::getParamCode, ids)
         );
-        stringRedisServiceImpl.del(ids.stream().map(RedisConstants::getParamKey).toList());
+        stringRedisServiceImpl.del(ids.stream().map(SysRedisConstants::getParamKey).toList());
     }
 }

@@ -1,7 +1,7 @@
 package com.haohaodayouxi.manage.utils.login;
 
 import com.haohaodayouxi.common.redis.service.impl.CommonRedisServiceImpl;
-import com.haohaodayouxi.manage.constants.RedisConstants;
+import com.haohaodayouxi.manage.constants.SysRedisConstants;
 import com.haohaodayouxi.manage.constants.enums.login.LoginLimitEnum;
 import com.haohaodayouxi.manage.model.bo.login.LoginCacheBO;
 import jakarta.annotation.Resource;
@@ -29,7 +29,7 @@ public class LoginCacheUtil {
      * @param token token
      */
     public LoginCacheBO getLoginCache(String token) {
-        String tokenRedisKey = RedisConstants.getAccountTokenKey(token);
+        String tokenRedisKey = SysRedisConstants.getAccountTokenKey(token);
         LoginCacheBO bo = loginRedisServiceImpl.get(tokenRedisKey, LoginCacheBO.class);
         if (ObjectUtils.isNotEmpty(bo)) {
             // 刷新过期时间
@@ -44,7 +44,7 @@ public class LoginCacheUtil {
      * @param bo bo
      */
     public void setLoginCache(LoginCacheBO bo) {
-        String tokenRedisKey = RedisConstants.getAccountTokenKey(bo.getHToken());
+        String tokenRedisKey = SysRedisConstants.getAccountTokenKey(bo.getHToken());
         loginRedisServiceImpl.set(tokenRedisKey, bo, Long.valueOf(LoginLimitEnum.LOGIN_TOKEN_TIME.getValue()), TimeUnit.MINUTES);
     }
 }

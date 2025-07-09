@@ -11,7 +11,7 @@ import com.haohaodayouxi.common.util.algorithm.md5.Md5Util;
 import com.haohaodayouxi.common.util.business.TokenUtil;
 import com.haohaodayouxi.common.util.constants.StringConstant;
 import com.haohaodayouxi.common.util.enums.TrueFalseEnum;
-import com.haohaodayouxi.manage.constants.RedisConstants;
+import com.haohaodayouxi.manage.constants.SysRedisConstants;
 import com.haohaodayouxi.manage.constants.enums.login.LoginLimitEnum;
 import com.haohaodayouxi.manage.event.LoginSuccessEvent;
 import com.haohaodayouxi.manage.model.bo.login.LoginCacheBO;
@@ -124,11 +124,11 @@ public class LoginServiceImpl implements LoginService {
     }
 
     private void checkMultipleStatus(LoginCacheBO bo) {
-        String tokenListRedisKey = RedisConstants.getAccountTokenListKey(bo.getUserLoginCacheBO().getAccount());
+        String tokenListRedisKey = SysRedisConstants.getAccountTokenListKey(bo.getUserLoginCacheBO().getAccount());
         if (Objects.equals(bo.getUserLoginCacheBO().getMultipleStatus(), TrueFalseEnum.FALSE.getCode())) {
             List<String> tokenList = stringRedisServiceImpl.listRange(tokenListRedisKey, 0L, -1L, String.class);
             if (ObjectUtils.isNotEmpty(tokenList)) {
-                stringRedisServiceImpl.del(tokenList.stream().map(RedisConstants::getAccountTokenKey).toList());
+                stringRedisServiceImpl.del(tokenList.stream().map(SysRedisConstants::getAccountTokenKey).toList());
             }
             stringRedisServiceImpl.listDel(tokenListRedisKey);
         }
@@ -149,8 +149,8 @@ public class LoginServiceImpl implements LoginService {
         Map<Long, Integer> loginParamMap = loginParamBOS.stream().collect(Collectors.toMap(SParamBO::getParamCode, v -> Integer.valueOf(v.getParamValue()), (v1, v2) -> v2));
         int loginErrorNum = loginParamMap.getOrDefault(LoginLimitEnum.LOGIN_ERROR_NUM.getCode(), LoginLimitEnum.LOGIN_ERROR_NUM.getValue());
         int loginLockTime = loginParamMap.getOrDefault(LoginLimitEnum.LOGIN_LOCK_TIME.getCode(), LoginLimitEnum.LOGIN_LOCK_TIME.getValue());
-        String loginLimitCountKey = RedisConstants.getLoginLimitAccountCountKey(account);
-        String loginLimitTimeKey = RedisConstants.getLoginLimitAccountTimeKey(account);
+        String loginLimitCountKey = SysRedisConstants.getLoginLimitAccountCountKey(account);
+        String loginLimitTimeKey = SysRedisConstants.getLoginLimitAccountTimeKey(account);
         String loginCountRedis = stringRedisServiceImpl.get(loginLimitCountKey, String.class);
         if (ObjectUtils.isNotEmpty(loginCountRedis)) {
             loginCount += Integer.parseInt(loginCountRedis);
@@ -168,6 +168,6 @@ public class LoginServiceImpl implements LoginService {
      * @param account 账号
      */
     private void delLoginLockCache(String account) {
-        stringRedisServiceImpl.delBySelectKeys(RedisConstants.getLoginLimitAccountKey(account) + StringConstant.MATCHES_PATTERN);
+        stringRedisServiceImpl.delBySelectKeys(SysRedisConstants.getLoginLimitAccountKey(account) + StringConstant.MATCHES_PATTERN);
     }
 }
