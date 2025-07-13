@@ -29,6 +29,7 @@ public class SApiServiceImpl extends ServiceImpl<SApiMapper, SApi> implements SA
 
     @Override
     public boolean checkRoleApi(Long roleId, String apiKey) {
-        return true;
+        // todo 角色 api权限 通过缓存 判断
+        return baseMapper.checkRoleApi(roleId, apiKey);
     }
 }

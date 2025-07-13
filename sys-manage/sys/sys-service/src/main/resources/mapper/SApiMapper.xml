@@ -139,4 +139,21 @@
         #{item.delStatus,jdbcType=TINYINT})
     </foreach>
   </insert>
+
+  <select id="checkRoleApi" resultType="boolean">
+    select
+    exists (
+    select 1
+    from s_api a
+    inner join m_menu_api mma on mma.api_id = a.api_id and mma.del_status = 0
+    inner join m_role_menu_api mrma on mrma.menu_api_id = mma.menu_api_id and mrma.del_status = 0
+    where a.del_status = 0
+    <if test="roleId != null">
+      and mrma.role_id = #{roleId}
+    </if>
+    <if test="apiKey != null and apiKey != ''">
+      and a.api_key = #{apiKey}
+    </if>
+    )
+  </select>
 </mapper>

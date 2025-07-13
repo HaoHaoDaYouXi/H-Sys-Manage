@@ -16,4 +16,6 @@ public interface SApiMapper extends BaseMapper<SApi> {
     int updateBatchSelective(@Param("list") List<SApi> list);
 
     int batchInsert(@Param("list") List<SApi> list);
+
+    boolean checkRoleApi(@Param("roleId") Long roleId, @Param("apiKey") String apiKey);
 }
