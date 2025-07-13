@@ -52,7 +52,7 @@ public class ApiCheckInterceptor implements HandlerInterceptor {
             // 若没有注解定义，则使用请求路径
             String key = ObjectUtils.isEmpty(permissionApi) ? request.getRequestURI() : permissionApi.value();
             // 没有@WhiteApi注解，并且白名单中不包含当前请求路径，则查询是否有对应API权限
-            if (!CurrentParam.has(CurrentParam.WHITE_API_KEY) && sysAuthProperties.getWhiteApis().stream().anyMatch(key::contains)) {
+            if (!CurrentParam.has(CurrentParam.WHITE_API_KEY) && sysAuthProperties.getWhiteApis().stream().noneMatch(key::contains)) {
                 LoginCacheBO bo = (LoginCacheBO) CurrentUserContextHolder.get();
                 // 判断api是否可访问
                 if (!apiService.checkRoleApi(bo.getUserLinkLoginCacheBO().getUserRoles().getFirst().getRoleId(), key)) {
