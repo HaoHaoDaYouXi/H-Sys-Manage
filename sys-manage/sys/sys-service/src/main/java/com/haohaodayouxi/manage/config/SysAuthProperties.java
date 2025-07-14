@@ -43,5 +43,10 @@ public class SysAuthProperties implements Serializable {
      */
     @Value("${h.sys.auth.whiteApis:/user/login/getByToken,/res/getRouterByToken}")
     private List<String> whiteApis;
+    /**
+     * 跳过Api权限检查
+     */
+    @Value("${h.sys.auth.skipApiCheck:false}")
+    private boolean skipApiCheck;
 
 }
