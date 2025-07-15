@@ -52,7 +52,7 @@ public class SApi implements Serializable {
     private String apiName;
 
     /**
-     * 接口类型 增=1 删=2 改=3 查=4
+     * 接口类型 1-增 2-删 3-改 4-查
      */
     @TableField(value = "api_type")
     private Integer apiType;
