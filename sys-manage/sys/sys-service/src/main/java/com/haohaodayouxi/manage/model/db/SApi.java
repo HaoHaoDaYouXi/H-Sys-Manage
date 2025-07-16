@@ -15,14 +15,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * SApi
+ * 接口表
  *
  * @author TONE
  * @date 2025/3/1
- */
-
-/**
- * 接口表
  */
 @Data
 @Builder

@@ -2,6 +2,7 @@ package com.haohaodayouxi.manage.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.haohaodayouxi.manage.model.db.SApi;
+import com.haohaodayouxi.manage.model.req.api.SApiAddOrUpdReq;
 
 import java.util.List;
 
@@ -18,4 +19,8 @@ public interface SApiService extends IService<SApi> {
     int batchInsert(List<SApi> list);
 
     boolean checkRoleApi(Long roleId, String apiKey);
+
+    void addOrUpd(SApiAddOrUpdReq req);
+
+    void batchDel(List<Long> ids);
 }

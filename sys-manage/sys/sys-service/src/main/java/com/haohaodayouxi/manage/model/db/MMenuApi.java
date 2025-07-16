@@ -15,14 +15,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * MMenuApi
+ * 菜单接口关系表
  *
  * @author TONE
  * @date 2025/3/1
- */
-
-/**
- * 菜单接口关系表
  */
 @Data
 @Builder
