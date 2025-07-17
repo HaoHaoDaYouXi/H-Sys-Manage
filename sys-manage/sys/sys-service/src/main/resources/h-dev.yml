@@ -4,6 +4,9 @@ h:
     version: "1.0.0"
     base-package: "com.haohaodayouxi.manage"
     parent-package: "com.haohaodayouxi"
+#  sys:
+#    auth:
+#      skipApiCheck: false
   file-os:
     enable: true
     sliceSize: 5242880
