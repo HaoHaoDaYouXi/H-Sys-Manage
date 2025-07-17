@@ -4,9 +4,12 @@ import com.haohaodayouxi.common.core.enums.OkResponse;
 import com.haohaodayouxi.common.core.interfaces.AddValid;
 import com.haohaodayouxi.common.core.interfaces.UpdValid;
 import com.haohaodayouxi.common.core.model.bo.ListObjectBO;
+import com.haohaodayouxi.common.core.model.req.page.PageBaseReq;
 import com.haohaodayouxi.common.core.model.res.Response;
+import com.haohaodayouxi.common.core.model.vo.page.PageBaseVO;
 import com.haohaodayouxi.manage.model.db.SApi;
 import com.haohaodayouxi.manage.model.req.api.SApiAddOrUpdReq;
+import com.haohaodayouxi.manage.model.req.api.SApiPageListReq;
 import com.haohaodayouxi.manage.service.SApiService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +29,26 @@ public class SApiController {
 
     @Resource
     private SApiService apiService;
+
+    /**
+     * 获取模块列表
+     *
+     * @return res
+     */
+    @PostMapping("/getModuleList")
+    public Response<PageBaseVO<String>> getModuleList(@RequestBody PageBaseReq req) {
+        return OkResponse.QUERY.toResponse(apiService.getModuleList(req));
+    }
+
+    /**
+     * 根据参数获取
+     *
+     * @return res
+     */
+    @PostMapping("/pageList")
+    public Response<PageBaseVO<SApi>> pageList(@RequestBody SApiPageListReq req) {
+        return OkResponse.QUERY.toResponse(apiService.pageList(req));
+    }
 
     /**
      * 新增
