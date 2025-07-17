@@ -46,7 +46,7 @@ public class SysAuthProperties implements Serializable {
     /**
      * 跳过Api权限检查
      */
-    @Value("${h.sys.auth.skipApiCheck:false}")
+    @Value("${h.sys.auth.skipApiCheck:true}")
     private boolean skipApiCheck;
 
 }
