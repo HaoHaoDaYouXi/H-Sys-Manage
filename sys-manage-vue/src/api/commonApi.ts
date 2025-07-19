@@ -4,6 +4,13 @@ import { ListObjectBO } from "@/api/commonTypes"
 
 export function commonApi<Prefix extends string>(API_PREFIX: Prefix) {
   return {
+    pageListApi: <T = boolean>(data: any) =>
+      request<ApiRes<T>>({
+        url: `${API_PREFIX}/pageList`,
+        method: "post",
+        data
+      }),
+
     addApi: <T = boolean>(data: any) =>
       request<ApiRes<T>>({
         url: `${API_PREFIX}/add`,
