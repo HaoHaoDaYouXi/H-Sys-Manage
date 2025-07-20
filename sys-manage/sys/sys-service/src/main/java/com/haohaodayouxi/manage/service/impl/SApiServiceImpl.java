@@ -49,11 +49,11 @@ public class SApiServiceImpl extends ServiceImpl<SApiMapper, SApi> implements SA
     @Override
     public PageBaseVO<String> getModuleList(PageBaseReq req) {
         Page<SApi> page = new Page<>(req.getPageNum(), req.getPageSize());
-        baseMapper.selectList(page, new LambdaQueryWrapper<SApi>().select(SApi::getModuleName).groupBy(SApi::getModuleName));
-        if (ObjectUtils.isEmpty(page.getRecords())) {
+        List<SApi> data = baseMapper.selectList(page, new LambdaQueryWrapper<SApi>().select(SApi::getModuleName).groupBy(SApi::getModuleName));
+        if (ObjectUtils.isEmpty(data)) {
             return new PageBaseVO<>(new ArrayList<>(), 0L);
         }
-        return new PageBaseVO<>(page.getRecords().stream().map(SApi::getModuleName).toList(), page.getTotal());
+        return new PageBaseVO<>(data.stream().map(SApi::getModuleName).toList(), page.getTotal());
     }
 
     @Override
