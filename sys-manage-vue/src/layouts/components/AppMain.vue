@@ -10,7 +10,7 @@
         </transition>
       </router-view>
       <!-- 页脚 -->
-      <Footer v-if="settingsStore.showFooter" />
+<!--      <Footer v-if="settingsStore.showFooter" />-->
     </div>
     <!-- 返回顶部 -->
     <el-backtop />
@@ -39,7 +39,7 @@ const key = computed(() => {
 @import "@/styles/variables.module.scss";
 @import "@/styles/mixin.scss";
 .app-main {
-  min-height: calc(100vh - var(--app-main-paddingT));
+  height: calc(100vh - var(--app-main-paddingT));
   width: 100%;
   position: relative;
   overflow: hidden;
@@ -56,9 +56,11 @@ const key = computed(() => {
   overflow: auto;
   display: flex;
   flex-direction: column;
+  height: 100%;
   @include scrollBar;
   .app-container-grow {
     flex-grow: 1;
+    min-height: 0;
   }
 }
 </style>
