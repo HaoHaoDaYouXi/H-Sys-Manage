@@ -12,6 +12,8 @@
       <el-row :gutter="20" class="marginB-20">
         <el-col :span="4">
           <el-tree
+            ref="treeRef"
+            node-key="label"
             style="width: 100%; height: 100%; border: 1px solid #ebeef5"
             :props="props"
             :data="treeData"
@@ -58,7 +60,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, computed } from "vue"
+import { ref, onMounted, computed, nextTick } from "vue"
 import { usePagination } from "@/hooks/usePagination"
 import { LoadFunction, ElMessage, ElMessageBox, ElTable } from "element-plus"
 import { CirclePlus, Delete } from "@element-plus/icons-vue"
@@ -78,6 +80,7 @@ const props = {
   label: "label",
   isLeaf: () => true
 }
+const treeRef = ref()
 const treeData = ref([])
 const getTreeData = async () => {
   const req = {
@@ -90,11 +93,11 @@ const getTreeData = async () => {
       label: m
     }
   })
+  await nextTick()
+  treeRef.value.setCurrentNode(treeData.value[0], true)
   await getTableData()
 }
-const treeClickNode = ref()
 const treeClick = async (node: any) => {
-  treeClickNode.value = node ? node : ""
   await getTableData()
 }
 
@@ -107,8 +110,8 @@ const getTableData = async () => {
     pageSize: tablePagination.paginationData.pageSize,
     moduleName: ""
   }
-  if (treeClickNode.value) {
-    req.moduleName = treeClickNode.value.label
+  if (treeRef.value.getCurrentKey()) {
+    req.moduleName = treeRef.value.getCurrentKey()
   }
   const { data } = await pageListApi(req)
   tablePagination.paginationData.total = data.total
@@ -124,6 +127,7 @@ const openItem = (id?: number) => {
 }
 
 const itemSuccess = async () => {
+  console.log("itemSuccess")
   await getTreeData()
 }
 
