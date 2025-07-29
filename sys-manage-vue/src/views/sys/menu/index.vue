@@ -63,10 +63,13 @@
             </template>
           </el-table-column>
           <el-table-column prop="updateTime" label="更新时间" align="center" />
-          <el-table-column fixed="right" label="操作" width="150" align="center">
+          <el-table-column fixed="right" label="操作" width="220" align="left">
             <template #default="scope">
               <el-button type="primary" text bg size="small" @click="openItem(scope.row.menuId)">修改</el-button>
               <el-button type="danger" text bg size="small" @click="handleDelete(scope.row)">删除</el-button>
+              <el-button v-if="scope.row.menuType !== 1" text bg size="small" @click="handleMenuApi(scope.row.menuId)">
+                接口配置
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -181,6 +184,10 @@ const handleDelete = (row: SMenuList) => {
         ElMessage.error("删除失败")
       })
   })
+}
+
+const handleMenuApi = (menuId: number) => {
+  ElMessage.info("功能开发中")
 }
 
 const batchDel = async () => {
