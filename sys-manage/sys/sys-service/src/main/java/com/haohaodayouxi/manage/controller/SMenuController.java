@@ -9,11 +9,13 @@ import com.haohaodayouxi.common.core.model.vo.keyValue.LabelValueVO;
 import com.haohaodayouxi.common.util.constants.StringConstant;
 import com.haohaodayouxi.manage.constants.enums.menu.MenuTypeEnum;
 import com.haohaodayouxi.manage.model.bo.param.SParamBO;
+import com.haohaodayouxi.manage.model.db.MMenuApi;
 import com.haohaodayouxi.manage.model.db.SMenu;
 import com.haohaodayouxi.manage.model.req.menu.ChangeDisableReq;
 import com.haohaodayouxi.manage.model.req.menu.SMenuAddOrUpdReq;
 import com.haohaodayouxi.manage.model.req.menu.SMenuListReq;
 import com.haohaodayouxi.manage.model.req.param.SParamReq;
+import com.haohaodayouxi.manage.service.MMenuApiService;
 import com.haohaodayouxi.manage.service.SMenuService;
 import com.haohaodayouxi.manage.service.SParamService;
 import jakarta.annotation.Resource;
@@ -41,6 +43,8 @@ public class SMenuController {
     private SMenuService sMenuService;
     @Resource
     private SParamService paramService;
+    @Resource
+    private MMenuApiService menuApiService;
 
 
     /**
@@ -140,6 +144,27 @@ public class SMenuController {
     public Response<Object> batchDel(@RequestBody @Validated ListObjectBO<Long> req) {
         sMenuService.batchDel(req.getList());
         return OkResponse.DELETE.toResponse(true);
+    }
+
+    /**
+     * 根据菜单id获取接口id
+     *
+     * @return 接口id
+     */
+    @GetMapping("/getApiIdsByMenuId/{menuId}")
+    public Response<List<Long>> getApiIdsByMenuId(@PathVariable Long menuId) {
+        return OkResponse.QUERY.toResponse(menuApiService.getMenuApiIdsByMenuId(menuId));
+    }
+
+    /**
+     * 设置菜单接口关系
+     *
+     * @return res
+     */
+    @PostMapping("/setMenuApis/{menuId}")
+    public Response<Object> setMenuApis(@PathVariable Long menuId, @RequestBody @Validated ListObjectBO<Long> req) {
+        menuApiService.batchInsert(menuId, req.getList());
+        return OkResponse.OK.toResponse(true);
     }
 
 }

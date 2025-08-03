@@ -97,4 +97,8 @@
         #{item.version,jdbcType=BIGINT}, #{item.delStatus,jdbcType=TINYINT})
     </foreach>
   </insert>
+
+  <select id="getMenuApiIdsByMenuId" resultType="java.lang.Long">
+    select api_id from m_menu_api where del_status = 0 and menu_id = #{menuId}
+  </select>
 </mapper>

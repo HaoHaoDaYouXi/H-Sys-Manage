@@ -16,4 +16,6 @@ public interface MMenuApiMapper extends BaseMapper<MMenuApi> {
     int updateBatchSelective(@Param("list") List<MMenuApi> list);
 
     int batchInsert(@Param("list") List<MMenuApi> list);
+
+    List<Long> getMenuApiIdsByMenuId(@Param("menuId") Long menuId);
 }

@@ -11,9 +11,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface MMenuApiService extends IService<MMenuApi>{
 
-
     int updateBatchSelective(List<MMenuApi> list);
 
     int batchInsert(List<MMenuApi> list);
 
+    int batchInsert(Long menuId, List<Long> apiIds);
+
+    void deleteByMenuId(Long menuId);
+
+    List<Long> getMenuApiIdsByMenuId(Long menuId);
 }
