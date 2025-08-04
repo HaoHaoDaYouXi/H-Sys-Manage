@@ -1,6 +1,7 @@
 import { request } from "@/utils/service"
 import type * as Menu from "./types/menu"
 import { commonApi } from "@/api/commonApi"
+import { ListObjectBO } from "@/api/commonTypes"
 
 const API_PREFIX = "s_menu"
 const baseApi = commonApi(API_PREFIX)
@@ -43,6 +44,22 @@ export function labelValueByParentApi(parentId: any) {
 export function changeDisableApi(data: any) {
   return request<ApiRes<boolean>>({
     url: `${API_PREFIX}/changeDisable`,
+    method: "post",
+    data
+  })
+}
+
+export function getApiIdsByMenuIdApi(menuId: any) {
+  return request<ApiRes<any>>({
+    url: `${API_PREFIX}/getApiIdsByMenuId/${menuId}`,
+    method: "get"
+  })
+}
+
+/** 设置菜单接口关系 */
+export function setMenuApisApi(id: number, data: ListObjectBO) {
+  return request<ApiRes<any>>({
+    url: `${API_PREFIX}/setMenuApis/${id}`,
     method: "post",
     data
   })

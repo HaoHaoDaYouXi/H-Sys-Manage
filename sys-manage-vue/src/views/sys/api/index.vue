@@ -64,7 +64,7 @@ import { ref, onMounted, computed, nextTick } from "vue"
 import { usePagination } from "@/hooks/usePagination"
 import { LoadFunction, ElMessage, ElMessageBox, ElTable } from "element-plus"
 import { CirclePlus, Delete } from "@element-plus/icons-vue"
-import { getModuleList, pageListApi, batchDelApi } from "@/api/sys/api"
+import { getModuleListApi, pageListApi, batchDelApi } from "@/api/sys/api"
 import { ApiTypeEnum } from "@/utils/enums"
 import { ListObjectBO } from "@/api/commonTypes"
 import Item from "./item.vue"
@@ -87,7 +87,7 @@ const getTreeData = async () => {
     // pageNum: leftPagination.paginationData.currentPage,
     // pageSize: leftPagination.paginationData.pageSize
   }
-  const { data } = await getModuleList(req)
+  const { data } = await getModuleListApi(req)
   treeData.value = data.list.map((m: any) => {
     return {
       label: m

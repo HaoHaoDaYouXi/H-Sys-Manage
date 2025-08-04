@@ -10,7 +10,7 @@ export const updApi = baseApi.updApi
 export const batchDelApi = baseApi.batchDelApi
 
 /** 获取模块列表 */
-export function getModuleList(data: any) {
+export function getModuleListApi(data: any) {
   return request<ApiRes<any>>({
     url: `${API_PREFIX}/getModuleList`,
     method: "post",

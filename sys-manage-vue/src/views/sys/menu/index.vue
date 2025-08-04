@@ -67,7 +67,7 @@
             <template #default="scope">
               <el-button type="primary" text bg size="small" @click="openItem(scope.row.menuId)">修改</el-button>
               <el-button type="danger" text bg size="small" @click="handleDelete(scope.row)">删除</el-button>
-              <el-button v-if="scope.row.menuType !== 1" text bg size="small" @click="handleMenuApi(scope.row.menuId)">
+              <el-button v-if="scope.row.menuType !== 1" text bg size="small" @click="handleMenuApi(scope.row)">
                 接口配置
               </el-button>
             </template>
@@ -76,6 +76,7 @@
       </div>
     </el-card>
     <Item ref="itemRef" @success="itemSuccess" />
+    <MenuApi ref="menuApiRef" />
   </div>
 </template>
 
@@ -88,6 +89,7 @@ import { batchDelApi, getMenuTypeApi, listByParentApi, changeDisableApi } from "
 import { SMenuListReq, SMenuList } from "@/api/sys/menu/types/menu"
 import { TopId, DisabledList, TrueFalseEnum } from "@/utils/enums"
 import Item from "./item.vue"
+import MenuApi from "./menuApi.vue"
 import { LabelValue, ListObjectBO } from "@/api/commonTypes"
 
 defineOptions({
@@ -186,8 +188,9 @@ const handleDelete = (row: SMenuList) => {
   })
 }
 
-const handleMenuApi = (menuId: number) => {
-  ElMessage.info("功能开发中")
+const menuApiRef = ref()
+const handleMenuApi = (row: SMenuList) => {
+  menuApiRef.value.open(row.menuId, row.menuName)
 }
 
 const batchDel = async () => {
