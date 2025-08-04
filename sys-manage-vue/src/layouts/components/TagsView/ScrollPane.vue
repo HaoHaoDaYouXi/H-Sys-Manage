@@ -1,10 +1,5 @@
 <template>
-  <el-scrollbar
-    class="scroll-container"
-    ref="scrollbarRef"
-    @wheel.passive="wheelScroll"
-    @scroll="scroll"
-  >
+  <el-scrollbar class="scroll-container" ref="scrollbarRef" @wheel.passive="wheelScroll" @scroll="scroll">
     <div ref="scrollbarContentRef" class="scrollbar-content">
       <slot />
     </div>
@@ -58,29 +53,21 @@ const getWidth = () => {
   /** 滚动可视区宽度 */
   const scrollbarRefWidth = scrollbarRef.value!.wrapRef!.clientWidth
   /** 最后剩余可滚动的宽度 */
-  const lastDistance =
-    scrollbarContentRefWidth - scrollbarRefWidth - currentScrollLeft
+  const lastDistance = scrollbarContentRefWidth - scrollbarRefWidth - currentScrollLeft
 
   return { scrollbarContentRefWidth, scrollbarRefWidth, lastDistance }
 }
 
 /** 左右滚动 */
-const scrollTo = (
-  direction: "left" | "right",
-  distance: number = translateDistance
-) => {
+const scrollTo = (direction: "left" | "right", distance: number = translateDistance) => {
   let scrollLeft = 0
-  const { scrollbarContentRefWidth, scrollbarRefWidth, lastDistance } =
-    getWidth()
+  const { scrollbarContentRefWidth, scrollbarRefWidth, lastDistance } = getWidth()
   // 没有横向滚动条，直接结束
   if (scrollbarRefWidth > scrollbarContentRefWidth) return
   if (direction === "left") {
     scrollLeft = Math.max(0, currentScrollLeft - distance)
   } else {
-    scrollLeft = Math.min(
-      currentScrollLeft + distance,
-      currentScrollLeft + lastDistance
-    )
+    scrollLeft = Math.min(currentScrollLeft + distance, currentScrollLeft + lastDistance)
   }
   scrollbarRef.value!.setScrollLeft(scrollLeft)
 }

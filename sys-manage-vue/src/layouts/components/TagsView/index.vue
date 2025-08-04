@@ -6,15 +6,8 @@
       :class="props.exData.hideHamburger ? 'hidden' : ''"
       @toggleClick="toggleSideBar"
     />
-    <div
-      id="tags-view-container"
-      class="tags-view-container hidden-sm-and-down"
-    >
-      <ScrollPane
-        ref="scrollPaneRef"
-        class="tags-view-wrapper"
-        :tag-refs="tagRefs"
-      >
+    <div id="tags-view-container" class="tags-view-container hidden-sm-and-down">
+      <ScrollPane ref="scrollPaneRef" class="tags-view-wrapper" :tag-refs="tagRefs">
         <router-link
           v-for="tag in tagsViewStore.visitedViews"
           ref="tagRefs"
@@ -26,43 +19,23 @@
           @contextmenu.prevent="openMenu(tag, $event)"
         >
           <span>{{ tag.meta?.title }}</span>
-          <span
-            v-if="!isAffix(tag)"
-            class="el-icon-close"
-            @click.prevent.stop="closeSelectedTag(tag)"
-          />
+          <span v-if="!isAffix(tag)" class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
         </router-link>
       </ScrollPane>
-      <ul
-        v-show="visible"
-        :style="{ left: left + 'px', top: top + 'px' }"
-        class="contextmenu"
-      >
+      <ul v-show="visible" :style="{ left: left + 'px', top: top + 'px' }" class="contextmenu">
         <li @click="refreshSelectedTag(selectedTag)">刷新</li>
-        <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)">
-          关闭
-        </li>
+        <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)">关闭</li>
         <li @click="closeOthersTags">关闭其它</li>
         <li @click="closeAllTags(selectedTag)">关闭所有</li>
       </ul>
     </div>
-    <Screenfull
-      v-if="settingsStore.showScreenFull"
-      :content="true"
-      class="screenfull"
-    />
+    <Screenfull v-if="settingsStore.showScreenFull" :content="true" class="screenfull" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { getCurrentInstance, onMounted, ref, watch } from "vue"
-import {
-  type RouteLocationNormalizedLoaded,
-  type RouteRecordRaw,
-  RouterLink,
-  useRoute,
-  useRouter
-} from "vue-router"
+import { type RouteLocationNormalizedLoaded, type RouteRecordRaw, RouterLink, useRoute, useRouter } from "vue-router"
 import { type TagView, useTagsViewStore } from "@/store/modules/tags-view"
 import { useSettingsStore } from "@/store/modules/settings"
 import { useAppStore } from "@/store/modules/app"
@@ -232,9 +205,7 @@ const closeMenu = () => {
 }
 
 watch(visible, (value) => {
-  value
-    ? document.body.addEventListener("click", closeMenu)
-    : document.body.removeEventListener("click", closeMenu)
+  value ? document.body.addEventListener("click", closeMenu) : document.body.removeEventListener("click", closeMenu)
 })
 
 onMounted(() => {
