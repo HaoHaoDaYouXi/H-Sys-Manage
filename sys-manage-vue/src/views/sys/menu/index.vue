@@ -24,7 +24,9 @@
     <el-card v-loading="loading" shadow="never">
       <div class="toolbar-wrapper">
         <div>
-          <el-button type="primary" :icon="CirclePlus" @click="openItem(undefined)">新增菜单</el-button>
+          <el-button v-permission="'add'" type="primary" :icon="CirclePlus" @click="openItem(undefined)">
+            新增菜单
+          </el-button>
           <el-button type="danger" :icon="Delete" @click="batchDel">批量删除</el-button>
         </div>
       </div>

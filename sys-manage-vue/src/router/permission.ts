@@ -53,6 +53,8 @@ router.beforeEach(async (to, _from, next) => {
 })
 
 router.afterEach((to) => {
+  const permissionStore = usePermissionStoreHook()
+  permissionStore.setCurrentRoutes(to.path)
   setRouteChange(to)
   NProgress.done()
 })

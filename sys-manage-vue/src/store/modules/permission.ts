@@ -14,6 +14,7 @@ export const usePermissionStore = defineStore("permission", () => {
   const addRouter = ref<any[]>([])
   /** 当前使用路由 */
   const currentRoutes = ref(undefined)
+  const currentRoutesData = ref(undefined)
   /** 默认打开的路由 */
   const defaultOpenRoute = ref(undefined)
   /** 面包屑列表 */
@@ -46,7 +47,7 @@ export const usePermissionStore = defineStore("permission", () => {
       const btnKeys: string[] = []
       children.forEach((item) => {
         if (item.menuType === 3) {
-          btnKeys.push(item.menuKey)
+          btnKeys.push(item.path)
         } else {
           child.push(item)
         }
@@ -96,6 +97,27 @@ export const usePermissionStore = defineStore("permission", () => {
     }
     return getChild(routers, TopId)
   }
+  const setCurrentRoutes = (path: any) => {
+    const paths = path.split("/")
+    const getCurrentRoutes = (pathPrefix: string, paths: any[], index: number, data: any[]): any => {
+      let res = undefined
+      data.some((item) => {
+        if (item.path === pathPrefix + paths[index]) {
+          if (index < paths.length - 1 && item.children && item.children.length > 0) {
+            res = getCurrentRoutes("", paths, index + 1, item.children)
+          } else {
+            res = item
+          }
+          return true
+        }
+      })
+      if (!res) {
+        res = data.find((item) => item.path === "/")
+      }
+      return res
+    }
+    currentRoutesData.value = getCurrentRoutes("/", paths, 1, routes.value)
+  }
 
   return {
     resetState,
@@ -103,9 +125,11 @@ export const usePermissionStore = defineStore("permission", () => {
     booAddRoutes,
     addRouter,
     currentRoutes,
+    currentRoutesData,
     defaultOpenRoute,
     breadcrumbList,
-    getRouterByUser
+    getRouterByUser,
+    setCurrentRoutes
   }
 })
 
