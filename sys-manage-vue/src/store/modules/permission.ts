@@ -14,7 +14,7 @@ export const usePermissionStore = defineStore("permission", () => {
   const addRouter = ref<any[]>([])
   /** 当前使用路由 */
   const currentRoutes = ref(undefined)
-  const currentRoutesData = ref(undefined)
+  const currentRoutesData: any = ref(undefined)
   /** 默认打开的路由 */
   const defaultOpenRoute = ref(undefined)
   /** 面包屑列表 */
