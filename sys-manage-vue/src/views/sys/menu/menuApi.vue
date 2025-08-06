@@ -51,7 +51,7 @@
 import { ref, nextTick } from "vue"
 import commonFormRules from "@/utils/rules"
 import { getModuleListApi, pageListApi } from "@/api/sys/api"
-import { setMenuApisApi } from "@/api/sys/menu"
+import { getApiIdsByMenuIdApi, setMenuApisApi } from "@/api/sys/menu"
 import { LabelValue } from "@/api/commonTypes"
 import { ElMessage } from "element-plus"
 
@@ -65,6 +65,10 @@ const open = async (menuId: number, menuName: string) => {
   dialogVisible.value = true
   form.value.menuId = menuId
   form.value.menuName = menuName
+  const menuApisRes = await getApiIdsByMenuIdApi(menuId)
+  if (menuApisRes.data) {
+    treeRef.value.setCheckedKeys(menuApisRes.data)
+  }
   formLoading.value = false
 }
 /** 提供 open 方法，用于打开弹窗 */
