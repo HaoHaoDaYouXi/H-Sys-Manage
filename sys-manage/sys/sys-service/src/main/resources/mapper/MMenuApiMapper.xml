@@ -98,7 +98,11 @@
     </foreach>
   </insert>
 
-  <select id="getMenuApiIdsByMenuId" resultType="java.lang.Long">
-    select api_id from m_menu_api where del_status = 0 and menu_id = #{menuId}
+  <select id="getMenuApiByMenuId" resultType="com.haohaodayouxi.common.core.model.vo.keyValue.LabelValueVO">
+    select mma.api_id AS value, mapi.api_name AS label
+    from m_menu_api mma
+    left join s_api mapi on mma.api_id = mapi.api_id
+    where mma.del_status = 0 and mma.menu_id = #{menuId}
+    and mapi.del_status = 0
   </select>
 </mapper>

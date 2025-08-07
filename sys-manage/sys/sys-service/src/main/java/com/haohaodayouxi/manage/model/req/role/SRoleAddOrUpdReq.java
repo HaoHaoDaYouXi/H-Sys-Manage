@@ -48,4 +48,9 @@ public class SRoleAddOrUpdReq implements Serializable {
      * 菜单权限
      */
     private List<Long> menuIds;
+
+    /**
+     * 菜单接口权限
+     */
+    private List<Long> menuApiIds;
 }

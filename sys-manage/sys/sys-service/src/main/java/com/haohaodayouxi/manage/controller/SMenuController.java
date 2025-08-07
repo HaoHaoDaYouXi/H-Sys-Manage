@@ -147,6 +147,16 @@ public class SMenuController {
     }
 
     /**
+     * 获取菜单关联的接口
+     *
+     * @return res
+     */
+    @GetMapping("/getApiByMenuId/{menuId}")
+    public Response<List<LabelValueVO<String, Long>>> getApiByMenuId(@PathVariable Long menuId) {
+        return OkResponse.QUERY.toResponse(menuApiService.getApiByMenuId(menuId));
+    }
+
+    /**
      * 根据菜单id获取接口id
      *
      * @return 接口id

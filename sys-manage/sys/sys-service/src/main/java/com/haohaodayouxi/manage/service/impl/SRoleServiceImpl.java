@@ -10,10 +10,12 @@ import com.haohaodayouxi.common.core.model.vo.page.PageBaseVO;
 import com.haohaodayouxi.common.util.constants.StringConstant;
 import com.haohaodayouxi.common.util.enums.TrueFalseEnum;
 import com.haohaodayouxi.manage.constants.enums.role.RoleTypeEnum;
+import com.haohaodayouxi.manage.mapper.MRoleMenuApiMapper;
 import com.haohaodayouxi.manage.mapper.SRoleMapper;
 import com.haohaodayouxi.manage.model.bo.login.LoginCacheBO;
 import com.haohaodayouxi.manage.model.bo.param.SParamBO;
 import com.haohaodayouxi.manage.model.db.MRoleMenu;
+import com.haohaodayouxi.manage.model.db.MRoleMenuApi;
 import com.haohaodayouxi.manage.model.db.SRole;
 import com.haohaodayouxi.manage.model.req.param.SParamReq;
 import com.haohaodayouxi.manage.model.req.role.SRoleAddOrUpdReq;
@@ -44,6 +46,8 @@ public class SRoleServiceImpl extends ServiceImpl<SRoleMapper, SRole> implements
     private SParamService paramService;
     @Resource
     private MRoleMenuService roleMenuService;
+    @Resource
+    private MRoleMenuApiMapper roleMenuApiMapper;
 
     @Override
     public int updateBatch(List<SRole> list) {
@@ -83,9 +87,10 @@ public class SRoleServiceImpl extends ServiceImpl<SRoleMapper, SRole> implements
                 .roleName(req.getRoleName())
                 .roleType(req.getRoleType())
                 .build();
+        Date now = new Date();
         LoginCacheBO bo = (LoginCacheBO) CurrentUserContextHolder.get();
         role.setUpdateUid(bo.getUserLoginCacheBO().getUserId());
-        role.setUpdateTime(new Date());
+        role.setUpdateTime(now);
         if (ObjectUtils.isEmpty(req.getRoleId())) {
             role.setCreateUid(bo.getUserLoginCacheBO().getUserId());
             role.setCreateTime(role.getUpdateTime());
@@ -96,8 +101,8 @@ public class SRoleServiceImpl extends ServiceImpl<SRoleMapper, SRole> implements
                         .menuId(m)
                         .createUid(bo.getUserLoginCacheBO().getUserId())
                         .updateUid(bo.getUserLoginCacheBO().getUserId())
-                        .createTime(role.getUpdateTime())
-                        .updateTime(role.getUpdateTime())
+                        .createTime(now)
+                        .updateTime(now)
                         .build()).toList());
             }
         } else {
@@ -114,7 +119,7 @@ public class SRoleServiceImpl extends ServiceImpl<SRoleMapper, SRole> implements
                                 .roleId(role.getRoleId())
                                 .menuId(m)
                                 .updateUid(bo.getUserLoginCacheBO().getUserId())
-                                .updateTime(role.getUpdateTime())
+                                .updateTime(now)
                                 .build();
                         if (map.containsKey(m)) {
                             mr.setId(map.get(m).getId());
@@ -122,7 +127,7 @@ public class SRoleServiceImpl extends ServiceImpl<SRoleMapper, SRole> implements
                             map.remove(m);
                         } else {
                             mr.setCreateUid(bo.getUserLoginCacheBO().getUserId());
-                            mr.setCreateTime(role.getUpdateTime());
+                            mr.setCreateTime(now);
                         }
                         return mr;
                     }).toList());
@@ -141,11 +146,28 @@ public class SRoleServiceImpl extends ServiceImpl<SRoleMapper, SRole> implements
                             .menuId(m)
                             .createUid(bo.getUserLoginCacheBO().getUserId())
                             .updateUid(bo.getUserLoginCacheBO().getUserId())
-                            .createTime(role.getUpdateTime())
-                            .updateTime(role.getUpdateTime())
+                            .createTime(now)
+                            .updateTime(now)
                             .build()).toList());
                 }
             }
+        }
+        roleMenuApiMapper.update(new LambdaUpdateWrapper<MRoleMenuApi>()
+                .set(MRoleMenuApi::getDelStatus, TrueFalseEnum.TRUE.getCode())
+                .set(MRoleMenuApi::getUpdateUid, bo.getUserLoginCacheBO().getUserId())
+                .set(MRoleMenuApi::getUpdateTime, now)
+                .eq(MRoleMenuApi::getRoleId, role.getRoleId()).eq(MRoleMenuApi::getDelStatus, TrueFalseEnum.FALSE.getCode()));
+        if (ObjectUtils.isNotEmpty(req.getMenuApiIds())) {
+            roleMenuApiMapper.insert(req.getMenuApiIds().stream().map(m -> MRoleMenuApi.builder()
+                    .roleId(role.getRoleId())
+                    .menuApiId(m)
+                    .createUid(bo.getUserLoginCacheBO().getUserId())
+                    .updateUid(bo.getUserLoginCacheBO().getUserId())
+                    .createTime(now)
+                    .updateTime(now)
+                    .version(1L)
+                    .delStatus(TrueFalseEnum.FALSE.getCode())
+                    .build()).toList());
         }
     }
 

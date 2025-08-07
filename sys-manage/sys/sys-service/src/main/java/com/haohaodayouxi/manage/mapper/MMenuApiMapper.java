@@ -1,6 +1,7 @@
 package com.haohaodayouxi.manage.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.haohaodayouxi.common.core.model.vo.keyValue.LabelValueVO;
 import com.haohaodayouxi.manage.model.db.MMenuApi;
 import org.apache.ibatis.annotations.Param;
 
@@ -17,5 +18,5 @@ public interface MMenuApiMapper extends BaseMapper<MMenuApi> {
 
     int batchInsert(@Param("list") List<MMenuApi> list);
 
-    List<Long> getMenuApiIdsByMenuId(@Param("menuId") Long menuId);
+    List<LabelValueVO<String, Long>> getMenuApiByMenuId(@Param("menuId") Long menuId);
 }

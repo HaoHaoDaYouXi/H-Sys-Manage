@@ -62,7 +62,7 @@ import { TopId, TrueFalseEnum } from "@/utils/enums"
 import { addApi, detailApi, updApi, getRoleTypeApi } from "@/api/sys/role"
 import { LabelValue } from "@/api/commonTypes"
 import { ElMessage } from "element-plus"
-import { labelValueByParentApi } from "@/api/sys/menu"
+import { getApiByMenuIdApi, labelValueByParentApi } from "@/api/sys/menu"
 
 const dialogVisible = ref(false)
 const dialogTitle = ref("新增角色")
@@ -121,12 +121,22 @@ const menuExpand = ref(false) // 展开/折叠
 const menuTreeProps = {
   label: "label",
   value: "value",
+  isLeaf: "leaf",
   checkStrictly: true
 }
 const lazyLoadMenu = async (node: any, resolve: any) => {
   if (!node.loaded) {
     try {
-      const { data } = await labelValueByParentApi(node.data?.value ? node.data.value : TopId)
+      const id = node.data?.value ? node.data.value : TopId
+      const { data } = await labelValueByParentApi(id)
+      const menuApiRes = await getApiByMenuIdApi(id)
+      if (menuApiRes.data) {
+        menuApiRes.data.map((item: any) => {
+          item.leaf = true
+          item.api = true
+        })
+        data.push(...menuApiRes.data)
+      }
       resolve(data)
     } catch (e) {
       ElMessage.error("获取下级菜单列表失败")
@@ -209,7 +219,8 @@ const handleSubmit = async () => {
       const api = form.value.roleId === undefined ? addApi : updApi
       const tmpForm = {
         ...form.value,
-        menuIds: [...treeRef.value?.getCheckedKeys()]
+        menuIds: [...treeRef.value?.getCheckedNodes().filter((item: any) => !item.api).map((item: any) => item.value)],
+        menuApiIds: [...treeRef.value?.getCheckedNodes().filter((item: any) => item.api).map((item: any) => item.value)]
       }
       api(tmpForm)
         .then((res) => {

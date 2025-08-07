@@ -49,6 +49,13 @@ export function changeDisableApi(data: any) {
   })
 }
 
+export function getApiByMenuIdApi(menuId: any) {
+  return request<ApiRes<any>>({
+    url: `${API_PREFIX}/getApiByMenuId/${menuId}`,
+    method: "get"
+  })
+}
+
 export function getApiIdsByMenuIdApi(menuId: any) {
   return request<ApiRes<any>>({
     url: `${API_PREFIX}/getApiIdsByMenuId/${menuId}`,
