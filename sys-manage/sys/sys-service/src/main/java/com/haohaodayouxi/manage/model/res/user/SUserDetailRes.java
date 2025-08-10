@@ -33,11 +33,6 @@ public class SUserDetailRes implements Serializable {
     private String account;
 
     /**
-     * 用户编码(UUID，可使用于密码等方面)
-     */
-    private String userCode;
-
-    /**
      * 用户名称
      */
     private String userName;

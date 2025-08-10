@@ -156,11 +156,39 @@ public class SUserServiceImpl extends ServiceImpl<SUserMapper, SUser> implements
 
     @Override
     public SUserDetailRes detail(Long id) {
-        return null;
+        SUser user = baseMapper.selectOne(new LambdaQueryWrapper<SUser>().eq(SUser::getUserId, id));
+        if (ObjectUtils.isEmpty(user)) {
+            return null;
+        }
+        List<MUserRole> userRoleList = userRoleService.list(new LambdaQueryWrapper<MUserRole>()
+                .select(MUserRole::getRoleId)
+                .eq(MUserRole::getDelStatus, TrueFalseEnum.FALSE.getCode())
+                .eq(MUserRole::getUserId, id));
+        List<Long> roleIds = new ArrayList<>();
+        if (ObjectUtils.isNotEmpty(userRoleList)) {
+            roleIds = userRoleList.stream().map(MUserRole::getRoleId).toList();
+        }
+        return SUserDetailRes.builder()
+                .userId(user.getUserId())
+                .account(user.getAccount())
+                .userName(user.getUserName())
+                .userAvatar(user.getUserAvatar())
+                .userContact(user.getUserContact())
+                .remarks(user.getRemarks())
+                .multipleStatus(user.getMultipleStatus())
+                .roleIds(roleIds)
+                .build();
     }
 
     @Override
     public void batchDel(List<Long> ids) {
-
+        LoginCacheBO bo = (LoginCacheBO) CurrentUserContextHolder.get();
+        baseMapper.update(new LambdaUpdateWrapper<SUser>()
+                .set(SUser::getDelStatus, TrueFalseEnum.TRUE.getCode())
+                .set(SUser::getUpdateUid, bo.getUserLoginCacheBO().getUserId())
+                .set(SUser::getUpdateTime, new Date())
+                .eq(SUser::getDelStatus, TrueFalseEnum.FALSE.getCode())
+                .in(SUser::getUserId, ids)
+        );
     }
 }
