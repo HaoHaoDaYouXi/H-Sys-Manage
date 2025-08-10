@@ -1,6 +1,7 @@
 package com.haohaodayouxi.manage.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.haohaodayouxi.common.core.model.vo.page.PageBaseVO;
 import com.haohaodayouxi.manage.model.db.SUser;
 import com.haohaodayouxi.manage.model.req.user.SUserAddOrUpdReq;
 import com.haohaodayouxi.manage.model.req.user.SUserPageListReq;
@@ -24,7 +25,7 @@ public interface SUserService extends IService<SUser> {
 
     void changeUseRole(Long id);
 
-    List<SUser> pageList(SUserPageListReq req);
+    PageBaseVO<SUser> pageList(SUserPageListReq req);
 
     void addOrUpd(SUserAddOrUpdReq req);
 

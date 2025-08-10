@@ -40,6 +40,12 @@ public class SUserAddOrUpdReq implements Serializable {
     private String account;
 
     /**
+     * 密码
+     */
+    @NotBlank(groups = {AddValid.class}, message = "密码不能为空")
+    private String pwd;
+
+    /**
      * 用户名称
      */
     @NotBlank(groups = {AddValid.class, UpdValid.class}, message = "用户名称不能为空")
