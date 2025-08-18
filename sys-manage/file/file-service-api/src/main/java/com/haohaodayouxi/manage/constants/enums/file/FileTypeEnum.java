@@ -57,7 +57,7 @@ public enum FileTypeEnum {
             new String[]{"mp4", "avi", "mpeg", "mov", "mkv"}
     ),
     AUDIO_OR_VIDEO(6, "video",
-            "视频",
+            "音频和视频",
             Stream.concat(Arrays.stream(AUDIO.getFileFormat()), Arrays.stream(VIDEO.getFileFormat()))
                     .toArray(String[]::new)
     ),

@@ -17,3 +17,34 @@ export const ApiTypeEnum = [
   { value: 4, label: "查询" },
   { value: 5, label: "新增或修改" }
 ]
+
+export const uploadTypeEnum = {
+  IMG: {
+    extension: ".png,.jpg,.jpeg,.gif,.dng",
+    api: ""
+  },
+  DOC: {
+    extension: ".doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf,.txt,.zip",
+    api: ""
+  },
+  get IMG_DOC() {
+    return {
+      extension: this.IMG.extension + this.DOC.extension,
+      api: ""
+    }
+  },
+  AUDIO: {
+    extension: ".mp3,.wav,.wma,.aac",
+    api: ""
+  },
+  VIDEO: {
+    extension: ".mp4,.avi,.mpeg,.mov,.mkv",
+    api: ""
+  },
+  get AUDIO_VIDEO() {
+    return {
+      extension: this.AUDIO.extension + this.VIDEO.extension,
+      api: ""
+    }
+  }
+}
