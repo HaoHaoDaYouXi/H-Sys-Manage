@@ -21,30 +21,24 @@ export const ApiTypeEnum = [
 export const uploadTypeEnum = {
   IMG: {
     extension: ".png,.jpg,.jpeg,.gif,.dng",
-    api: ""
+    api: "/upload/img"
   },
   DOC: {
     extension: ".doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf,.txt,.zip",
-    api: ""
+    api: "/upload/doc"
   },
   get IMG_DOC() {
     return {
       extension: this.IMG.extension + this.DOC.extension,
-      api: ""
+      api: "/upload/imgOrDoc"
     }
   },
   AUDIO: {
     extension: ".mp3,.wav,.wma,.aac",
-    api: ""
+    api: "/upload/audio"
   },
   VIDEO: {
     extension: ".mp4,.avi,.mpeg,.mov,.mkv",
-    api: ""
-  },
-  get AUDIO_VIDEO() {
-    return {
-      extension: this.AUDIO.extension + this.VIDEO.extension,
-      api: ""
-    }
+    api: "/upload/video"
   }
 }
