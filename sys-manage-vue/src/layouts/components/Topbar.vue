@@ -127,9 +127,21 @@ const permission_routes = computed(() => {
 const userInfo = computed(() => {
   return {
     ...userStore.userInfo,
-    avatar: new URL(userStore.userInfo.avatar, import.meta.url).href
+    avatar: getAvatar()
   }
 })
+
+const getAvatar = () => {
+  let avatar = userStore.userInfo.avatar
+  if (!avatar) {
+    avatar = "vue.svg"
+  } else {
+    if (!avatar.startsWith("http://") && !avatar.startsWith("https://")) {
+      avatar = "../../assets/" + avatar
+    }
+  }
+  return new URL(avatar, import.meta.url).href
+}
 
 const booRoleList = ref<boolean>(false)
 
