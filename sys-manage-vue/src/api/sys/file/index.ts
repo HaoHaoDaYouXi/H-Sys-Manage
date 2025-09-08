@@ -1,7 +1,7 @@
 import { request } from "@/utils/service"
 import { commonApi } from "@/api/commonApi"
 
-const API_PREFIX = "file"
+export const API_PREFIX = "file"
 const baseApi = commonApi(API_PREFIX)
 export const pageListApi = baseApi.pageListApi
 export const addApi = baseApi.addApi
@@ -20,6 +20,13 @@ export function getPreviewUrlApi(fileCode: any) {
 export function previewApi(fileName: any) {
   return request<ApiRes<any>>({
     url: `${API_PREFIX}/preview/${fileName}`,
+    method: "get"
+  })
+}
+/** 上传接口 */
+export function uploadApi(uploadUrl: string) {
+  return request<ApiRes<any>>({
+    url: `${API_PREFIX}/${uploadUrl}`,
     method: "get"
   })
 }

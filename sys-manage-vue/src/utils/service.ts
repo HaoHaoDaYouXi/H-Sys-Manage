@@ -98,6 +98,9 @@ function createService() {
   return service
 }
 
+export const getBaseURL = (dir?: string) => {
+  return dir ? import.meta.env.VITE_BASE_API + dir : import.meta.env.VITE_BASE_API
+}
 /** 创建请求方法 */
 function createRequest(service: AxiosInstance) {
   return function <T>(config: AxiosRequestConfig): Promise<T> {
@@ -109,7 +112,7 @@ function createRequest(service: AxiosInstance) {
         "Content-Type": "application/json"
       },
       timeout: 60000,
-      baseURL: import.meta.env.VITE_BASE_API,
+      baseURL: getBaseURL(),
       data: {}
     }
     // 将默认配置 defaultConfig 和传入的自定义配置 config 进行合并成为 mergeConfig
