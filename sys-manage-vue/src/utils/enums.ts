@@ -29,7 +29,7 @@ export const uploadTypeEnum = {
   },
   get IMG_DOC() {
     return {
-      extension: this.IMG.extension + this.DOC.extension,
+      extension: this.IMG.extension + "," + this.DOC.extension,
       api: "/upload/imgOrDoc"
     }
   },
