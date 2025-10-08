@@ -2,7 +2,9 @@ package com.haohaodayouxi.manage.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.haohaodayouxi.common.core.model.vo.page.PageBaseVO;
+import com.haohaodayouxi.manage.model.bo.role.RoleUserSelectBO;
 import com.haohaodayouxi.manage.model.db.SRole;
+import com.haohaodayouxi.manage.model.req.role.RoleUserSelectPageListReq;
 import com.haohaodayouxi.manage.model.req.role.SRoleAddOrUpdReq;
 import com.haohaodayouxi.manage.model.req.role.SRolePageListReq;
 import com.haohaodayouxi.manage.model.res.role.RoleMenuDetailRes;
@@ -32,4 +34,5 @@ public interface SRoleService extends IService<SRole> {
 
     void batchDel(List<Long> ids);
 
+    PageBaseVO<RoleUserSelectBO> getRoleForUserSelect(RoleUserSelectPageListReq req);
 }

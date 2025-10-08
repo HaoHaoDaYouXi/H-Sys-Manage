@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.haohaodayouxi.common.core.constants.CurrentUserContextHolder;
 import com.haohaodayouxi.common.core.exception.BusinessException;
 import com.haohaodayouxi.common.core.model.vo.page.PageBaseVO;
@@ -14,10 +16,12 @@ import com.haohaodayouxi.manage.mapper.MRoleMenuApiMapper;
 import com.haohaodayouxi.manage.mapper.SRoleMapper;
 import com.haohaodayouxi.manage.model.bo.login.LoginCacheBO;
 import com.haohaodayouxi.manage.model.bo.param.SParamBO;
+import com.haohaodayouxi.manage.model.bo.role.RoleUserSelectBO;
 import com.haohaodayouxi.manage.model.db.MRoleMenu;
 import com.haohaodayouxi.manage.model.db.MRoleMenuApi;
 import com.haohaodayouxi.manage.model.db.SRole;
 import com.haohaodayouxi.manage.model.req.param.SParamReq;
+import com.haohaodayouxi.manage.model.req.role.RoleUserSelectPageListReq;
 import com.haohaodayouxi.manage.model.req.role.SRoleAddOrUpdReq;
 import com.haohaodayouxi.manage.model.req.role.SRolePageListReq;
 import com.haohaodayouxi.manage.model.res.role.RoleMenuDetailRes;
@@ -196,5 +200,12 @@ public class SRoleServiceImpl extends ServiceImpl<SRoleMapper, SRole> implements
                 .eq(SRole::getDelStatus, TrueFalseEnum.FALSE.getCode())
                 .in(SRole::getRoleId, ids)
         );
+    }
+
+    @Override
+    public PageBaseVO<RoleUserSelectBO> getRoleForUserSelect(RoleUserSelectPageListReq req) {
+        PageHelper.startPage(req.getPageNum(), req.getPageSize());
+        List<RoleUserSelectBO> list = baseMapper.getRoleForUserSelect(req.getUserId());
+        return new PageBaseVO<>(list, new PageInfo<>(list).getTotal());
     }
 }

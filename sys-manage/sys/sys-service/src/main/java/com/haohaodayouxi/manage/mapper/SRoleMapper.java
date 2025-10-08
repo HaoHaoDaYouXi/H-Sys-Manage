@@ -1,6 +1,7 @@
 package com.haohaodayouxi.manage.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.haohaodayouxi.manage.model.bo.role.RoleUserSelectBO;
 import com.haohaodayouxi.manage.model.db.SRole;
 import org.apache.ibatis.annotations.Param;
 
@@ -19,4 +20,6 @@ public interface SRoleMapper extends BaseMapper<SRole> {
     int updateBatchSelective(@Param("list") List<SRole> list);
 
     int batchInsert(@Param("list") List<SRole> list);
+
+    List<RoleUserSelectBO> getRoleForUserSelect(@Param("userId") Long userId);
 }

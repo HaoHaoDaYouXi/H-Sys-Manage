@@ -147,4 +147,10 @@
         #{item.version,jdbcType=BIGINT}, #{item.delStatus,jdbcType=TINYINT})
     </foreach>
   </insert>
+  <select id="getRoleForUserSelect" resultType="com.haohaodayouxi.manage.model.bo.role.RoleUserSelectBO">
+    select r.role_id, r.role_name, r.role_type, ur.user_id
+    from s_role r
+    left join m_user_role ur on r.role_id = ur.role_id and ur.user_id = #{userId} and ur.del_status = 0
+    where r.del_status = 0
+  </select>
 </mapper>

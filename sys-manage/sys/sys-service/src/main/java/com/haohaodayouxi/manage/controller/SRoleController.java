@@ -10,6 +10,7 @@ import com.haohaodayouxi.common.util.constants.StringConstant;
 import com.haohaodayouxi.manage.constants.enums.role.RoleTypeEnum;
 import com.haohaodayouxi.manage.model.bo.param.SParamBO;
 import com.haohaodayouxi.manage.model.req.param.SParamReq;
+import com.haohaodayouxi.manage.model.req.role.RoleUserSelectPageListReq;
 import com.haohaodayouxi.manage.model.req.role.SRoleAddOrUpdReq;
 import com.haohaodayouxi.manage.model.req.role.SRolePageListReq;
 import com.haohaodayouxi.manage.model.res.role.RoleMenuDetailRes;
@@ -110,4 +111,13 @@ public class SRoleController {
         return OkResponse.DELETE.toResponse(true);
     }
 
+    /**
+     * 列表查询
+     *
+     * @return res
+     */
+    @PostMapping("/getRoleForUserSelect")
+    public Response<Object> getRoleForUserSelect(@RequestBody RoleUserSelectPageListReq req) {
+        return OkResponse.QUERY.toResponse(sRoleService.getRoleForUserSelect(req));
+    }
 }
