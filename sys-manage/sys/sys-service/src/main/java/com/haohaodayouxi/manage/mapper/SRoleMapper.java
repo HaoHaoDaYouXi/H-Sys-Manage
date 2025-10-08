@@ -20,6 +20,4 @@ public interface SRoleMapper extends BaseMapper<SRole> {
     int updateBatchSelective(@Param("list") List<SRole> list);
 
     int batchInsert(@Param("list") List<SRole> list);
-
-    List<RoleUserSelectBO> getRoleForUserSelect(@Param("userId") Long userId);
 }

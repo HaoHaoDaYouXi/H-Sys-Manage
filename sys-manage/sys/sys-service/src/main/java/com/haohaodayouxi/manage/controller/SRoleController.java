@@ -111,13 +111,4 @@ public class SRoleController {
         return OkResponse.DELETE.toResponse(true);
     }
 
-    /**
-     * 列表查询
-     *
-     * @return res
-     */
-    @PostMapping("/getRoleForUserSelect")
-    public Response<Object> getRoleForUserSelect(@RequestBody RoleUserSelectPageListReq req) {
-        return OkResponse.QUERY.toResponse(sRoleService.getRoleForUserSelect(req));
-    }
 }

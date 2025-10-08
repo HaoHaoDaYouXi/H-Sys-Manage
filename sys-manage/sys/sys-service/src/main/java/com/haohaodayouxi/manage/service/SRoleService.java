@@ -33,6 +33,4 @@ public interface SRoleService extends IService<SRole> {
     RoleMenuDetailRes getDetail(Long id);
 
     void batchDel(List<Long> ids);
-
-    PageBaseVO<RoleUserSelectBO> getRoleForUserSelect(RoleUserSelectPageListReq req);
 }

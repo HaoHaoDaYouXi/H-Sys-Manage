@@ -201,11 +201,4 @@ public class SRoleServiceImpl extends ServiceImpl<SRoleMapper, SRole> implements
                 .in(SRole::getRoleId, ids)
         );
     }
-
-    @Override
-    public PageBaseVO<RoleUserSelectBO> getRoleForUserSelect(RoleUserSelectPageListReq req) {
-        PageHelper.startPage(req.getPageNum(), req.getPageSize());
-        List<RoleUserSelectBO> list = baseMapper.getRoleForUserSelect(req.getUserId());
-        return new PageBaseVO<>(list, new PageInfo<>(list).getTotal());
-    }
 }
