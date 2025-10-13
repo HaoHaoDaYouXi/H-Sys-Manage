@@ -28,6 +28,7 @@
         <div class="el-upload__tip">{{ computedTip }}</div>
       </template>
     </el-upload>
+    <el-image-viewer v-if="showPreview" :url-list="previewImageUrl" show-progress @close="showPreview = false" />
   </div>
 </template>
 
@@ -96,8 +97,12 @@ const headers = ref({
 
 const emit = defineEmits(["changeFile"])
 
+const previewImageUrl = ref<any[]>([])
+const showPreview = ref(false)
 const handlePreview = (uploadFile: UploadFile) => {
-  console.log("handlePreview")
+  // console.log("handlePreview", uploadFile)
+  previewImageUrl.value = uploadFile.url ? [uploadFile.url] : []
+  showPreview.value = true
 }
 const handleRemove = (uploadFile: any) => {
   let serviceFileName = uploadFile.url
@@ -173,19 +178,19 @@ function changeRef(instance: any) {
 <style lang="scss" scoped>
 .upload-wrapper {
   .is-disabled {
-    ::v-deep .el-upload {
+    :deep(.el-upload) {
       cursor: not-allowed;
     }
   }
 
-  ::v-deep .el-upload--picture-card {
+  :deep(.el-upload--picture-card) {
     height: 80px;
     width: 80px;
     line-height: 80px;
   }
 }
 
-.upload-wrapper ::v-deep .el-upload-list--picture-card {
+.upload-wrapper :deep(.el-upload-list--picture-card) {
   display: flex;
   flex-flow: row wrap;
 
@@ -196,7 +201,7 @@ function changeRef(instance: any) {
 }
 
 .hide {
-  ::v-deep .el-upload {
+  :deep(.el-upload) {
     &.el-upload--picture-card,
     &.el-upload--text {
       display: none;
