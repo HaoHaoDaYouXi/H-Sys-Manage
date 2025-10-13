@@ -26,8 +26,8 @@
       <div class="marginB-20">
         <el-table ref="tableDataRef" :data="tableData" row-key="roleId" border stripe>
           <el-table-column type="selection" width="50" align="center" />
-          <el-table-column prop="roleName" label="用户名" align="center" />
-          <el-table-column prop="roleTypeStr" label="角色" align="center">
+          <el-table-column prop="roleName" label="角色名" align="center" />
+          <el-table-column prop="roleTypeStr" label="角色类型" align="center">
             <template #default="scope">
               <el-tag type="primary" effect="plain">
                 {{ scope.row.roleTypeStr }}
