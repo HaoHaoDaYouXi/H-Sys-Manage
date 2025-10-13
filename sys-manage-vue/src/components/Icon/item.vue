@@ -1,7 +1,7 @@
 <!-- icon 组件 -->
 <template>
   <SvgIcon v-if="isSvgIcon" :name="iconName" :class="iconClass" />
-  <i v-else-if="isElIcon || isIconfont" :class="iconClass" ></i>
+  <i v-else-if="isElIcon || isIconfont" :class="iconClass" />
   <el-icon v-else>
     <component :is="props.icon" :class="iconClass" />
   </el-icon>
@@ -18,33 +18,32 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   icon: "",
   defaultStyle: false,
-  color: "",
+  color: ""
 })
 
-const isSvgIcon = computed(() => props.icon.includes('svg-icon'))
-const isElIcon = computed(() => props.icon.includes('el-icon'))
-const isIconfont = computed(() => props.icon.includes('iconfont'))
+const isSvgIcon = computed(() => props.icon.includes("svg-icon"))
+const isElIcon = computed(() => props.icon.includes("el-icon"))
+const isIconfont = computed(() => props.icon.includes("iconfont"))
 
 const iconName = computed(() => {
   if (isSvgIcon.value) {
-    return props.icon.replace('svg-icon-', '')
+    return props.icon.replace("svg-icon-", "")
   }
   return props.icon
 })
 
 const iconClass = computed(() => {
   if (isSvgIcon.value) {
-    return props.defaultStyle?[]:['el-icon', 'sub-el-icon']
+    return props.defaultStyle ? [] : ["el-icon", "sub-el-icon"]
   }
   if (isElIcon.value) {
-    return props.defaultStyle?[props.icon, 'icon']:[props.icon, 'el-icon', 'sub-el-icon', 'mr-8']
+    return props.defaultStyle ? [props.icon, "icon"] : [props.icon, "el-icon", "sub-el-icon", "mr-8"]
   }
   if (isIconfont.value) {
-    return props.defaultStyle?[props.icon, 'icon']:[props.icon, 'el-icon', 'sub-el-icon', 'mr-5', 'text-18']
+    return props.defaultStyle ? [props.icon, "icon"] : [props.icon, "el-icon", "sub-el-icon", "mr-5", "text-18"]
   }
-  return props.defaultStyle?[props.icon, 'icon']:['el-icon', 'sub-el-icon']
+  return props.defaultStyle ? [props.icon, "icon"] : ["el-icon", "sub-el-icon"]
 })
-
 </script>
 
 <style lang="scss" scoped>
