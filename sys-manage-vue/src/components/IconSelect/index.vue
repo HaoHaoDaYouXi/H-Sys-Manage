@@ -1,31 +1,24 @@
 <template>
   <div>
-    <el-popover
-      ref="popoverRef"
-      placement="top-start"
-      width="460"
-      trigger="click">
+    <el-popover ref="popoverRef" placement="top-start" width="460" trigger="click">
       <template #reference>
         <div class="icon-select">
-          <el-button
-            v-if="!props.exData.icon"
-            class="el-icon-plus icon-select-trigger"></el-button>
+          <el-button v-if="!props.exData.icon" class="el-icon-plus icon-select-trigger" />
           <p
             v-else
             class="icon-select-result-box"
             @mouseenter.stop="booClear = true"
-            @mouseleave.stop="booClear = false">
-            <el-button
-              size="small"
-              class="icon-select-result"
-              :style="{ color: props.exData.color }">
+            @mouseleave.stop="booClear = false"
+          >
+            <el-button size="small" class="icon-select-result" :style="{ color: props.exData.color }">
               <IconItem :icon="props.exData.icon" :defaultStyle="true" />
             </el-button>
             <el-button
               size="small"
               class="el-icon-circle-close icon-select-clear"
               @click.stop="handleClear"
-              v-if="booClear"></el-button>
+              v-if="booClear"
+            />
           </p>
         </div>
       </template>
@@ -37,40 +30,33 @@
             :key="index"
             :class="props.exData.color === item.value ? 'gou' : ''"
             :style="{ backgroundColor: item.value, backgroundImage: item.img }"
-            @click="setColor(item.value)"></el-button>
+            @click="setColor(item.value)"
+          />
         </div>
       </template>
 
       <p class="subtitle">图标选择</p>
       <div class="marginB-15">
-        <el-input
-          placeholder="请输入内容"
-          v-model="searchForm.icon"
-          clearable>
+        <el-input placeholder="请输入内容" v-model="searchForm.icon" clearable>
           <template #append>
-            <el-button
-              icon="search"
-              @click="searchSubmit"></el-button>
+            <el-button icon="search" @click="searchSubmit" />
           </template>
         </el-input>
       </div>
       <el-tabs v-model="tabsModel" @tab-change="tabChange">
-        <el-tab-pane
-          v-for="(pane, index) in IconJson"
-          :key="index"
-          :label="pane.label"
-          :name="pane.name">
+        <el-tab-pane v-for="(pane, index) in IconJson" :key="index" :label="pane.label" :name="pane.name">
           <el-divider border-style="dashed" class="tab-divider" />
           <el-scrollbar height="220px">
             <ul class="ml-2 flex flex-wrap">
               <li
                 v-for="(item, key) in iconList"
                 :title="item"
-                :key="pane.prefix+key"
+                :key="pane.prefix + key"
                 :style="iconItemStyle(item)"
                 class="icon-item mr-2 mt-1 w-1/10 flex cursor-pointer items-center justify-center border border-solid p-2"
-                @click="setIcon(pane.prefix+item)">
-                <IconItem :icon="pane.prefix+item" :defaultStyle="true" />
+                @click="setIcon(pane.prefix + item)"
+              >
+                <IconItem :icon="pane.prefix + item" :defaultStyle="true" />
               </li>
             </ul>
           </el-scrollbar>
@@ -82,7 +68,7 @@
 
 <script lang="ts" setup>
 import { ref, computed } from "vue"
-import { ElPopover, TabPaneName } from 'element-plus'
+import { ElPopover, TabPaneName } from "element-plus"
 import IconItem from "../Icon/item.vue"
 import { IconJson } from "@/icons"
 
@@ -99,31 +85,31 @@ const props = withDefaults(defineProps<{ exData: ExData }>(), {
   })
 })
 
-const popoverRef = ref<InstanceType<typeof ElPopover> | null>(null);
+const popoverRef = ref<InstanceType<typeof ElPopover> | null>(null)
 
 const colorList = [
-  { label: '', value: '#2975F9' },
-  { label: '', value: '#585BFF' },
-  { label: '', value: '#F53F3F' },
-  { label: '', value: '#FF943E' },
-  { label: '', value: '#15BC83' },
+  { label: "", value: "#2975F9" },
+  { label: "", value: "#585BFF" },
+  { label: "", value: "#F53F3F" },
+  { label: "", value: "#FF943E" },
+  { label: "", value: "#15BC83" },
   {
-    label: '',
-    value: '',
-    img: 'linear-gradient(45deg, #00000040, #00000040),linear-gradient(45deg,#eee 25%,transparent 0,transparent 75%,#eee 0,#eee),linear-gradient(45deg, #eee 25%, #fff 0, #fff 75%, #eee 0, #eee)'
+    label: "",
+    value: "",
+    img: "linear-gradient(45deg, #00000040, #00000040),linear-gradient(45deg,#eee 25%,transparent 0,transparent 75%,#eee 0,#eee),linear-gradient(45deg, #eee 25%, #fff 0, #fff 75%, #eee 0, #eee)"
   }
 ]
 const booClear = ref(false)
 
 const searchForm = ref({
-  icon: ''
+  icon: ""
 })
 
 const tabsModel = ref<string>(IconJson[0].name)
 const iconList = ref<string[]>(IconJson[0].value)
 
 const tabChange = (name: TabPaneName) => {
-  iconList.value = IconJson.find(item => item.name === name)?.value || []
+  iconList.value = IconJson.find((item) => item.name === name)?.value || []
   if (searchForm.value.icon) {
     iconList.value = iconList.value.filter((item: string) => item.includes(searchForm.value.icon.trim().toLowerCase()))
   }
@@ -133,44 +119,49 @@ const iconItemStyle = computed(() => {
   return (item: string) => {
     if (props.exData.icon === item) {
       return {
-        borderColor: 'var(--el-color-primary)',
-        color: 'var(--el-color-primary)'
+        borderColor: "var(--el-color-primary)",
+        color: "var(--el-color-primary)"
       }
     }
   }
 })
 
 const showColorConfig = () => {
-  return Object.prototype.hasOwnProperty.call(props.exData, 'color')
+  return Object.prototype.hasOwnProperty.call(props.exData, "color")
 }
 
-const emit = defineEmits<{ (e: 'changeIcon', value: {
-    icon: string
-    color?: string
-    [key: string]: any
-  }): void }>()
+const emit = defineEmits<{
+  (
+    e: "changeIcon",
+    value: {
+      icon: string
+      color?: string
+      [key: string]: any
+    }
+  ): void
+}>()
 
 const setIcon = (icon: string) => {
-  emit('changeIcon', {
+  emit("changeIcon", {
     ...props.exData,
     icon
   })
   if (popoverRef.value) {
-    popoverRef.value.hide(); // 使用 hide 方法关闭弹出框
+    popoverRef.value.hide() // 使用 hide 方法关闭弹出框
   }
 }
 
 const setColor = (color: string) => {
-  emit('changeIcon', {
+  emit("changeIcon", {
     ...props.exData,
     color
   })
 }
 
 const handleClear = () => {
-  emit('changeIcon', {
-    icon: '',
-    color: ''
+  emit("changeIcon", {
+    icon: "",
+    color: ""
   })
 }
 
@@ -179,7 +170,7 @@ const searchSubmit = () => {
   if (searchForm.value.icon) {
     iconList.value = iconList.value.filter((item: string) => item.includes(searchForm.value.icon.trim().toLowerCase()))
   } else {
-    iconList.value = IconJson.find(item => item.name === tabsModel.value)?.value || []
+    iconList.value = IconJson.find((item) => item.name === tabsModel.value)?.value || []
   }
 }
 </script>
@@ -227,7 +218,6 @@ const searchSubmit = () => {
   margin: 0;
 }
 
-
 .icon-select {
   width: 32px;
 
@@ -266,16 +256,19 @@ const searchSubmit = () => {
     margin: 0;
     font-size: 20px;
     color: #666666;
-    background-color: #DEE1E5;
+    background-color: #dee1e5;
     border-radius: 50%;
-    border: 1px solid #FFFFFF;
+    border: 1px solid #ffffff;
   }
 }
 
 .subtitle {
   margin-bottom: 12px;
   font-size: 14px;
-  font-family: PingFang SC-Medium, PingFang SC,serif;
+  font-family:
+    PingFang SC-Medium,
+    PingFang SC,
+    serif;
   color: #333333;
 }
 
@@ -291,7 +284,10 @@ const searchSubmit = () => {
     border: none;
     border-radius: 50%;
     background-size: 4px 4px;
-    background-position: 0 0, 0 0, 2px 2px;
+    background-position:
+      0 0,
+      0 0,
+      2px 2px;
 
     & + & {
       margin-left: 16px;
@@ -307,11 +303,11 @@ const searchSubmit = () => {
         left: 7px;
         top: 4px;
         z-index: 1;
-        content: '';
+        content: "";
         width: 4px;
         height: 7px;
-        border-right: 1px solid #FFF;
-        border-bottom: 1px solid #FFF;
+        border-right: 1px solid #fff;
+        border-bottom: 1px solid #fff;
         transform: rotate(40deg);
       }
     }
@@ -344,7 +340,7 @@ const searchSubmit = () => {
 
   &:hover,
   &.selected {
-    background: #FFFFFF;
+    background: #ffffff;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.302);
     border-radius: 2px;
   }

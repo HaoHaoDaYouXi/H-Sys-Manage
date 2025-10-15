@@ -34,22 +34,29 @@
 
 <script lang="ts" setup>
 import { computed, getCurrentInstance, h, ref, withDefaults } from "vue"
-import {
-  ElMessage,
-  ElUpload,
-  UploadFile,
-  UploadFiles,
-  UploadProgressEvent,
-  type UploadProps,
-  UploadRawFile,
-  UploadUserFile
-} from "element-plus"
+import { ElMessage, ElUpload, UploadFile, UploadFiles, UploadProps, UploadRawFile, UploadUserFile } from "element-plus"
 import { uploadTypeEnum } from "@/utils/enums"
 import { getToken } from "@/utils/cache/cookies"
 import { getBaseURL } from "@/utils/service"
 import { API_PREFIX } from "@/api/sys/file"
 
-const props = withDefaults(defineProps<Partial<UploadProps>>(), {
+interface Props extends Partial<UploadProps> {
+  fileType?: number
+  fileCount?: number
+  limit?: number
+  action?: string
+  placeholder?: string
+  maxSize?: number
+  tip?: string
+  width?: number
+  height?: number
+  formKey?: string
+  formData?: Record<string, any>
+  fileList?: UploadUserFile[]
+  listType?: "text" | "picture" | "picture-card"
+}
+
+const props = withDefaults(defineProps<Props>(), {
   fileType: 1, // 文件保存的路径类型 0-其他 1-图片 2-附件 3-图片和附件 4-音频 5-视频 6-音频和视频
   fileCount: 0,
   limit: 1,
@@ -66,8 +73,9 @@ const props = withDefaults(defineProps<Partial<UploadProps>>(), {
   fileList: () => {
     return []
   },
-  listType: "text" // text/picture/picture-card
+  listType: "picture-card" // text/picture/picture-card
 })
+console.log(props)
 
 // 动态计算tip属性
 const computedTip = computed(() => {
@@ -105,22 +113,19 @@ const handlePreview = (uploadFile: UploadFile) => {
   showPreview.value = true
 }
 const handleRemove = (uploadFile: any) => {
-  let serviceFileName = uploadFile.url
-  if (uploadFile.response && uploadFile.response?.data) {
-    serviceFileName = uploadFile.response.data?.serviceFileName
-  }
-  emit("changeFile", { type: "remove", formKey: props.formKey, fileName: uploadFile.name, serviceFileName })
+  // console.log("handleRemove", uploadFile)
+  emit("changeFile", { type: "remove", formKey: props.formKey, fileCode: uploadFile.response.data.fileCode })
 }
 const handleAvatarSuccess = (res: any, uploadFile: any) => {
+  // console.log("handleAvatarSuccess", res, uploadFile)
   if (res.code === 20000) {
     const temp = res.data || {}
-    emit("changeFile", { type: "add", formKey: props.formKey, ...temp })
+    emit("changeFile", { type: "add", formKey: props.formKey, fileName: uploadFile.name, ...temp })
     if (temp.zoomFile) {
       uploadFile.url = `${temp.prefixUrl}${temp.zoomFile}`
     }
   } else {
     ElMessage.error(res.message)
-    handleRemove("")
   }
 }
 const handleAvatarError = (error: Error, uploadFile: UploadFile, uploadFiles: UploadFiles) => {
