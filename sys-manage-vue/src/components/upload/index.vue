@@ -75,7 +75,6 @@ const props = withDefaults(defineProps<Props>(), {
   },
   listType: "picture-card" // text/picture/picture-card
 })
-console.log(props)
 
 // 动态计算tip属性
 const computedTip = computed(() => {
