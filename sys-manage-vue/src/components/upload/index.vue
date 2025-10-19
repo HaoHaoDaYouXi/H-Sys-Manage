@@ -113,13 +113,22 @@ const handlePreview = (uploadFile: UploadFile) => {
 }
 const handleRemove = (uploadFile: any) => {
   // console.log("handleRemove", uploadFile)
-  emit("changeFile", { type: "remove", formKey: props.formKey, fileCode: uploadFile.response.data.fileCode })
+  emit("changeFile", {
+    type: "remove",
+    formKey: props.formKey,
+    fileCode: uploadFile.response ? uploadFile.response.data.fileCode : uploadFile.code
+  })
 }
 const handleAvatarSuccess = (res: any, uploadFile: any) => {
   // console.log("handleAvatarSuccess", res, uploadFile)
   if (res.code === 20000) {
     const temp = res.data || {}
-    emit("changeFile", { type: "add", formKey: props.formKey, fileName: uploadFile.name, ...temp })
+    emit("changeFile", {
+      type: "add",
+      formKey: props.formKey,
+      fileName: uploadFile.name,
+      ...temp
+    })
     if (temp.zoomFile) {
       uploadFile.url = `${temp.prefixUrl}${temp.zoomFile}`
     }

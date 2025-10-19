@@ -136,7 +136,7 @@ public class SUserServiceImpl extends ServiceImpl<SUserMapper, SUser> implements
                     .set(MUserRole::getUpdateUid, bo.getUserLoginCacheBO().getUserId())
                     .set(MUserRole::getUpdateTime, now)
                     .eq(MUserRole::getDelStatus, TrueFalseEnum.FALSE.getCode())
-                    .eq(MUserRole::getUserId, bo.getUserLoginCacheBO().getUserId()));
+                    .eq(MUserRole::getUserId, user.getUserId()));
         }
         if (ObjectUtils.isNotEmpty(req.getRoleIds())) {
             userRoleService.batchInsert(req.getRoleIds().stream()
