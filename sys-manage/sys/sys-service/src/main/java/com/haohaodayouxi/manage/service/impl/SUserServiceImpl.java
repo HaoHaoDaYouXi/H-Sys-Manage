@@ -95,8 +95,8 @@ public class SUserServiceImpl extends ServiceImpl<SUserMapper, SUser> implements
     public PageBaseVO<SUser> pageList(SUserPageListReq req) {
         Page<SUser> page = new Page<>(req.getPageNum(), req.getPageSize());
         baseMapper.selectPage(page, new LambdaQueryWrapper<SUser>()
-                .eq(ObjectUtils.isNotEmpty(req.getAccount()), SUser::getAccount, req.getAccount())
-                .eq(ObjectUtils.isNotEmpty(req.getUserName()), SUser::getUserName, req.getUserName())
+                .like(ObjectUtils.isNotEmpty(req.getAccount()), SUser::getAccount, req.getAccount())
+                .like(ObjectUtils.isNotEmpty(req.getUserName()), SUser::getUserName, req.getUserName())
                 .orderByDesc(List.of(SUser::getUpdateTime, SUser::getUserId)));
         if (ObjectUtils.isEmpty(page.getRecords())) {
             return new PageBaseVO<>(new ArrayList<>(), 0L);
