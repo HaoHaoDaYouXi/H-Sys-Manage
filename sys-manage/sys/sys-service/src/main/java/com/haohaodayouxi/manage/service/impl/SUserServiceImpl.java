@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.haohaodayouxi.common.core.constants.CurrentUserContextHolder;
 import com.haohaodayouxi.common.core.model.vo.page.PageBaseVO;
+import com.haohaodayouxi.common.util.algorithm.md5.Md5Util;
 import com.haohaodayouxi.common.util.business.IdUtil;
 import com.haohaodayouxi.common.util.enums.TrueFalseEnum;
 import com.haohaodayouxi.manage.mapper.SUserMapper;
@@ -111,7 +112,6 @@ public class SUserServiceImpl extends ServiceImpl<SUserMapper, SUser> implements
         SUser user = SUser.builder()
                 .userId(req.getUserId())
                 .account(req.getAccount())
-                .pwd(req.getPwd())
                 .userName(req.getUserName())
                 .userAvatar(req.getUserAvatar())
                 .userContact(req.getUserContact())
@@ -123,6 +123,7 @@ public class SUserServiceImpl extends ServiceImpl<SUserMapper, SUser> implements
         boolean add = ObjectUtils.isEmpty(req.getUserId());
         if (add) {
             user.setUserCode(IdUtil.getUUID());
+            user.setPwd(Md5Util.encryptPWD(req.getPwd(), user.getUserCode()));
             user.setCreateUid(bo.getUserLoginCacheBO().getUserId());
             user.setCreateTime(now);
             user.setVersion(1L);

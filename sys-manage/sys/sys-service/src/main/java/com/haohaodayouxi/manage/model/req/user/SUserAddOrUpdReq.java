@@ -69,7 +69,7 @@ public class SUserAddOrUpdReq implements Serializable {
     /**
      * 多人使用状态 0-否 1-是
      */
-    @NotBlank(groups = {AddValid.class, UpdValid.class}, message = "多人使用状态不能为空")
+    @NotNull(groups = {AddValid.class, UpdValid.class}, message = "多人使用状态不能为空")
     private Integer multipleStatus;
 
     /**
