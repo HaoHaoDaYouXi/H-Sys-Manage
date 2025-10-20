@@ -95,6 +95,7 @@ import { debounce } from "lodash-es"
 import SidebarItemLink from "./Sidebar/SidebarItemLink.vue"
 import { isExternal } from "@/utils/validate"
 import { useRouteListener } from "@/hooks/useRouteListener"
+import { getDetailApiUrl } from "@/api/sys/file"
 
 const route = useRoute()
 const router = useRouter()
@@ -124,23 +125,16 @@ const permission_routes = computed(() => {
   return permissionStore.routes.filter((route) => !route.meta?.hidden)
 })
 
-const userInfo = computed(() => {
-  return {
-    ...userStore.userInfo,
-    avatar: getAvatar()
-  }
+const userInfo = ref({
+  ...userStore.userInfo
 })
 
-const getAvatar = () => {
-  let avatar = userStore.userInfo.avatar
-  if (!avatar) {
-    avatar = "vue.svg"
+const getAvatar = async () => {
+  if (userStore.userInfo.avatar) {
+    userInfo.value.avatar = await getDetailApiUrl(userStore.userInfo.avatar)
   } else {
-    if (!avatar.startsWith("http://") && !avatar.startsWith("https://")) {
-      avatar = "../../assets/" + avatar
-    }
+    userInfo.value.avatar = new URL("vue.svg", import.meta.url).href
   }
-  return new URL(avatar, import.meta.url).href
 }
 
 const booRoleList = ref<boolean>(false)
@@ -200,6 +194,7 @@ onMounted(() => {
 const initTopbar = async () => {
   initCurrentRoutes()
   await nextTick()
+  await getAvatar()
   initScroll()
 }
 
