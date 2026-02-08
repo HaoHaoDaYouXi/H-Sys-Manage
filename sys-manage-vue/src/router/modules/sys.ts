@@ -5,7 +5,8 @@ const Sys = {
   SApi: () => import("@/views/sys/api/index.vue"),
   SMenu: () => import("@/views/sys/menu/index.vue"),
   SRole: () => import("@/views/sys/role/index.vue"),
-  SUser: () => import("@/views/sys/user/index.vue")
+  SUser: () => import("@/views/sys/user/index.vue"),
+  SFile: () => import("@/views/sys/file/index.vue")
 }
 
 export default Sys
