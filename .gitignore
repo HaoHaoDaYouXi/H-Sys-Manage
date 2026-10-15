@@ -34,3 +34,7 @@ build/
 ### log file ###
 logs/
 **/logs/
+
+### 本地临时脚本/日志（含开发库连接串，别提交）###
+tmp/
+.qoder-credits
